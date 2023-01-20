@@ -1,11 +1,11 @@
 package ir.maktab.finalprojectspring.data.model;
 
-import ir.maktab.enums.EXPERTCONDITION;
+
+import ir.maktab.finalprojectspring.enums.EXPERTCONDITION;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
