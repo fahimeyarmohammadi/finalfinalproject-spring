@@ -1,0 +1,17 @@
+package ir.maktab.finalprojectspring.enums;
+
+public enum ORDERCONDITION {
+
+    WAITINGFORTHESUGGESTINOFEXPERT,
+
+    WAITINGFORSELECTIONOFEXPERT,
+
+    WAITINGFORTHESPECIALISTTOCOMETOYOURPLACE,
+
+    STARTED,
+
+    DONE,
+
+    PAID
+
+}
