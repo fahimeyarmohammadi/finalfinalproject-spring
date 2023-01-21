@@ -1,8 +1,8 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.SubService;
-import ir.maktab.finalprojectspring.data.repository.BaseServiceRepository;
 import ir.maktab.finalprojectspring.data.repository.SubServiceRepository;
+import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.exception.ObjectExistException;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class SubServiceServiceIMPL implements SubServiceService{
+public class SubServiceServiceIMPL implements SubServiceService {
     private final SubServiceRepository subServiceRepository;
     private final BaseServiceServiceIMPL baseServiceServiceIMPL;
 
@@ -21,13 +21,13 @@ public class SubServiceServiceIMPL implements SubServiceService{
 
         if (baseServiceServiceIMPL.getBaseServiceByName(subService.getBaseService().getName()).isEmpty())
             throw new NotFoundException("this baseService is not exist");
-        else
-        {
-            for (SubService s:subServiceRepository.findAllByBaseService_Name(subService.getBaseService().getName())) {
-                if (s.getSubName().equals(subService.getSubName()))
-                    throw new ObjectExistException("this subService is exist");
-            }
+
+
+        for (SubService s : subServiceRepository.findAllByBaseService_Name(subService.getBaseService().getName())) {
+            if (s.getSubName().equals(subService.getSubName()))
+                throw new ObjectExistException("this subService is exist");
         }
+
 
         subServiceRepository.save(subService);
 
@@ -55,15 +55,23 @@ public class SubServiceServiceIMPL implements SubServiceService{
     }
 
 
-    public void changeSubServiceBasePrice(String subName, Double newPrice) {
+    public void changeSubServiceBasePrice(String subName, Double newPrice) throws InvalidInputException {
 
-        subServiceRepository.updateSubServiceBasePrice(subName,newPrice);
+        Optional<SubService> optionalSubService = subServiceRepository.findBySubName(subName);
+
+        SubService subService = optionalSubService.orElseThrow(() -> new InvalidInputException("Invalid subService name"));
+
+        subServiceRepository.updateSubServiceBasePrice(subName, newPrice);
 
     }
 
-    public void changeSubServiceDescription(String subName, String newDescription) {
+    public void changeSubServiceDescription(String subName, String newDescription) throws InvalidInputException {
 
-        subServiceRepository.updateSubServiceDescription(subName,newDescription);
+        Optional<SubService> optionalSubService = subServiceRepository.findBySubName(subName);
+
+        SubService subService = optionalSubService.orElseThrow(() -> new InvalidInputException("Invalid subService name"));
+
+        subServiceRepository.updateSubServiceDescription(subName, newDescription);
 
     }
 }

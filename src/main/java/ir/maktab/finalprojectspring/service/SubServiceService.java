@@ -1,6 +1,7 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.SubService;
+import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.exception.ObjectExistException;
 
@@ -16,9 +17,9 @@ public interface SubServiceService {
 
     SubService getSubServiceByName(String subName) throws NotFoundException;
 
-    void changeSubServiceBasePrice(String subName, Double newPrice);
+    void changeSubServiceBasePrice(String subName, Double newPrice) throws InvalidInputException;
 
-    void changeSubServiceDescription(String subName, String newDescription);
+    void changeSubServiceDescription(String subName, String newDescription) throws InvalidInputException;
 
 
 }
