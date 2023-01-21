@@ -1,7 +1,7 @@
 package ir.maktab.finalprojectspring.data.model;
 
 
-import ir.maktab.finalprojectspring.enums.EXPERTCONDITION;
+import ir.maktab.finalprojectspring.enumeration.ExpertCondition;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +23,7 @@ import java.util.List;
 public class Expert extends Person {
 
     @Enumerated(value = EnumType.STRING)
-    EXPERTCONDITION expertcondition;
+    ExpertCondition expertcondition;
 
     @ManyToMany
     List<SubService> subServiceList = new ArrayList<>();

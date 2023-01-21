@@ -1,7 +1,7 @@
 package ir.maktab.finalprojectspring.data.model;
 
 
-import ir.maktab.finalprojectspring.enums.ORDERCONDITION;
+import ir.maktab.finalprojectspring.enumeration.OrderCondition;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -34,7 +34,7 @@ public class CustomerOrder {
     Date preferDate;
 
     @Enumerated(value = EnumType.STRING)
-    ORDERCONDITION ordercondition;
+    OrderCondition ordercondition;
 
     @OneToOne
     SubService subService;
