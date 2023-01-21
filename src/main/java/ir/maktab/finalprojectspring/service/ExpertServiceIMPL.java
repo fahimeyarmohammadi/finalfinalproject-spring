@@ -2,6 +2,7 @@ package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.Customer;
 import ir.maktab.finalprojectspring.data.model.Expert;
+import ir.maktab.finalprojectspring.data.model.SubService;
 import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.enumeration.ExpertCondition;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +20,8 @@ import java.util.Optional;
 public class ExpertServiceIMPL implements ExpertService {
 
     private final ExpertRepository expertRepository;
+
+    private final SubServiceServiceIMPL subServiceServiceIMPL;
 
     public void addExpert(Expert expert, String imagePath) throws InvalidInputException, IOException {
 
@@ -62,4 +66,41 @@ public class ExpertServiceIMPL implements ExpertService {
         return optionalExpert.orElseThrow(() -> new NotFoundException("Invalid Username"));
 
     }
+
+    public List<Expert> getExpertNotAccepted() {
+
+        return expertRepository.getAllExpertNotAccepted();
+
+    }
+
+    public void acceptExpert(String username) throws NotFoundException {
+
+        Expert expert = getByUsername(username);
+        expertRepository.acceptExpert(username);
+
+    }
+
+    public void addSubServiceToExpertList(String username, String subServiceName) throws NotFoundException {
+
+        Expert expert = getByUsername(username);
+        SubService subService = subServiceServiceIMPL.getSubServiceByName(subServiceName);
+        List<SubService> subServiceList = expert.getSubServiceList();
+        subServiceList.add(subService);
+        expertRepository.updateExpertSubServiceList(subServiceList, username);
+
+    }
+
+    public void deleteSubServiceFromExpertList(String username, String subServiceName) throws NotFoundException {
+
+        Expert expert = getByUsername(username);
+        SubService subService = subServiceServiceIMPL.getSubServiceByName(subServiceName);
+        List<SubService> subServiceList = expert.getSubServiceList();
+        if (subServiceList.contains(subService))
+            subServiceList.remove(subService);
+        else
+            throw new NotFoundException("expert dont have this subService");
+        expertRepository.updateExpertSubServiceList(subServiceList, username);
+
+    }
+
 }
