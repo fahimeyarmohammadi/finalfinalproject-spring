@@ -1,8 +1,6 @@
 package ir.maktab.finalprojectspring.service;
 
-import ir.maktab.finalprojectspring.data.model.Customer;
-import ir.maktab.finalprojectspring.data.model.Expert;
-import ir.maktab.finalprojectspring.data.model.SubService;
+import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.enumeration.ExpertCondition;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
@@ -12,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +21,10 @@ public class ExpertServiceIMPL implements ExpertService {
     private final ExpertRepository expertRepository;
 
     private final SubServiceServiceIMPL subServiceServiceIMPL;
+
+    private final CustomerOrderServiceIMPL customerOrderServiceIMPL;
+
+    private final OffersServiceIMPL offersServiceIMPL;
 
     public void addExpert(Expert expert, String imagePath) throws InvalidInputException, IOException {
 
@@ -102,5 +105,33 @@ public class ExpertServiceIMPL implements ExpertService {
         expertRepository.updateExpertSubServiceList(subServiceList, username);
 
     }
+
+    public List<CustomerOrder> getAllCustomerOrderInSubService(String userName) throws NotFoundException {
+
+        Expert expert=getByUsername(userName);
+
+        List<CustomerOrder>customerOrderList=new ArrayList<>();
+
+        for (SubService s:expert.getSubServiceList()) {
+
+            customerOrderList.addAll(customerOrderServiceIMPL.getAllCustomerOrderSInSubService(s.getSubName()));
+
+        }
+
+        return customerOrderList;
+    }
+
+    public void registerOffer(Offers offers) throws InvalidInputException {
+
+        offersServiceIMPL.addOffers(offers);
+
+         customerOrderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertSelection(offers.getCustomerOrder());
+
+    }
+
+
+
+
+
 
 }

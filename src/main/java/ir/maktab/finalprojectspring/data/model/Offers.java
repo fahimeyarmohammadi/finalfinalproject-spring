@@ -35,12 +35,12 @@ public class Offers {
     Date startWork;
 
     @OneToOne
-    CustomerOrder order;
-
-    @OneToOne
     Expert expert;
 
     @Column(nullable = false)
     Duration duration;
+
+    @ManyToOne
+    CustomerOrder customerOrder;
 
 }

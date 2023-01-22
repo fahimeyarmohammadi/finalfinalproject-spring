@@ -7,7 +7,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -44,5 +46,6 @@ public class CustomerOrder {
 
     @OneToOne(cascade =CascadeType.MERGE)
     Address address;
+
 
 }

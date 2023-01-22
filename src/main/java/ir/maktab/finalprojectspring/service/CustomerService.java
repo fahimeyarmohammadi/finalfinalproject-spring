@@ -17,13 +17,13 @@ public interface CustomerService {
 
     Customer signIn(String username, String password) throws NotFoundException;
 
-    void customerGetOrder(CustomerOrder order) throws InvalidInputException;
+    void customerGetOrder(CustomerOrder order,String username) throws InvalidInputException, NotFoundException;
 
     List<BaseService> getAllBaseService();
 
     List<SubService> getAllSubServiceInBaseService(String baseServiceName) throws NotFoundException;
 
-
+    List<CustomerOrder>GetOrdersWaitingExpertSelection(String username) throws NotFoundException;
 
 
 }

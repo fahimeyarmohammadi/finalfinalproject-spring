@@ -6,4 +6,5 @@ import ir.maktab.finalprojectspring.exception.InvalidInputException;
 public interface CustomerOrderService {
 
     void addOrder(CustomerOrder order) throws InvalidInputException;
+
 }

@@ -1,16 +1,15 @@
 package ir.maktab.finalprojectspring.service;
 
-import ir.maktab.finalprojectspring.data.model.BaseService;
-import ir.maktab.finalprojectspring.data.model.Customer;
-import ir.maktab.finalprojectspring.data.model.CustomerOrder;
-import ir.maktab.finalprojectspring.data.model.SubService;
+import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
+import ir.maktab.finalprojectspring.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,9 +60,14 @@ public class CustomerServiceIMPL implements CustomerService {
 
     }
 
-    public void customerGetOrder(CustomerOrder order) throws InvalidInputException {
+    public void customerGetOrder(CustomerOrder order,String username) throws NotFoundException, InvalidInputException {
+
+        Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
+        Customer customer = signInCustomer.orElseThrow(() -> new NotFoundException("Invalid Username"));
 
         orderServiceIMPL.addOrder(order);
+
+        customer.getOrderList().add(order);
 
     }
 
@@ -76,5 +80,48 @@ public class CustomerServiceIMPL implements CustomerService {
         return subServiceServiceIMPL.getAllSubServiceInBaseService(baseServiceName);
 
     }
+
+    public List<CustomerOrder> getAllCustomerOrders(String username) throws NotFoundException {
+
+        Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
+        Customer customer = signInCustomer.orElseThrow(() -> new NotFoundException("Invalid Username"));
+
+        return customer.getOrderList();
+
+    }
+
+    public List<CustomerOrder>GetOrdersWaitingExpertSelection(String username) throws NotFoundException {
+
+        List<CustomerOrder>orderList=getAllCustomerOrders(username);
+
+        List<CustomerOrder>orderListWaitingForExpertSelection = new ArrayList<>();
+
+        for (CustomerOrder c:orderList) {
+            if(c.getOrdercondition().equals(OrderCondition.WAITING_EXPERT_SELECTION))
+                orderListWaitingForExpertSelection.add(c);
+        }
+
+         return orderListWaitingForExpertSelection;
+
+    }
+    public void selectExpert(Offers offers){
+
+        orderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertComing(offers.getCustomerOrder());
+
+    }
+
+    public void changeCustomerConditionToStarted(Offers offers){
+
+        orderServiceIMPL.changeCustomerOrderConditionToStarted(offers.getCustomerOrder());
+
+    }
+
+    public void changeCustomerConditionToDone(Offers offers){
+
+        orderServiceIMPL.changeCustomerOrderConditionToDone(offers.getCustomerOrder());
+
+    }
+
+
 
 }
