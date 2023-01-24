@@ -2,7 +2,7 @@ package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
-import ir.maktab.finalprojectspring.enumeration.ExpertCondition;
+import ir.maktab.finalprojectspring.data.model.enumeration.ExpertCondition;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.validation.Validation;

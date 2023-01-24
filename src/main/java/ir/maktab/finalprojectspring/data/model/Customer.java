@@ -5,6 +5,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 
 

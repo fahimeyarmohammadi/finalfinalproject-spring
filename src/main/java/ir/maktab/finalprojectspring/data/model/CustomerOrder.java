@@ -1,15 +1,13 @@
 package ir.maktab.finalprojectspring.data.model;
 
 
-import ir.maktab.finalprojectspring.enumeration.OrderCondition;
+import ir.maktab.finalprojectspring.data.model.enumeration.OrderCondition;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter

@@ -3,6 +3,7 @@ package ir.maktab.finalprojectspring.data.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 
@@ -15,6 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 

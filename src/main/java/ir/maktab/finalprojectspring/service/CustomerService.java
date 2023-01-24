@@ -15,7 +15,7 @@ public interface CustomerService {
 
     void changPassword(String username, String repeatNewPassword, String newPassword) throws InvalidInputException;
 
-    Customer signIn(String username, String password) throws NotFoundException;
+    Customer signIn(String username, String password) throws NotFoundException, InvalidInputException;
 
     void customerGetOrder(CustomerOrder order,String username) throws InvalidInputException, NotFoundException;
 

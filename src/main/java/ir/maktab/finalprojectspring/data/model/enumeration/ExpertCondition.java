@@ -1,4 +1,4 @@
-package ir.maktab.finalprojectspring.enumeration;
+package ir.maktab.finalprojectspring.data.model.enumeration;
 
 public enum ExpertCondition {
 

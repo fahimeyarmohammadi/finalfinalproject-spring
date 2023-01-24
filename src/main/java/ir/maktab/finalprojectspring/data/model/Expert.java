@@ -1,7 +1,7 @@
 package ir.maktab.finalprojectspring.data.model;
 
 
-import ir.maktab.finalprojectspring.enumeration.ExpertCondition;
+import ir.maktab.finalprojectspring.data.model.enumeration.ExpertCondition;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

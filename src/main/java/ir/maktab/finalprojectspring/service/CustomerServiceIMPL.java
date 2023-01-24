@@ -2,11 +2,12 @@ package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
-import ir.maktab.finalprojectspring.enumeration.OrderCondition;
+import ir.maktab.finalprojectspring.data.model.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,7 +34,13 @@ public class CustomerServiceIMPL implements CustomerService {
         Validation.validatePassword(customer.getPassword());
         customer.setCredit((double) 0);
         customer.setUsername(customer.getEmail());
-        customerRepository.save(customer);
+
+        try {
+            customerRepository.save(customer);
+        } catch (DataIntegrityViolationException e) {
+            throw new InvalidInputException("Customer already exist with given email:" + customer.getEmail());
+
+        }
 
     }
 
@@ -46,28 +53,34 @@ public class CustomerServiceIMPL implements CustomerService {
 
         Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
 
-        customerRepository.updateCustomerPassword(newPassword, username);
+        customer.setPassword(newPassword);
+
+        customerRepository.save(customer);
 
     }
 
-    public Customer signIn(String username, String password) throws NotFoundException {
+    public Customer signIn(String username, String password) throws InvalidInputException {
 
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
-        Customer customer = signInCustomer.orElseThrow(() -> new NotFoundException("Invalid Username"));
+        Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
+
         if (!customer.getPassword().equals(password))
-            throw new NotFoundException("the password is not correct");
+            throw new InvalidInputException("The password is not correct");
         return customer;
 
     }
 
-    public void customerGetOrder(CustomerOrder order,String username) throws NotFoundException, InvalidInputException {
+
+    public void customerGetOrder(CustomerOrder order, String username) throws InvalidInputException {
 
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
-        Customer customer = signInCustomer.orElseThrow(() -> new NotFoundException("Invalid Username"));
+        Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
 
         orderServiceIMPL.addOrder(order);
 
         customer.getOrderList().add(order);
+
+        customerRepository.save(customer);
 
     }
 
@@ -90,38 +103,37 @@ public class CustomerServiceIMPL implements CustomerService {
 
     }
 
-    public List<CustomerOrder>GetOrdersWaitingExpertSelection(String username) throws NotFoundException {
+    public List<CustomerOrder> GetOrdersWaitingExpertSelection(String username) throws NotFoundException {
 
-        List<CustomerOrder>orderList=getAllCustomerOrders(username);
+        List<CustomerOrder> orderList = getAllCustomerOrders(username);
 
-        List<CustomerOrder>orderListWaitingForExpertSelection = new ArrayList<>();
+        List<CustomerOrder> orderListWaitingForExpertSelection = new ArrayList<>();
 
-        for (CustomerOrder c:orderList) {
-            if(c.getOrdercondition().equals(OrderCondition.WAITING_EXPERT_SELECTION))
+        for (CustomerOrder c : orderList) {
+            if (c.getOrdercondition().equals(OrderCondition.WAITING_EXPERT_SELECTION))
                 orderListWaitingForExpertSelection.add(c);
         }
 
-         return orderListWaitingForExpertSelection;
+        return orderListWaitingForExpertSelection;
 
     }
-    public void selectExpert(Offers offers){
+
+    public void selectExpert(Offers offers) {
 
         orderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertComing(offers.getCustomerOrder());
 
     }
 
-    public void changeCustomerConditionToStarted(Offers offers){
+    public void changeCustomerConditionToStarted(Offers offers) {
 
         orderServiceIMPL.changeCustomerOrderConditionToStarted(offers.getCustomerOrder());
 
     }
 
-    public void changeCustomerConditionToDone(Offers offers){
+    public void changeCustomerConditionToDone(Offers offers) {
 
         orderServiceIMPL.changeCustomerOrderConditionToDone(offers.getCustomerOrder());
 
     }
-
-
 
 }

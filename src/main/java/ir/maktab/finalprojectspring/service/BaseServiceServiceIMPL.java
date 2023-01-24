@@ -18,7 +18,7 @@ public class BaseServiceServiceIMPL implements BaseServiceService{
     public void addBaseService(BaseService baseService) throws ObjectExistException {
 
         if (baseServiceRepository.findByName(baseService.getName()).isPresent())
-            throw new ObjectExistException("this baseService is existing");
+            throw new ObjectExistException("This baseService is exist");
         else
             baseServiceRepository.save(baseService);
 

@@ -23,11 +23,8 @@ public class SubServiceServiceIMPL implements SubServiceService {
             throw new NotFoundException("this baseService is not exist");
 
 
-        for (SubService s : subServiceRepository.findAllByBaseService_Name(subService.getBaseService().getName())) {
-            if (s.getSubName().equals(subService.getSubName()))
-                throw new ObjectExistException("this subService is exist");
-        }
-
+        if(subServiceRepository.findBySubName(subService.getSubName()).isPresent())
+            throw new ObjectExistException("this subService is exist");
 
         subServiceRepository.save(subService);
 
