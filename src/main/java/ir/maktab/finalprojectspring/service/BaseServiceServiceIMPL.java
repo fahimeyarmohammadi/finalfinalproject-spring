@@ -3,7 +3,9 @@ package ir.maktab.finalprojectspring.service;
 import ir.maktab.finalprojectspring.data.model.BaseService;
 import ir.maktab.finalprojectspring.data.repository.BaseServiceRepository;
 import ir.maktab.finalprojectspring.exception.ObjectExistException;
+import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +17,17 @@ public class BaseServiceServiceIMPL implements BaseServiceService{
 
     private final BaseServiceRepository baseServiceRepository;
 
-    public void addBaseService(BaseService baseService) throws ObjectExistException {
+    public void addBaseService(BaseService baseService)  {
 
-        if (baseServiceRepository.findByName(baseService.getName()).isPresent())
-            throw new ObjectExistException("This baseService is exist");
-        else
+        try {
+
             baseServiceRepository.save(baseService);
+
+        } catch (DataIntegrityViolationException e) {
+
+            throw new ObjectExistException("This baseService is exist");
+
+        }
 
     }
     public List<BaseService> getAllBaseService() {

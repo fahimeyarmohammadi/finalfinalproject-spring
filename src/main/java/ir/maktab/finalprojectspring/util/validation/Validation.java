@@ -20,14 +20,14 @@ public class Validation {
 
     public static void validateName(String name) throws InvalidInputException {
 
-        validate.accept(name, "^[a-zA-Z ]{2,}", "Invalid Name(Only Alphabetic Characters Accepted)");
+        validate.accept(name, "^[a-zA-Z ]{2,}", "Invalid input");
 
     }
 
     public static void validatePassword(String pass) throws InvalidInputException {
 
         validate.accept(pass, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8}$",
-                "Invalid Password( 8 characters,composition of character and digit)");
+                "Invalid input");
 
     }
 
@@ -35,7 +35,7 @@ public class Validation {
 
         validate.accept(email,  "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
-                "Invalid Email");
+                "Invalid input");
 
     }
 
@@ -46,7 +46,7 @@ public class Validation {
         double imageSize = file.length();
         double imageSIzeInKb = (imageSize / 1024);
         if (imageSIzeInKb > 300) {
-            throw new InvalidInputException("image size must be less than 300 kb");
+            throw new InvalidInputException("Invalid input");
         }
 
         //format validation
@@ -59,7 +59,7 @@ public class Validation {
             format = reader.getFormatName();
         }
         if (format.equals("jpg")) {
-            throw new InvalidInputException("the image format must be JPEG");
+            throw new InvalidInputException("Invalid input");
         }
 
         //reading file

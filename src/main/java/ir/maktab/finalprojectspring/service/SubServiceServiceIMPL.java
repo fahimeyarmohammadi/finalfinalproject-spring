@@ -6,6 +6,7 @@ import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.exception.ObjectExistException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class SubServiceServiceIMPL implements SubServiceService {
+
     private final SubServiceRepository subServiceRepository;
     private final BaseServiceServiceIMPL baseServiceServiceIMPL;
 
@@ -22,11 +24,15 @@ public class SubServiceServiceIMPL implements SubServiceService {
         if (baseServiceServiceIMPL.getBaseServiceByName(subService.getBaseService().getName()).isEmpty())
             throw new NotFoundException("this baseService is not exist");
 
+        try {
 
-        if(subServiceRepository.findBySubName(subService.getSubName()).isPresent())
+            subServiceRepository.save(subService);
+
+        } catch (DataIntegrityViolationException e) {
+
             throw new ObjectExistException("this subService is exist");
 
-        subServiceRepository.save(subService);
+        }
 
     }
 
@@ -36,10 +42,11 @@ public class SubServiceServiceIMPL implements SubServiceService {
 
     public List<SubService> getAllSubServiceInBaseService(String baseServiceName) throws NotFoundException {
 
-        if (baseServiceServiceIMPL.getBaseServiceByName(baseServiceName).isPresent())
-            return subServiceRepository.findAllByBaseService_Name(baseServiceName);
-        else
+        if (!baseServiceServiceIMPL.getBaseServiceByName(baseServiceName).isPresent())
+
             throw new NotFoundException("this baseService is not exist");
+
+            return subServiceRepository.findAllByBaseService_Name(baseServiceName);
 
     }
 
@@ -47,28 +54,28 @@ public class SubServiceServiceIMPL implements SubServiceService {
 
         Optional<SubService> optionalSubService = subServiceRepository.findBySubName(subName);
         if (optionalSubService.isPresent()) return optionalSubService.get();
-        else throw new NotFoundException("SubService not sound");
+        else throw new NotFoundException("SubService not found");
 
     }
 
 
     public void changeSubServiceBasePrice(String subName, Double newPrice) throws InvalidInputException {
 
-        Optional<SubService> optionalSubService = subServiceRepository.findBySubName(subName);
+        SubService savedSubService = getSubServiceByName(subName);
 
-        SubService subService = optionalSubService.orElseThrow(() -> new InvalidInputException("Invalid subService name"));
+        savedSubService.setBasePrice(newPrice);
 
-        subServiceRepository.updateSubServiceBasePrice(subName, newPrice);
+        subServiceRepository.save(savedSubService);
 
     }
 
-    public void changeSubServiceDescription(String subName, String newDescription) throws InvalidInputException {
+    public void changeSubServiceDescription(String subName, String newDescription){
 
-        Optional<SubService> optionalSubService = subServiceRepository.findBySubName(subName);
+         SubService savedSubService = getSubServiceByName(subName);
 
-        SubService subService = optionalSubService.orElseThrow(() -> new InvalidInputException("Invalid subService name"));
+         savedSubService.setDescription(newDescription);
 
-        subServiceRepository.updateSubServiceDescription(subName, newDescription);
+         subServiceRepository.save(savedSubService);
 
     }
 }

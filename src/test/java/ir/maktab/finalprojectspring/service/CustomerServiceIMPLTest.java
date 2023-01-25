@@ -3,12 +3,16 @@ package ir.maktab.finalprojectspring.service;
 import ir.maktab.finalprojectspring.data.model.Customer;
 import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,50 +28,31 @@ class CustomerServiceIMPLTest {
 
     private Customer customer;
 
+    public static Customer[] customerData() {
 
+        Customer[] customers = new Customer[4];
 
-    @Test
+        customers[0] = Customer.builder().name("fahime123").familyName("yarmohammadi").email("fahimea@gmail").password("Fy123456").build();
+        customers[1] = Customer.builder().name("fahime").familyName("yarmoha123mmadi").email("fahimea@gmail").password("Fy123456").build();
+        customers[2] = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime.gmail").password("Fy123456").build();
+        customers[3] = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy1234").build();
+
+        return customers;
+
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "customerData")
     @Order(1)
-    void invalidNameAddCustomerTest() throws InvalidInputException {
+    void invalidinputAddCustomerTest(Customer invalidCustomer) throws InvalidInputException {
 
-        customer = Customer.builder().name("fahime123").familyName("yarmohammadi").email("fahimea@gmail").password("Fy123456").build();
-        Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.addCustomer(customer));
-        assertEquals("Invalid Name(Only Alphabetic Characters Accepted)", exception.getMessage());
+        Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.addCustomer(invalidCustomer));
+        assertEquals("Invalid input", exception.getMessage());
 
     }
 
     @Test
     @Order(2)
-    void invalidFamilyNameAddCustomerTest() throws InvalidInputException {
-
-        customer = Customer.builder().name("fahime").familyName("yarmoha123mmadi").email("fahimea@gmail").password("Fy123456").build();
-        Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.addCustomer(customer));
-        assertEquals("Invalid Name(Only Alphabetic Characters Accepted)", exception.getMessage());
-
-    }
-
-    @Test
-    @Order(3)
-    void invalidEmailAddCustomerTest() throws InvalidInputException {
-
-        customer = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime.gmail").password("Fy123456").build();
-        Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.addCustomer(customer));
-        assertEquals("Invalid Email", exception.getMessage());
-
-    }
-
-    @Test
-    @Order(4)
-    void invalidPasswordAddCustomerTest() throws InvalidInputException {
-
-        customer = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy1234").build();
-        Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.addCustomer(customer));
-        assertEquals("Invalid Password( 8 characters,composition of character and digit)", exception.getMessage());
-
-    }
-
-    @Test
-    @Order(5)
     void addCustomerTest() throws InvalidInputException {
         customer = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").build();
         customerServiceIMPL.addCustomer(customer);
@@ -78,7 +63,7 @@ class CustomerServiceIMPLTest {
     }
 
     @Test
-    @Order(6)
+    @Order(3)
     void repeatCustomerAddCustomerTest() throws InvalidInputException {
 
         customer = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").build();
@@ -89,7 +74,7 @@ class CustomerServiceIMPLTest {
 //changePassword---------------------------------------------------------------------------------------------------------
 
     @Test
-    @Order(7)
+    @Order(4)
     void invalidUserNameChangPasswordTest() {
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.changPassword("fahim@gmail.com", "Fahime12", "Fahime12"));
@@ -98,7 +83,7 @@ class CustomerServiceIMPLTest {
     }
 
     @Test
-    @Order(8)
+    @Order(5)
     void invalidPasswordRepeatChangPasswordTest() {
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.changPassword("fahime@gmail.com", "Fahime12", "Fahime34"));
@@ -107,7 +92,7 @@ class CustomerServiceIMPLTest {
     }
 
     @Test
-    @Order(9)
+    @Order(6)
     void changPasswordTestTest() throws InvalidInputException {
 
         customerServiceIMPL.changPassword("fahime@gmail.com", "Fahime12", "Fahime12");
@@ -118,6 +103,7 @@ class CustomerServiceIMPLTest {
 
     //signIn-------------------------------------------------------------------------------------------------------------
     @Test
+    @Order(7)
     void invalidUsernameSignInTest() {
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.signIn("fahime@gmail.co", "Fahime12"));
@@ -126,6 +112,7 @@ class CustomerServiceIMPLTest {
     }
 
     @Test
+    @Order(8)
     void invalidPasswordSignInTest() {
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.signIn("fahime@gmail.com", "Fahime1"));
@@ -133,9 +120,10 @@ class CustomerServiceIMPLTest {
     }
 
     @Test
+    @Order(9)
     void signInTest() throws InvalidInputException {
 
-        Customer signInCustomer=customerServiceIMPL.signIn("fahime@gmail.com","Fahime12");
+        Customer signInCustomer = customerServiceIMPL.signIn("fahime@gmail.com", "Fahime12");
         assertNotNull(signInCustomer);
 
     }

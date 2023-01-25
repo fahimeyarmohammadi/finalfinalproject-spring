@@ -21,10 +21,11 @@ class BaseServiceServiceIMPLTest {
     @Autowired
     private BaseServiceServiceIMPL baseServiceServiceIMPL;
 
+//addBaseServiceTest------------------------------------------------------------------------------------------------------
 
     @Test
     @Order(1)
-    void addRepeatedBaseServiceTest() throws ObjectExistException {
+    void addRepeatedBaseServiceTest(){
 
         BaseService baseService = BaseService.builder().name("BuildingDecoration").build();
         baseServiceServiceIMPL.addBaseService(baseService);
@@ -38,7 +39,7 @@ class BaseServiceServiceIMPLTest {
 
     @Test
     @Order(2)
-    void addBaseServiceTest() throws ObjectExistException {
+    void addBaseServiceTest(){
 
         BaseService addedBaseService = BaseService.builder().name("BuildingFacilities").build();
 
@@ -48,7 +49,7 @@ class BaseServiceServiceIMPLTest {
 
     }
 
-    //getAllBaseService-------------------------------------------------------------------------------------------------------
+    //getAllBaseServiceTest-------------------------------------------------------------------------------------------------------
 
     @Test
     @Order(3)
@@ -60,7 +61,7 @@ class BaseServiceServiceIMPLTest {
 
     }
 
-//getBaseServiceByName---------------------------------------------------------------------------------------------------------
+//getBaseServiceByNameTest---------------------------------------------------------------------------------------------------------
 
     @Test()
     @Order(4)

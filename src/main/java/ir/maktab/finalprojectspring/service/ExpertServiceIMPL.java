@@ -7,6 +7,7 @@ import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -37,7 +38,14 @@ public class ExpertServiceIMPL implements ExpertService {
         expert.setExpertcondition(ExpertCondition.NEW);
         expert.setUsername(expert.getEmail());
         expert.setExpertImage(Validation.validateImage(imagePath));
-        expertRepository.save(expert);
+
+        try {
+            expertRepository.save(expert);
+        } catch (DataIntegrityViolationException e) {
+            throw new InvalidInputException("Customer already exist with given email:" + expert.getEmail());
+
+        }
+
 
     }
 

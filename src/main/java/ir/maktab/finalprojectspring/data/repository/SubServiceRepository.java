@@ -17,11 +17,4 @@ public interface SubServiceRepository extends JpaRepository<SubService,Long> {
 
     List<SubService> findAllByBaseService_Name(String name);
 
-    @Modifying
-    @Query("update SubService s SET s.basePrice =:basePrice WHERE s.subName =:subName")
-    void updateSubServiceBasePrice(@Param("subName") String subName, @Param("basePrice") Double basePrice);
-
-    @Modifying
-    @Query("update SubService s SET s.description =:description WHERE s.subName =:subName")
-    void updateSubServiceDescription(@Param("subName") String subName, @Param("description") String description);
 }

@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
+@Builder
 
 
 
@@ -24,8 +25,11 @@ public class SubService {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(nullable = false, unique = true)
     String subName;
+
     Double basePrice;
+
     String description;
 
     @ManyToOne
