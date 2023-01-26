@@ -16,18 +16,7 @@ public interface ExpertRepository extends JpaRepository<Expert, Long> {
 
     Optional<Expert> findByUsername(String username);
 
-    @Query(value = "From Expert e where e.expertCondition=:NEW or e.expertCondition=:AWAITINGCONFIRMATION")
+    @Query(value = "From Expert e where e.expertCondition=ir.maktab.finalprojectspring.data.model.enumeration.ExpertCondition.NEW or e.expertCondition=ir.maktab.finalprojectspring.data.model.enumeration.ExpertCondition.AWAITING_CONFIRMATION")
     List<Expert> getAllExpertNotAccepted();
 
-    @Modifying
-    @Query(value="update Expert e set e.expertCondition=:ACCEPTED where e.username=:username" )
-    void acceptExpert(@Param("username") String username);
-
-    @Modifying
-    @Query(value="update Expert e SET e.password =:password WHERE e.username =:username")
-    void updateExpertPassword(@Param("password") String password, @Param("username") String Username);
-
-    @Modifying
-    @Query(value = "update Expert e set e.subServiceList=:subServiceList where e.username=:username")
-    void updateExpertSubServiceList(@Param("subServiceList") List<SubService> subServiceList , @Param("username") String username);
 }

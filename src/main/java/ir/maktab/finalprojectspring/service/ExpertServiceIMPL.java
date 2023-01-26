@@ -63,7 +63,9 @@ public class ExpertServiceIMPL implements ExpertService {
 
         Expert expert = signInExpert.orElseThrow(() -> new InvalidInputException("Invalid Username"));
 
-        expertRepository.updateExpertPassword(newPassword, username);
+        expert.setPassword(newPassword);
+
+        expertRepository.save(expert);
     }
 
     public Expert signIn(String username, String password) throws NotFoundException {
@@ -92,17 +94,18 @@ public class ExpertServiceIMPL implements ExpertService {
     public void acceptExpert(String username) throws NotFoundException {
 
         Expert expert = getByUsername(username);
-        expertRepository.acceptExpert(username);
+        expert.setExpertCondition(ExpertCondition.ACCEPTED);
+        expertRepository.save(expert);
 
     }
 
-    public void addSubServiceToExpertList(String username, String subServiceName) throws NotFoundException {
+    public void addSubServiceToExpertList(String username, String subServiceName){
 
         Expert expert = getByUsername(username);
         SubService subService = subServiceServiceIMPL.getSubServiceByName(subServiceName);
         List<SubService> subServiceList = expert.getSubServiceList();
         subServiceList.add(subService);
-        expertRepository.updateExpertSubServiceList(subServiceList, username);
+        expertRepository.save(expert);
 
     }
 
@@ -115,7 +118,8 @@ public class ExpertServiceIMPL implements ExpertService {
             subServiceList.remove(subService);
         else
             throw new NotFoundException("expert dont have this subService");
-        expertRepository.updateExpertSubServiceList(subServiceList, username);
+
+        expertRepository.save(expert);
 
     }
 

@@ -4,18 +4,22 @@ import ir.maktab.finalprojectspring.data.model.Customer;
 import ir.maktab.finalprojectspring.data.model.Expert;
 import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
+import static ir.maktab.finalprojectspring.data.model.enumeration.ExpertCondition.ACCEPTED;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -29,6 +33,16 @@ class ExpertServiceIMPLTest {
     private ExpertRepository expertRepository;
 
      private Expert expert;
+
+
+    @BeforeAll
+    static void setup(@Autowired DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("ExpertServiceData.sql"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static Expert[] expertData() {
 
@@ -70,12 +84,22 @@ class ExpertServiceIMPLTest {
     @Test
     @Order(3)
     void changPassword() {
-    }
 
+       expertServiceIMPL.changPassword("fahime@gmail.com", "Fahime12", "Fahime12");
+        Expert savedExpert = expertRepository.findByUsername("fahime@gmail.com").get();
+        assertEquals("Fahime12", savedExpert.getPassword());
+
+    }
+//signIn---------------------------------------------------------------------------------------------------------------
     @Test
     @Order(4)
     void signIn() {
+
+        Expert signInExpert = expertServiceIMPL.signIn("fahime@gmail.com", "Fahime12");
+        assertNotNull(signInExpert);
+
     }
+//getByUserName--------------------------------------------------------------------------------------------------------------
 
     @Test
     @Order(5)
@@ -85,28 +109,40 @@ class ExpertServiceIMPLTest {
         assertEquals("fahime",savedExpert.getName());
 
     }
-
+//getExpertNotAccepted----------------------------------------------------------------------------------------------------
     @Test
+    @Order(6)
     void getExpertNotAccepted() {
-    }
 
+        List<Expert>expertList=expertServiceIMPL.getExpertNotAccepted();
+        assertTrue(expertList.size()>0);
+    }
+//acceptExpert------------------------------------------------------------------------
     @Test
+    @Order(7)
     void acceptExpert() {
-    }
+        expertServiceIMPL.acceptExpert("fahime@gmail.com");
+        Expert acceptedExpert=expertServiceIMPL.getByUsername("fahime@gmail.com");
+        assertTrue(acceptedExpert.getExpertCondition().equals(ACCEPTED));
 
+    }
+//addSubServiceToExpertList-----------------------------------------------------------
     @Test
+    @Order(8)
     void addSubServiceToExpertList() {
+        expertServiceIMPL.addSubServiceToExpertList("fahime@gmail.com","kitchen");
+        expertServiceIMPL.addSubServiceToExpertList("fahime@gmail.com","bathroom");
+        Expert savedExpert=expertServiceIMPL.getByUsername("fahime@gmail.com");
+        assertTrue(savedExpert.getSubServiceList().size()>0);
     }
-
+//deleteSubServiceFromExpertList--------------------------------------------------------
     @Test
+    @Order(9)
     void deleteSubServiceFromExpertList() {
+        int listSize=expertServiceIMPL.getByUsername("fahime@gmail.com").getSubServiceList().size();
+        expertServiceIMPL.deleteSubServiceFromExpertList("fahime@gmail.com","kitchen");
+        int afterdeleteListSize=expertServiceIMPL.getByUsername("fahime@gmail.com").getSubServiceList().size();
+        assertTrue(afterdeleteListSize==listSize-1);
     }
 
-    @Test
-    void getAllCustomerOrderInSubService() {
-    }
-
-    @Test
-    void registerOffer() {
-    }
 }
