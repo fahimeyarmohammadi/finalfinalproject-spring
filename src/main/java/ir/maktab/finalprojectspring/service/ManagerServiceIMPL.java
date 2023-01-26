@@ -7,9 +7,12 @@ import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.exception.ObjectExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+
 public class ManagerServiceIMPL implements ManagerService {
 
     private final BaseServiceServiceIMPL baseServiceServiceIMPL;
@@ -43,6 +46,8 @@ public class ManagerServiceIMPL implements ManagerService {
     }
 
     public void deleteExpertFromSubService(String username, String subServiceName) throws InvalidInputException {
+
+        expertServiceIMPL.deleteSubServiceFromExpertList(username, subServiceName);
 
 
     }

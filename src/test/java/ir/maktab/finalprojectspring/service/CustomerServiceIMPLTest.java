@@ -54,6 +54,7 @@ class CustomerServiceIMPLTest {
     @Test
     @Order(2)
     void addCustomerTest() throws InvalidInputException {
+
         customer = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").build();
         customerServiceIMPL.addCustomer(customer);
         Optional<Customer> savedCustomer = customerRepository.findByUsername(customer.getEmail());
@@ -133,13 +134,6 @@ class CustomerServiceIMPLTest {
     void customerGetOrder() {
     }
 
-    @Test
-    void getAllBaseService() {
-    }
-
-    @Test
-    void getAllSubServiceInBaseService() {
-    }
 
     @Test
     void getAllCustomerOrders() {
@@ -153,11 +147,4 @@ class CustomerServiceIMPLTest {
     void selectExpert() {
     }
 
-    @Test
-    void changeCustomerConditionToStarted() {
-    }
-
-    @Test
-    void changeCustomerConditionToDone() {
-    }
 }

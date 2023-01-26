@@ -8,12 +8,16 @@ import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+
 public class CustomerOrderServiceIMPL implements CustomerOrderService{
 
     private final CustomerOrderRepository orderRepository;
@@ -31,12 +35,12 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService{
         if (order.getAddress() == null)
             throw new InvalidInputException("you must have an address");
 
-        order.setOrdercondition(OrderCondition.WAITING_EXPERT_SUGGESTION);
+        order.setOrderCondition(OrderCondition.WAITING_EXPERT_SUGGESTION);
 
         orderRepository.save(order);
     }
 
-    public List<CustomerOrder> getAllCustomerOrderSInSubService(String subName) throws NotFoundException {
+    public List<CustomerOrder> getAllCustomerOrderSInSubService(String subName) {
 
         subServiceServiceIMPL.getSubServiceByName(subName);
 
@@ -44,27 +48,50 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService{
 
     }
 
-    public void changeCustomerOrderConditionToWaitingForExpertSelection(CustomerOrder customerOrder){
+    public CustomerOrder getCustomerOrderById(Long id){
 
-        orderRepository.changeCustomerOrderConditionToWaitingExpertSelection(customerOrder.getId());
-
-    }
-
-    public void changeCustomerOrderConditionToWaitingForExpertComing(CustomerOrder customerOrder){
-
-        orderRepository.changeCustomerOrderConditionToWaitingForExpertComing(customerOrder.getId());
+        Optional<CustomerOrder> optionalCustomerOrder=orderRepository.findById(id);
+       return optionalCustomerOrder.orElseThrow(() -> new NotFoundException("Invalid Username"));
 
     }
 
-    public void changeCustomerOrderConditionToStarted(CustomerOrder customerOrder){
+    public void changeCustomerOrderConditionToWaitingForExpertSelection(Long id){
 
-        orderRepository.changeCustomerOrderConditionToStarted(customerOrder.getId());
+        CustomerOrder savedCustomerOrder=getCustomerOrderById(id);
+
+        savedCustomerOrder.setOrderCondition(OrderCondition.WAITING_EXPERT_SELECTION);
+
+        orderRepository.save(savedCustomerOrder);
 
     }
 
-    public void changeCustomerOrderConditionToDone(CustomerOrder customerOrder){
+    public void changeCustomerOrderConditionToWaitingForExpertComing(Long id){
 
-        orderRepository.changeCustomerOrderConditionToDone(customerOrder.getId());
+        CustomerOrder savedCustomerOrder=getCustomerOrderById(id);
+
+        savedCustomerOrder.setOrderCondition(OrderCondition.WAITING_FOR_EXPERT_COMING);
+
+        orderRepository.save(savedCustomerOrder);
+
+    }
+
+    public void changeCustomerOrderConditionToStarted(Long id){
+
+        CustomerOrder savedCustomerOrder=getCustomerOrderById(id);
+
+        savedCustomerOrder.setOrderCondition(OrderCondition.STARTED);
+
+        orderRepository.save(savedCustomerOrder);
+
+    }
+
+    public void changeCustomerOrderConditionToDone(Long id){
+
+        CustomerOrder savedCustomerOrder=getCustomerOrderById(id);
+
+        savedCustomerOrder.setOrderCondition(OrderCondition.DONE);
+
+        orderRepository.save(savedCustomerOrder);
     }
 
 }

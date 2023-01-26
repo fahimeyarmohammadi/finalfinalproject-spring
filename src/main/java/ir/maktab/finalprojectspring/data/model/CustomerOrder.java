@@ -13,10 +13,11 @@ import java.util.Date;
 @Getter
 @Setter
 @EqualsAndHashCode
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
+@Builder
 
 public class CustomerOrder {
 
@@ -34,7 +35,7 @@ public class CustomerOrder {
     Date preferDate;
 
     @Enumerated(value = EnumType.STRING)
-    OrderCondition ordercondition;
+    OrderCondition orderCondition;
 
     @OneToOne
     SubService subService;
@@ -42,8 +43,7 @@ public class CustomerOrder {
     @Temporal(value = TemporalType.TIMESTAMP)
     Date doneDate;
 
-    @OneToOne(cascade =CascadeType.MERGE)
+    @OneToOne(cascade =CascadeType.PERSIST)
     Address address;
-
 
 }

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
+
 public class Validation {
 
     public static ValidateInterface validate = (s, r, m) -> {
@@ -39,7 +40,7 @@ public class Validation {
 
     }
 
-    public static byte[]validateImage(String imagePath) throws IOException, InvalidInputException {
+    public static byte[]validateImage(String imagePath) throws IOException {
 
         //size validation
         File file = new File(imagePath);
@@ -58,11 +59,13 @@ public class Validation {
             ImageReader reader = imageReaders.next();
             format = reader.getFormatName();
         }
-        if (format.equals("jpg")) {
+        if (!format.equals("JPEG")) {
+            System.out.println(format);
             throw new InvalidInputException("Invalid input");
         }
 
         //reading file
+
         BufferedImage bImage = ImageIO.read(file);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(bImage, "jpg", bos);

@@ -9,6 +9,7 @@ import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+
 public class CustomerServiceIMPL implements CustomerService {
 
     private final CustomerRepository customerRepository;
@@ -110,7 +113,7 @@ public class CustomerServiceIMPL implements CustomerService {
         List<CustomerOrder> orderListWaitingForExpertSelection = new ArrayList<>();
 
         for (CustomerOrder c : orderList) {
-            if (c.getOrdercondition().equals(OrderCondition.WAITING_EXPERT_SELECTION))
+            if (c.getOrderCondition().equals(OrderCondition.WAITING_EXPERT_SELECTION))
                 orderListWaitingForExpertSelection.add(c);
         }
 
@@ -120,19 +123,19 @@ public class CustomerServiceIMPL implements CustomerService {
 
     public void selectExpert(Offers offers) {
 
-        orderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertComing(offers.getCustomerOrder());
+        orderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertComing(offers.getCustomerOrder().getId());
 
     }
 
-    public void changeCustomerConditionToStarted(Offers offers) {
+    public void changeCustomerOrderConditionToStarted(Offers offers) {
 
-        orderServiceIMPL.changeCustomerOrderConditionToStarted(offers.getCustomerOrder());
+        orderServiceIMPL.changeCustomerOrderConditionToStarted(offers.getCustomerOrder().getId());
 
     }
 
-    public void changeCustomerConditionToDone(Offers offers) {
+    public void changeCustomerOrderConditionToDone(Offers offers) {
 
-        orderServiceIMPL.changeCustomerOrderConditionToDone(offers.getCustomerOrder());
+        orderServiceIMPL.changeCustomerOrderConditionToDone(offers.getCustomerOrder().getId());
 
     }
 

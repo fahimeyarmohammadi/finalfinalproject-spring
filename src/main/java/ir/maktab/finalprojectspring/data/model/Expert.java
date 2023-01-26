@@ -5,6 +5,8 @@ import ir.maktab.finalprojectspring.data.model.enumeration.ExpertCondition;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
+@SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
@@ -23,9 +26,9 @@ import java.util.List;
 public class Expert extends Person {
 
     @Enumerated(value = EnumType.STRING)
-    ExpertCondition expertcondition;
+    ExpertCondition expertCondition;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     List<SubService> subServiceList = new ArrayList<>();
 
     @OneToMany
@@ -33,7 +36,10 @@ public class Expert extends Person {
 
     int score;
 
-    @Lob
-    byte[] expertImage;
+   // @Lob
+    @Column(length = 300000)
+    byte[] image;
+
+    String path;
 
 }

@@ -1,14 +1,18 @@
 package ir.maktab.finalprojectspring.service;
 
-import ir.maktab.finalprojectspring.data.model.*;
-import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
+import ir.maktab.finalprojectspring.data.model.CustomerOrder;
+import ir.maktab.finalprojectspring.data.model.Expert;
+import ir.maktab.finalprojectspring.data.model.Offers;
+import ir.maktab.finalprojectspring.data.model.SubService;
 import ir.maktab.finalprojectspring.data.model.enumeration.ExpertCondition;
+import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +21,8 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+
 public class ExpertServiceIMPL implements ExpertService {
 
     private final ExpertRepository expertRepository;
@@ -27,7 +33,7 @@ public class ExpertServiceIMPL implements ExpertService {
 
     private final OffersServiceIMPL offersServiceIMPL;
 
-    public void addExpert(Expert expert, String imagePath) throws InvalidInputException, IOException {
+    public void addExpert(Expert expert) throws InvalidInputException, IOException {
 
         Validation.validateName(expert.getName());
         Validation.validateName(expert.getFamilyName());
@@ -35,9 +41,9 @@ public class ExpertServiceIMPL implements ExpertService {
         Validation.validatePassword(expert.getPassword());
         expert.setCredit((double) 0);
         expert.setScore(0);
-        expert.setExpertcondition(ExpertCondition.NEW);
+        expert.setExpertCondition(ExpertCondition.NEW);
         expert.setUsername(expert.getEmail());
-        expert.setExpertImage(Validation.validateImage(imagePath));
+        expert.setImage(Validation.validateImage(expert.getPath()));
 
         try {
             expertRepository.save(expert);
@@ -45,7 +51,6 @@ public class ExpertServiceIMPL implements ExpertService {
             throw new InvalidInputException("Customer already exist with given email:" + expert.getEmail());
 
         }
-
 
     }
 
@@ -70,12 +75,12 @@ public class ExpertServiceIMPL implements ExpertService {
         return expert;
 
     }
+    
 
     public Expert getByUsername(String username) throws NotFoundException {
 
         Optional<Expert> optionalExpert = expertRepository.findByUsername(username);
-        return optionalExpert.orElseThrow(() -> new NotFoundException("Invalid Username"));
-
+       return optionalExpert.orElseThrow(() -> new NotFoundException("Invalid Username"));
     }
 
     public List<Expert> getExpertNotAccepted() {
@@ -116,11 +121,11 @@ public class ExpertServiceIMPL implements ExpertService {
 
     public List<CustomerOrder> getAllCustomerOrderInSubService(String userName) throws NotFoundException {
 
-        Expert expert=getByUsername(userName);
+        Expert expert = getByUsername(userName);
 
-        List<CustomerOrder>customerOrderList=new ArrayList<>();
+        List<CustomerOrder> customerOrderList = new ArrayList<>();
 
-        for (SubService s:expert.getSubServiceList()) {
+        for (SubService s : expert.getSubServiceList()) {
 
             customerOrderList.addAll(customerOrderServiceIMPL.getAllCustomerOrderSInSubService(s.getSubName()));
 
@@ -133,13 +138,8 @@ public class ExpertServiceIMPL implements ExpertService {
 
         offersServiceIMPL.addOffers(offers);
 
-         customerOrderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertSelection(offers.getCustomerOrder());
+        customerOrderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertSelection(offers.getCustomerOrder().getId());
 
     }
-
-
-
-
-
 
 }

@@ -8,27 +8,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Long> {
 
-    @Query(value = "from CustomerOrder c where c.subService.subName=:subName and (c.ordercondition=:WAITING_EXPERT_SUGGESTION or c.ordercondition=:WAITING_EXPERT_SELECTION)")
+    @Query(value = "from CustomerOrder c where c.subService.subName=?1 and (c.orderCondition=ir.maktab.finalprojectspring.data.model.enumeration.OrderCondition.WAITING_EXPERT_SELECTION or c.orderCondition=ir.maktab.finalprojectspring.data.model.enumeration.OrderCondition.WAITING_EXPERT_SUGGESTION)")
     List<CustomerOrder> getAllCustomerOrderInSubService(@Param("subNam") String subName);
 
-    @Modifying
-    @Query(value = "update CustomerOrder  c set c.ordercondition=:WAITING_EXPERT_SELECTION where c.id=:id")
-    void changeCustomerOrderConditionToWaitingExpertSelection(Long id);
+    @Override
+    Optional<CustomerOrder> findById(Long id);
 
-    @Modifying
-    @Query(value = "update CustomerOrder  c set c.ordercondition=:WAITING_FOR_EXPERT_COMING where c.id=:id")
-    void changeCustomerOrderConditionToWaitingForExpertComing(Long id);
-
-    @Modifying
-    @Query(value = "update CustomerOrder  c set c.ordercondition=:STARTED where c.id=:id")
-    void changeCustomerOrderConditionToStarted(Long id);
-
-    @Modifying
-    @Query(value = "update CustomerOrder  c set c.ordercondition=:DONE where c.id=:id")
-    void changeCustomerOrderConditionToDone(Long id);
 
 }

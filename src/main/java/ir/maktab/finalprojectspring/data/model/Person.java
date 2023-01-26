@@ -1,6 +1,7 @@
 package ir.maktab.finalprojectspring.data.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
@@ -9,7 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
-@Entity
+
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -18,12 +19,11 @@ import java.util.Date;
 @ToString
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PROTECTED)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-
+@MappedSuperclass
 public class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     Double credit;

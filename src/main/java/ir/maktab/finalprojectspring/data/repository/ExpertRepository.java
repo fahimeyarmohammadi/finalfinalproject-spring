@@ -16,11 +16,11 @@ public interface ExpertRepository extends JpaRepository<Expert, Long> {
 
     Optional<Expert> findByUsername(String username);
 
-    @Query(value = "From Expert e where e.expertcondition=:NEW or e.expertcondition=:AWAITINGCONFIRMATION")
+    @Query(value = "From Expert e where e.expertCondition=:NEW or e.expertCondition=:AWAITINGCONFIRMATION")
     List<Expert> getAllExpertNotAccepted();
 
     @Modifying
-    @Query(value="update Expert e set e.expertcondition=:ACCEPTED where e.username=:username" )
+    @Query(value="update Expert e set e.expertCondition=:ACCEPTED where e.username=:username" )
     void acceptExpert(@Param("username") String username);
 
     @Modifying

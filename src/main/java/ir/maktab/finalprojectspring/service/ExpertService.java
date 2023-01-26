@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public interface ExpertService {
 
-    void addExpert(Expert expert, String imagePath) throws InvalidInputException, IOException;
+    void addExpert(Expert expert) throws InvalidInputException, IOException;
 
     void changPassword(String username, String repeatNewPassword, String newPassword) throws InvalidInputException;
 
