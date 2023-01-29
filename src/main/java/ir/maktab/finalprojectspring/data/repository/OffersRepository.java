@@ -11,10 +11,11 @@ import java.util.List;
 @Repository
 public interface OffersRepository extends JpaRepository<Offers,Long> {
 
-    @Query(value = "from Offers o where o.customerOrder.id=:id order by o.offerPrice")
-    List<Offers>offersListOrderedByPrice(@Param("id") Long id);
+    @Query(value = "from Offers o where o.customerOrder.id=?1 ORDER BY o.offerPrice ASC")
+    List<Offers> offersListOrderedByPrice(@Param("id") Long id);
 
-    @Query(value = "from Offers o where o.customerOrder.id=:id order by o.expert.score")
-    List<Offers>offersListOrderedByExpertScore(@Param("id") Long id);
+    @Query(value = "from Offers o where o.customerOrder.id=?1 ORDER BY o.expert.score DESC ")
+    List<Offers> offersListOrderedByExpertScore(@Param("id") Long id);
+
 
 }

@@ -4,7 +4,7 @@ import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.model.Expert;
 import ir.maktab.finalprojectspring.data.model.Offers;
 import ir.maktab.finalprojectspring.data.model.SubService;
-import ir.maktab.finalprojectspring.data.model.enumeration.ExpertCondition;
+import ir.maktab.finalprojectspring.data.enumeration.ExpertCondition;
 import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
@@ -14,6 +14,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class ExpertServiceIMPL implements ExpertService {
 
     private final OffersServiceIMPL offersServiceIMPL;
 
-    public void addExpert(Expert expert) throws InvalidInputException, IOException {
+    public void addExpert(Expert expert) throws IOException {
 
         Validation.validateName(expert.getName());
         Validation.validateName(expert.getFamilyName());
@@ -54,7 +58,7 @@ public class ExpertServiceIMPL implements ExpertService {
 
     }
 
-    public void changPassword(String username, String repeatNewPassword, String newPassword) throws InvalidInputException {
+    public void changPassword(String username, String repeatNewPassword, String newPassword){
 
         if (!newPassword.equals(repeatNewPassword))
             throw new InvalidInputException("password and repeatPassword must be equal");
@@ -68,7 +72,7 @@ public class ExpertServiceIMPL implements ExpertService {
         expertRepository.save(expert);
     }
 
-    public Expert signIn(String username, String password) throws NotFoundException {
+    public Expert signIn(String username, String password){
 
         Optional<Expert> optionalExpert = expertRepository.findByUsername(username);
         Expert expert = optionalExpert.orElseThrow(() -> new NotFoundException("Invalid Username"));
@@ -79,7 +83,7 @@ public class ExpertServiceIMPL implements ExpertService {
     }
     
 
-    public Expert getByUsername(String username) throws NotFoundException {
+    public Expert getByUsername(String username){
 
         Optional<Expert> optionalExpert = expertRepository.findByUsername(username);
        return optionalExpert.orElseThrow(() -> new NotFoundException("Invalid Username"));
@@ -91,7 +95,7 @@ public class ExpertServiceIMPL implements ExpertService {
 
     }
 
-    public void acceptExpert(String username) throws NotFoundException {
+    public void acceptExpert(String username){
 
         Expert expert = getByUsername(username);
         expert.setExpertCondition(ExpertCondition.ACCEPTED);
@@ -109,7 +113,7 @@ public class ExpertServiceIMPL implements ExpertService {
 
     }
 
-    public void deleteSubServiceFromExpertList(String username, String subServiceName) throws NotFoundException {
+    public void deleteSubServiceFromExpertList(String username, String subServiceName){
 
         Expert expert = getByUsername(username);
         SubService subService = subServiceServiceIMPL.getSubServiceByName(subServiceName);
@@ -123,7 +127,7 @@ public class ExpertServiceIMPL implements ExpertService {
 
     }
 
-    public List<CustomerOrder> getAllCustomerOrderInSubService(String userName) throws NotFoundException {
+    public List<CustomerOrder> getAllCustomerOrderInSubService(String userName){
 
         Expert expert = getByUsername(userName);
 
@@ -138,12 +142,23 @@ public class ExpertServiceIMPL implements ExpertService {
         return customerOrderList;
     }
 
-    public void registerOffer(Offers offers) throws InvalidInputException {
+    public void registerOffer(Offers offers){
 
         offersServiceIMPL.addOffers(offers);
 
         customerOrderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertSelection(offers.getCustomerOrder().getId());
 
+    }
+
+    public String convertArrayByteToImage(byte[] byteArray) throws IOException {
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
+
+        BufferedImage newImage = ImageIO.read(inputStream);
+
+        ImageIO.write(newImage, "jpg", new File("outputImage.jpg"));
+
+        return "outputImage.jpg";
     }
 
 }

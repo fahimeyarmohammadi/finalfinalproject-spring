@@ -21,31 +21,31 @@ public class ManagerServiceIMPL implements ManagerService {
 
     private final ExpertServiceIMPL expertServiceIMPL;
 
-    public void addBaseService(BaseService baseService) throws ObjectExistException {
+    public void addBaseService(BaseService baseService){
 
         baseServiceServiceIMPL.addBaseService(baseService);
 
     }
 
-    public void addSubService(SubService subService) throws ObjectExistException, NotFoundException {
+    public void addSubService(SubService subService){
 
         subServiceServiceIMPL.addSubService(subService);
 
     }
 
-    public void acceptExpert(String username) throws NotFoundException {
+    public void acceptExpert(String username){
 
         expertServiceIMPL.acceptExpert(username);
 
     }
 
-    public void addExpertToSubService(String username, String subServiceName) throws NotFoundException {
+    public void addExpertToSubService(String username, String subServiceName){
 
         expertServiceIMPL.addSubServiceToExpertList(username, subServiceName);
 
     }
 
-    public void deleteExpertFromSubService(String username, String subServiceName) throws InvalidInputException {
+    public void deleteExpertFromSubService(String username, String subServiceName) {
 
         expertServiceIMPL.deleteSubServiceFromExpertList(username, subServiceName);
 

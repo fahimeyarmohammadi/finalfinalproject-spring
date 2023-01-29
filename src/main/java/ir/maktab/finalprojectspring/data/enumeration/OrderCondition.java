@@ -1,4 +1,4 @@
-package ir.maktab.finalprojectspring.data.model.enumeration;
+package ir.maktab.finalprojectspring.data.enumeration;
 
 public enum OrderCondition {
 

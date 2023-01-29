@@ -1,7 +1,7 @@
 package ir.maktab.finalprojectspring.data.model;
 
 
-import ir.maktab.finalprojectspring.data.model.enumeration.OrderCondition;
+import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

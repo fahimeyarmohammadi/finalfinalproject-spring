@@ -1,17 +1,23 @@
 package ir.maktab.finalprojectspring.service;
 
-import ir.maktab.finalprojectspring.data.model.Customer;
+import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import ir.maktab.finalprojectspring.util.DateUtil;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +32,28 @@ class CustomerServiceIMPLTest {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+
+    private SubServiceServiceIMPL subServiceServiceIMPL;
+
+    @Autowired
+
+    private CustomerOrderServiceIMPL customerOrderServiceIMPL;
+
+    @Autowired
+
+    private OffersServiceIMPL offersServiceIMPL;
+
     private Customer customer;
+
+    @BeforeAll
+    static void setup(@Autowired DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("CustomerServiceData.sql"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static Customer[] customerData() {
 
@@ -131,20 +158,50 @@ class CustomerServiceIMPLTest {
 
     //customerGetOrder---------------------------------------------------------------------------------------------------------------
     @Test
+    @Order(10)
     void customerGetOrder() {
+
+        Date preferDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 02, 11, 10, 30));
+        SubService subService = subServiceServiceIMPL.getSubServiceByName("kitchen");
+        CustomerOrder customerOrder = CustomerOrder.builder().description("firstOrder").proposedPrice(30e5).address(Address.builder().city("tehran").alley("ghadiyani").street("satarkhan").houseNumber("124").build()).preferDate(preferDate).build();
+        customerOrder.setSubService(subService);
+        customerServiceIMPL.customerGetOrder(customerOrder, "fahime@gmail.com");
+
+        assertTrue(customerRepository.findByUsername("fahime@gmail.com").get().getOrderList().size() > 0);
     }
 
-
+    //getAllCustomerOrders---------------------------------------------------------------------------------------------------------
     @Test
+    @Order(11)
     void getAllCustomerOrders() {
+        List<CustomerOrder> customerOrderList = customerServiceIMPL.getAllCustomerOrders("fahime@gmail.com");
+        assertTrue(customerOrderList.size() > 0);
     }
 
+//getOrdersWaitingExpertSelection---------------------------------------------------------------------------------------------
+
     @Test
+    @Order(12)
     void getOrdersWaitingExpertSelection() {
+        customerOrderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertSelection(1L);
+        List<CustomerOrder> customerOrderList = customerServiceIMPL.getOrdersWaitingExpertSelection("fahime@gmail.com");
+        assertTrue(customerOrderList.size() > 0);
+
     }
 
+    //selectExpert-----------------------------------------------------------------------------------------------------------------
     @Test
+    @Order(13)
     void selectExpert() {
-    }
 
+        Offers offers=offersServiceIMPL.getOffersById(1L);
+        offers.setCustomerOrder(customerOrderServiceIMPL.getCustomerOrderById(1L));
+
+        customerServiceIMPL.selectExpert(offers);
+
+        Offers acceptOffers=offersServiceIMPL.getOffersById(1L);
+
+        assertTrue(acceptOffers.isAcceptOffer());
+
+    }
 }

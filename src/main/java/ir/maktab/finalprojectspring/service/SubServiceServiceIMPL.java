@@ -22,7 +22,7 @@ public class SubServiceServiceIMPL implements SubServiceService {
     private final SubServiceRepository subServiceRepository;
     private final BaseServiceServiceIMPL baseServiceServiceIMPL;
 
-    public void addSubService(SubService subService) throws NotFoundException, ObjectExistException {
+    public void addSubService(SubService subService){
 
         if (baseServiceServiceIMPL.getBaseServiceByName(subService.getBaseService().getName()).isEmpty())
             throw new NotFoundException("this baseService is not exist");
@@ -43,7 +43,7 @@ public class SubServiceServiceIMPL implements SubServiceService {
         return subServiceRepository.findAll();
     }
 
-    public List<SubService> getAllSubServiceInBaseService(String baseServiceName) throws NotFoundException {
+    public List<SubService> getAllSubServiceInBaseService(String baseServiceName) {
 
         if (!baseServiceServiceIMPL.getBaseServiceByName(baseServiceName).isPresent())
 
@@ -53,7 +53,7 @@ public class SubServiceServiceIMPL implements SubServiceService {
 
     }
 
-    public SubService getSubServiceByName(String subName) throws NotFoundException {
+    public SubService getSubServiceByName(String subName){
 
         Optional<SubService> optionalSubService = subServiceRepository.findBySubName(subName);
         if (optionalSubService.isPresent()) return optionalSubService.get();
@@ -62,7 +62,7 @@ public class SubServiceServiceIMPL implements SubServiceService {
     }
 
 
-    public void changeSubServiceBasePrice(String subName, Double newPrice) throws InvalidInputException {
+    public void changeSubServiceBasePrice(String subName, Double newPrice){
 
         SubService savedSubService = getSubServiceByName(subName);
 

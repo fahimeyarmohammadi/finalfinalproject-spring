@@ -2,7 +2,7 @@ package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
-import ir.maktab.finalprojectspring.data.model.enumeration.OrderCondition;
+import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.validation.Validation;
@@ -29,7 +29,9 @@ public class CustomerServiceIMPL implements CustomerService {
 
     private final CustomerOrderServiceIMPL orderServiceIMPL;
 
-    public void addCustomer(Customer customer) throws InvalidInputException {
+    private final OffersServiceIMPL offersServiceIMPL;
+
+    public void addCustomer(Customer customer) {
 
         Validation.validateName(customer.getName());
         Validation.validateName(customer.getFamilyName());
@@ -47,7 +49,7 @@ public class CustomerServiceIMPL implements CustomerService {
 
     }
 
-    public void changPassword(String username, String repeatNewPassword, String newPassword) throws InvalidInputException {
+    public void changPassword(String username, String repeatNewPassword, String newPassword) {
 
         if (!newPassword.equals(repeatNewPassword))
             throw new InvalidInputException("password and repeatPassword must be equal");
@@ -62,7 +64,7 @@ public class CustomerServiceIMPL implements CustomerService {
 
     }
 
-    public Customer signIn(String username, String password) throws InvalidInputException {
+    public Customer signIn(String username, String password) {
 
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
         Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
@@ -73,8 +75,7 @@ public class CustomerServiceIMPL implements CustomerService {
 
     }
 
-
-    public void customerGetOrder(CustomerOrder order, String username) throws InvalidInputException {
+    public void customerGetOrder(CustomerOrder order, String username) {
 
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
         Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
@@ -91,13 +92,13 @@ public class CustomerServiceIMPL implements CustomerService {
         return baseServiceServiceIMPL.getAllBaseService();
     }
 
-    public List<SubService> getAllSubServiceInBaseService(String baseServiceName) throws NotFoundException {
+    public List<SubService> getAllSubServiceInBaseService(String baseServiceName) {
 
         return subServiceServiceIMPL.getAllSubServiceInBaseService(baseServiceName);
 
     }
 
-    public List<CustomerOrder> getAllCustomerOrders(String username) throws NotFoundException {
+    public List<CustomerOrder> getAllCustomerOrders(String username) {
 
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
         Customer customer = signInCustomer.orElseThrow(() -> new NotFoundException("Invalid Username"));
@@ -106,7 +107,7 @@ public class CustomerServiceIMPL implements CustomerService {
 
     }
 
-    public List<CustomerOrder> GetOrdersWaitingExpertSelection(String username) throws NotFoundException {
+    public List<CustomerOrder> getOrdersWaitingExpertSelection(String username) {
 
         List<CustomerOrder> orderList = getAllCustomerOrders(username);
 
@@ -123,7 +124,10 @@ public class CustomerServiceIMPL implements CustomerService {
 
     public void selectExpert(Offers offers) {
 
+        Offers savedOffer =offersServiceIMPL.getOffersById(offers.getId());
         orderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertComing(offers.getCustomerOrder().getId());
+        savedOffer.setAcceptOffer(true);
+        offersServiceIMPL.updateOffers(savedOffer);
 
     }
 

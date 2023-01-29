@@ -9,17 +9,17 @@ import java.util.List;
 
 public interface SubServiceService {
 
-    void addSubService(SubService subService) throws NotFoundException, ObjectExistException;
+    void addSubService(SubService subService);
 
     List<SubService> getAllSubService();
 
-    List<SubService> getAllSubServiceInBaseService(String baseServiceName) throws NotFoundException;
+    List<SubService> getAllSubServiceInBaseService(String baseServiceName);
 
-    SubService getSubServiceByName(String subName) throws NotFoundException;
+    SubService getSubServiceByName(String subName);
 
-    void changeSubServiceBasePrice(String subName, Double newPrice) throws InvalidInputException;
+    void changeSubServiceBasePrice(String subName, Double newPrice);
 
-    void changeSubServiceDescription(String subName, String newDescription) throws InvalidInputException;
+    void changeSubServiceDescription(String subName, String newDescription);
 
 
 }

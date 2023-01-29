@@ -12,10 +12,12 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@ToString
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 
 public class Offers {
 
@@ -42,5 +44,7 @@ public class Offers {
 
     @ManyToOne
     CustomerOrder customerOrder;
+
+    boolean acceptOffer;
 
 }

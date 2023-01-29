@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface BaseServiceService {
 
-    void addBaseService(BaseService baseService) throws ObjectExistException;
+    void addBaseService(BaseService baseService);
 
     List<BaseService> getAllBaseService();
 

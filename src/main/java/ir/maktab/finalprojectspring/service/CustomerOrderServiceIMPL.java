@@ -2,7 +2,7 @@ package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.repository.CustomerOrderRepository;
-import ir.maktab.finalprojectspring.data.model.enumeration.OrderCondition;
+import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.DateUtil;
@@ -24,7 +24,7 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService{
 
     private final SubServiceServiceIMPL subServiceServiceIMPL;
 
-    public void addOrder(CustomerOrder order) throws InvalidInputException {
+    public void addOrder(CustomerOrder order){
 
         if (order.getProposedPrice() < order.getSubService().getBasePrice())
             throw new InvalidInputException("the proposedPrice must greater than subServer basePrice");

@@ -14,12 +14,11 @@ import javax.sql.DataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-import static ir.maktab.finalprojectspring.data.model.enumeration.OrderCondition.*;
+import static ir.maktab.finalprojectspring.data.enumeration.OrderCondition.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest

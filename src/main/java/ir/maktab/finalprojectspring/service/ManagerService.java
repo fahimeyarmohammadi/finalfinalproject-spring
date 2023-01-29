@@ -8,13 +8,13 @@ import ir.maktab.finalprojectspring.exception.ObjectExistException;
 
 public interface ManagerService {
 
-    void addBaseService(BaseService baseService) throws ObjectExistException;
+    void addBaseService(BaseService baseService);
 
-    void addSubService(SubService subService) throws ObjectExistException, NotFoundException;
+    void addSubService(SubService subService);
 
-    void acceptExpert(String username) throws NotFoundException;
+    void acceptExpert(String username);
 
-    void addExpertToSubService(String username, String subServiceName) throws NotFoundException ;
+    void addExpertToSubService(String username, String subServiceName);
 
-    void deleteExpertFromSubService(String username, String subServiceName) throws InvalidInputException;
+    void deleteExpertFromSubService(String username, String subServiceName);
 }

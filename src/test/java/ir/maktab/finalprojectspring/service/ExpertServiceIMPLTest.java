@@ -1,6 +1,5 @@
 package ir.maktab.finalprojectspring.service;
 
-import ir.maktab.finalprojectspring.data.model.Customer;
 import ir.maktab.finalprojectspring.data.model.Expert;
 import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
@@ -19,7 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import static ir.maktab.finalprojectspring.data.model.enumeration.ExpertCondition.ACCEPTED;
+import static ir.maktab.finalprojectspring.data.enumeration.ExpertCondition.ACCEPTED;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -141,8 +140,17 @@ class ExpertServiceIMPLTest {
     void deleteSubServiceFromExpertList() {
         int listSize=expertServiceIMPL.getByUsername("fahime@gmail.com").getSubServiceList().size();
         expertServiceIMPL.deleteSubServiceFromExpertList("fahime@gmail.com","kitchen");
-        int afterdeleteListSize=expertServiceIMPL.getByUsername("fahime@gmail.com").getSubServiceList().size();
-        assertTrue(afterdeleteListSize==listSize-1);
+        int afterDeleteListSize=expertServiceIMPL.getByUsername("fahime@gmail.com").getSubServiceList().size();
+        assertTrue(afterDeleteListSize==listSize-1);
     }
 
+    //convertArrayByteToImage-------------------------------------------------------------------------------
+    @Test
+    @Order(10)
+   void  convertArrayByteToImage() throws IOException {
+
+        Expert savedExpert=expertServiceIMPL.getByUsername("fahime@gmail.com");
+        assertFalse(expertServiceIMPL.convertArrayByteToImage(savedExpert.getImage()).isEmpty());
+
+    }
 }

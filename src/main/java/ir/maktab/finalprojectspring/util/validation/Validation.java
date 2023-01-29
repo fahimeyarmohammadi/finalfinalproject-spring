@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -34,13 +35,13 @@ public class Validation {
 
     public static void validateEmail(String email) throws InvalidInputException {
 
-        validate.accept(email,  "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
+        validate.accept(email, "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                        + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
                 "Invalid input");
 
     }
 
-    public static byte[]validateImage(String imagePath) throws IOException {
+    public static byte[] validateImage(String imagePath) throws IOException {
 
         //size validation
         File file = new File(imagePath);
@@ -74,3 +75,5 @@ public class Validation {
     }
 
 }
+
+

@@ -3,8 +3,21 @@ package ir.maktab.finalprojectspring.service;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 
+import java.util.List;
+
 public interface CustomerOrderService {
 
-    void addOrder(CustomerOrder order) throws InvalidInputException;
+    void addOrder(CustomerOrder order);
 
+    List<CustomerOrder> getAllCustomerOrderSInSubService(String subName);
+
+    CustomerOrder getCustomerOrderById(Long id);
+
+    void changeCustomerOrderConditionToWaitingForExpertSelection(Long id);
+
+    void changeCustomerOrderConditionToWaitingForExpertComing(Long id);
+
+    void changeCustomerOrderConditionToStarted(Long id);
+
+    void changeCustomerOrderConditionToDone(Long id);
 }
