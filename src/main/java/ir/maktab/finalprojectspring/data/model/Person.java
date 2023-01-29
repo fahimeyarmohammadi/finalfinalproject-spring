@@ -1,7 +1,6 @@
 package ir.maktab.finalprojectspring.data.model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;

@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface BaseServiceRepository extends JpaRepository<BaseService, Long> {
+
     Optional<BaseService> findByName(String name);
 }

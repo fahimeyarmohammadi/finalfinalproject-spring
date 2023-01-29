@@ -3,8 +3,6 @@ package ir.maktab.finalprojectspring.service;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.model.Expert;
 import ir.maktab.finalprojectspring.data.model.Offers;
-import ir.maktab.finalprojectspring.exception.InvalidInputException;
-import ir.maktab.finalprojectspring.exception.NotFoundException;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,6 +29,6 @@ public interface ExpertService {
 
     void registerOffer(Offers offers);
 
-    String convertArrayByteToImage(byte[] byteArray) throws IOException;
+    String convertArrayByteToImage(String username) throws IOException;
 
 }

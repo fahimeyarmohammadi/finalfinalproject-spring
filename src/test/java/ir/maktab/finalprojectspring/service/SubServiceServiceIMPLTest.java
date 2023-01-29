@@ -14,10 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 class SubServiceServiceIMPLTest {
 
     @Autowired
     private SubServiceServiceIMPL subServiceServiceIMPL;
+
     @Autowired
     private BaseServiceServiceIMPL baseServiceServiceIMPL;
 
@@ -29,6 +31,7 @@ class SubServiceServiceIMPLTest {
     public static void setUp() {
 
         baseService = BaseService.builder().name("HomeAppliance").build();
+
         subService = SubService.builder().subName("KitchenAppliances").baseService(baseService).basePrice(12e4).description("Kitchen appliances").build();
 
     }
@@ -37,10 +40,12 @@ class SubServiceServiceIMPLTest {
 
     @Test
     @Order(1)
-    void InvalidBaseServiceAddSubServiceTest() {
+    void addSubService_InvalidBaseServiceTest() {
 
         Throwable exception = assertThrows(NotFoundException.class, () -> subServiceServiceIMPL.addSubService(subService));
+
         assertEquals("this baseService is not exist", exception.getMessage());
+
     }
 
     @Test
@@ -48,39 +53,49 @@ class SubServiceServiceIMPLTest {
     void addSubServiceTest() throws ObjectExistException, NotFoundException {
 
         baseServiceServiceIMPL.addBaseService(baseService);
+
         subServiceServiceIMPL.addSubService(subService);
+
         SubService saveSubService = subServiceServiceIMPL.getSubServiceByName("KitchenAppliances");
+
         assertEquals(subService, saveSubService);
 
     }
 
     @Test
     @Order(3)
-    void repeatedSubServiceAddSubService() {
+    void addSubService_repeatedSubServiceTest() {
+
         SubService repeatedSubService = SubService.builder().subName("KitchenAppliances").baseService(baseService).build();
+
         Throwable exception = assertThrows(ObjectExistException.class, () -> subServiceServiceIMPL.addSubService(repeatedSubService));
+
         assertEquals("this subService is exist", exception.getMessage());
 
     }
-
 
     //getAllSubServiceTest-------------------------------------------------------------------------------------------------------
 
     @Test
     @Order(4)
-    void getAllSubService() {
+    void getAllSubServiceTest() {
+
         List<SubService> subServiceList = subServiceServiceIMPL.getAllSubService();
+
         assertTrue(subServiceList.size() > 0);
+
     }
 
 //getAllSubServiceInBaseService------------------------------------------------------------------------------------------
 
     @Test
     @Order(5)
-    void getAllSubServiceInBaseServiceTestInvalidBaseServiceName() {
+    void getAllSubServiceInBaseService_InvalidBaseServiceNameTest() {
 
         Throwable exception = assertThrows(NotFoundException.class, () -> subServiceServiceIMPL.getAllSubServiceInBaseService("Appliances"));
+
         assertEquals("this baseService is not exist", exception.getMessage());
+
     }
 
     @Test
@@ -88,45 +103,58 @@ class SubServiceServiceIMPLTest {
     void getAllSubServiceInBaseServiceTest() {
 
         List<SubService> subServiceList = subServiceServiceIMPL.getAllSubServiceInBaseService("HomeAppliance");
+
         assertTrue(subServiceList.size() > 0);
+
     }
 
     //getSubServiceByName-------------------------------------------------------------------------------------------------------
+
     @Test
     @Order(7)
-    void getSubServiceByNameInvalidSubServiceName() {
+    void getSubServiceByName_InvalidSubServiceNameTest() {
 
         Throwable exception = assertThrows(NotFoundException.class, () -> subServiceServiceIMPL.getSubServiceByName("Appliances"));
+
         assertEquals("SubService not found", exception.getMessage());
+
     }
 
     @Test
     @Order(8)
-    void getSubServiceByName() {
+    void getSubServiceByNameTest() {
+
         SubService savedSubService = subServiceServiceIMPL.getSubServiceByName("KitchenAppliances");
+
         assertEquals(subService, savedSubService);
+
     }
 
 
     //changeSubServiceBasePrice---------------------------------------------------------------------------------------------------
+
     @Test
     @Order(9)
-    void changeSubServiceBasePrice() {
+    void changeSubServiceBasePriceTest() {
 
         subServiceServiceIMPL.changeSubServiceBasePrice("KitchenAppliances", 20e5);
+
         SubService savedSubService = subServiceServiceIMPL.getSubServiceByName("KitchenAppliances");
+
         assertEquals(20e5, savedSubService.getBasePrice());
 
     }
 
-
     //changeSubServiceDescription--------------------------------------------------------------------------------------------------
+
     @Test
     @Order(10)
-    void changeSubServiceDescription() {
+    void changeSubServiceDescriptionTest() {
 
         subServiceServiceIMPL.changeSubServiceDescription("KitchenAppliances", "this is kitchen appliance");
+
         SubService savedSubService = subServiceServiceIMPL.getSubServiceByName("KitchenAppliances");
+
         assertEquals("this is kitchen appliance", savedSubService.getDescription());
 
     }

@@ -11,7 +11,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import javax.sql.DataSource;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -19,7 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 import static ir.maktab.finalprojectspring.data.enumeration.OrderCondition.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -31,8 +31,6 @@ class CustomerOrderServiceIMPLTest {
     @Autowired
     private SubServiceServiceIMPL subServiceServiceIMPL;
 
-    private CustomerOrder savedCustomerOrder;
-
     @BeforeAll
     static void setup(@Autowired DataSource dataSource) {
         try (Connection connection = dataSource.getConnection()) {
@@ -42,88 +40,113 @@ class CustomerOrderServiceIMPLTest {
         }
     }
 
+    //addOrder------------------------------------------------------------------------------------------------------------------
 
     @Test
     @Order(1)
-    void addOrder() {
+    void addOrderTest() {
 
-        Date preferDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 02, 11, 10, 30));
+        Date preferDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 2, 11, 10, 30));
+
         SubService subService = subServiceServiceIMPL.getSubServiceByName("kitchen");
+
         CustomerOrder customerOrder = CustomerOrder.builder().description("firstOrder").proposedPrice(30e5).address(Address.builder().city("tehran").alley("ghadiyani").street("satarkhan").houseNumber("124").build()).preferDate(preferDate).build();
+
         customerOrder.setSubService(subService);
+
         customerOrderServiceIMPL.addOrder(customerOrder);
-        savedCustomerOrder = customerOrderServiceIMPL.getCustomerOrderById(1L);
+
+        CustomerOrder savedCustomerOrder = customerOrderServiceIMPL.getCustomerOrderById(1L);
+
         assertEquals("firstOrder", savedCustomerOrder.getDescription());
 
     }
 
+    //changeCustomerOrderConditionToWaitingForExpertSelection----------------------------------------------------------------
+
     @Test
     @Order(2)
-    void changeCustomerOrderConditionToWaitingForExpertSelection() {
+    void changeCustomerOrderConditionToWaitingForExpertSelectionTest() {
 
         customerOrderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertSelection(1L);
 
         CustomerOrder changedCustomerOrder = customerOrderServiceIMPL.getCustomerOrderById(1L);
 
-        assertTrue(changedCustomerOrder.getOrderCondition().equals(WAITING_EXPERT_SELECTION));
+        assertEquals(changedCustomerOrder.getOrderCondition(), WAITING_EXPERT_SELECTION);
     }
+
+    //changeCustomerOrderConditionToWaitingForExpertComing--------------------------------------------------------------------
 
     @Test
     @Order(3)
-    void changeCustomerOrderConditionToWaitingForExpertComing() {
+    void changeCustomerOrderConditionToWaitingForExpertComingTest() {
 
         customerOrderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertComing(1L);
 
         CustomerOrder changedCustomerOrder = customerOrderServiceIMPL.getCustomerOrderById(1L);
 
-        assertTrue(changedCustomerOrder.getOrderCondition().equals(WAITING_FOR_EXPERT_COMING));
+        assertEquals(changedCustomerOrder.getOrderCondition(), WAITING_FOR_EXPERT_COMING);
     }
+
+    //changeCustomerOrderConditionToStartedTest-------------------------------------------------------------------------
 
     @Test()
     @Order(4)
-    void changeCustomerOrderConditionToStarted() {
+    void changeCustomerOrderConditionToStartedTest() {
 
         customerOrderServiceIMPL.changeCustomerOrderConditionToStarted(1L);
 
         CustomerOrder changedCustomerOrder = customerOrderServiceIMPL.getCustomerOrderById(1L);
 
-        assertTrue(changedCustomerOrder.getOrderCondition().equals(STARTED));
+        assertEquals(changedCustomerOrder.getOrderCondition(), STARTED);
     }
+
+    //changeCustomerOrderConditionToDoneTest------------------------------------------------------------------------------
 
     @Test()
     @Order(5)
-    void changeCustomerOrderConditionToDone() {
+    void changeCustomerOrderConditionToDoneTest() {
 
         customerOrderServiceIMPL.changeCustomerOrderConditionToDone(1L);
 
         CustomerOrder changedCustomerOrder = customerOrderServiceIMPL.getCustomerOrderById(1L);
 
-        assertTrue(changedCustomerOrder.getOrderCondition().equals(DONE));
+        assertEquals(changedCustomerOrder.getOrderCondition(), DONE);
     }
+
+    //getCustomerOrderByIdTest----------------------------------------------------------------------------------------------
 
     @Test
     @Order(6)
-    void getCustomerOrderById(){
+    void getCustomerOrderByIdTest() {
 
         CustomerOrder customerOrderById = customerOrderServiceIMPL.getCustomerOrderById(1L);
+
         assertEquals("firstOrder", customerOrderById.getDescription());
+
     }
+
+    //getAllCustomerOrderSInSubServiceTest--------------------------------------------------------------------------------
 
     @Test
     @Order(7)
-    void getAllCustomerOrderSInSubService() {
+    void getAllCustomerOrderSInSubServiceTest() {
 
-        Date preferDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 02,22 , 10, 30));
+        Date preferDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 2, 22, 10, 30));
+
         SubService subService = subServiceServiceIMPL.getSubServiceByName("kitchen");
+
         CustomerOrder customerOrder = CustomerOrder.builder().description("secondOrder").proposedPrice(30e5).address(Address.builder().city("tehran").alley("ghadiyani").street("satarkhan").houseNumber("10").build()).preferDate(preferDate).build();
+
         customerOrder.setSubService(subService);
+
         customerOrderServiceIMPL.addOrder(customerOrder);
 
-        List<CustomerOrder>customerOrderList=customerOrderServiceIMPL.getAllCustomerOrderSInSubService("kitchen");
+        List<CustomerOrder> customerOrderList = customerOrderServiceIMPL.getAllCustomerOrderSInSubService("kitchen");
 
         System.out.println(customerOrderList);
 
-        assertTrue(customerOrderList.size()>0);
+        assertTrue(customerOrderList.size() > 0);
 
     }
 }

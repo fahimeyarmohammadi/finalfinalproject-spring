@@ -1,7 +1,6 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.BaseService;
-import ir.maktab.finalprojectspring.exception.ObjectExistException;
 
 import java.util.List;
 import java.util.Optional;

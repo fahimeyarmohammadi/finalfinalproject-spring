@@ -16,30 +16,33 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 class BaseServiceServiceIMPLTest {
 
     @Autowired
     private BaseServiceServiceIMPL baseServiceServiceIMPL;
 
-//addBaseServiceTest------------------------------------------------------------------------------------------------------
+//addBaseServiceTest-----------------------------------------------------------------------------------------------------------
 
     @Test
     @Order(1)
-    void addRepeatedBaseServiceTest(){
+    void addBaseServiceTest_RepeatedBaseService() {
 
         BaseService baseService = BaseService.builder().name("BuildingDecoration").build();
+
         baseServiceServiceIMPL.addBaseService(baseService);
 
         BaseService repeatedBaseService = BaseService.builder().name("BuildingDecoration").build();
 
         Throwable exception = assertThrows(ObjectExistException.class, () -> baseServiceServiceIMPL.addBaseService(repeatedBaseService));
+
         assertEquals("This baseService is exist", exception.getMessage());
 
     }
 
     @Test
     @Order(2)
-    void addBaseServiceTest(){
+    void addBaseServiceTest() {
 
         BaseService addedBaseService = BaseService.builder().name("BuildingFacilities").build();
 
@@ -53,11 +56,11 @@ class BaseServiceServiceIMPLTest {
 
     @Test
     @Order(3)
-    void getAllBaseService() {
+    void getAllBaseServiceTest() {
 
         List<BaseService> baseServiceList = baseServiceServiceIMPL.getAllBaseService();
 
-        assertTrue(baseServiceList.size()>0);
+        assertTrue(baseServiceList.size() > 0);
 
     }
 
@@ -65,9 +68,10 @@ class BaseServiceServiceIMPLTest {
 
     @Test()
     @Order(4)
-    void getBaseServiceByName() {
+    void getBaseServiceByNameTest() {
 
         Optional<BaseService> optionalBaseService = baseServiceServiceIMPL.getBaseServiceByName("BuildingFacilities");
+
         assertTrue(optionalBaseService.isPresent());
     }
 }

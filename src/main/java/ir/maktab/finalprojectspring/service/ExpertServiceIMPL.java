@@ -25,7 +25,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 
 public class ExpertServiceIMPL implements ExpertService {
 
@@ -40,18 +39,29 @@ public class ExpertServiceIMPL implements ExpertService {
     public void addExpert(Expert expert) throws IOException {
 
         Validation.validateName(expert.getName());
+
         Validation.validateName(expert.getFamilyName());
+
         Validation.validateEmail(expert.getEmail());
+
         Validation.validatePassword(expert.getPassword());
+
         expert.setCredit((double) 0);
+
         expert.setScore(0);
+
         expert.setExpertCondition(ExpertCondition.NEW);
+
         expert.setUsername(expert.getEmail());
+
         expert.setImage(Validation.validateImage(expert.getPath()));
 
         try {
+
             expertRepository.save(expert);
+
         } catch (DataIntegrityViolationException e) {
+
             throw new InvalidInputException("Customer already exist with given email:" + expert.getEmail());
 
         }
@@ -61,6 +71,7 @@ public class ExpertServiceIMPL implements ExpertService {
     public void changPassword(String username, String repeatNewPassword, String newPassword){
 
         if (!newPassword.equals(repeatNewPassword))
+
             throw new InvalidInputException("password and repeatPassword must be equal");
 
         Optional<Expert> signInExpert = expertRepository.findByUsername(username);
@@ -70,14 +81,19 @@ public class ExpertServiceIMPL implements ExpertService {
         expert.setPassword(newPassword);
 
         expertRepository.save(expert);
+
     }
 
     public Expert signIn(String username, String password){
 
         Optional<Expert> optionalExpert = expertRepository.findByUsername(username);
+
         Expert expert = optionalExpert.orElseThrow(() -> new NotFoundException("Invalid Username"));
+
         if (!expert.getPassword().equals(password))
+
             throw new NotFoundException("the password is not correct");
+
         return expert;
 
     }
@@ -86,7 +102,9 @@ public class ExpertServiceIMPL implements ExpertService {
     public Expert getByUsername(String username){
 
         Optional<Expert> optionalExpert = expertRepository.findByUsername(username);
+
        return optionalExpert.orElseThrow(() -> new NotFoundException("Invalid Username"));
+
     }
 
     public List<Expert> getExpertNotAccepted() {
@@ -98,7 +116,9 @@ public class ExpertServiceIMPL implements ExpertService {
     public void acceptExpert(String username){
 
         Expert expert = getByUsername(username);
+
         expert.setExpertCondition(ExpertCondition.ACCEPTED);
+
         expertRepository.save(expert);
 
     }
@@ -106,27 +126,37 @@ public class ExpertServiceIMPL implements ExpertService {
     public void addSubServiceToExpertList(String username, String subServiceName){
 
         Expert expert = getByUsername(username);
+
         SubService subService = subServiceServiceIMPL.getSubServiceByName(subServiceName);
+
         List<SubService> subServiceList = expert.getSubServiceList();
+
         subServiceList.add(subService);
+
         expertRepository.save(expert);
 
     }
 
+    @Transactional
     public void deleteSubServiceFromExpertList(String username, String subServiceName){
 
         Expert expert = getByUsername(username);
+
         SubService subService = subServiceServiceIMPL.getSubServiceByName(subServiceName);
+
         List<SubService> subServiceList = expert.getSubServiceList();
-        if (subServiceList.contains(subService))
-            subServiceList.remove(subService);
-        else
+
+        if (!subServiceList.contains(subService))
+
             throw new NotFoundException("expert dont have this subService");
+
+        subServiceList.remove(subService);
 
         expertRepository.save(expert);
 
     }
 
+    @Transactional
     public List<CustomerOrder> getAllCustomerOrderInSubService(String userName){
 
         Expert expert = getByUsername(userName);
@@ -142,6 +172,7 @@ public class ExpertServiceIMPL implements ExpertService {
         return customerOrderList;
     }
 
+    @Transactional
     public void registerOffer(Offers offers){
 
         offersServiceIMPL.addOffers(offers);
@@ -150,7 +181,11 @@ public class ExpertServiceIMPL implements ExpertService {
 
     }
 
-    public String convertArrayByteToImage(byte[] byteArray) throws IOException {
+    public String convertArrayByteToImage(String username) throws IOException {
+
+        Expert expert=getByUsername(username);
+
+        byte[] byteArray=expert.getImage();
 
         ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
 

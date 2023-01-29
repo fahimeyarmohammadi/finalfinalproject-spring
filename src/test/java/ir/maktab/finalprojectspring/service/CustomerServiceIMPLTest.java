@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 class CustomerServiceIMPLTest {
 
     @Autowired
@@ -48,11 +49,17 @@ class CustomerServiceIMPLTest {
 
     @BeforeAll
     static void setup(@Autowired DataSource dataSource) {
+
         try (Connection connection = dataSource.getConnection()) {
+
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("CustomerServiceData.sql"));
+
         } catch (SQLException e) {
+
             e.printStackTrace();
+
         }
+
     }
 
     public static Customer[] customerData() {
@@ -60,20 +67,26 @@ class CustomerServiceIMPLTest {
         Customer[] customers = new Customer[4];
 
         customers[0] = Customer.builder().name("fahime123").familyName("yarmohammadi").email("fahimea@gmail").password("Fy123456").build();
+
         customers[1] = Customer.builder().name("fahime").familyName("yarmoha123mmadi").email("fahimea@gmail").password("Fy123456").build();
+
         customers[2] = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime.gmail").password("Fy123456").build();
+
         customers[3] = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy1234").build();
 
         return customers;
 
     }
 
+    //addCustomer----------------------------------------------------------------------------------------------------------
+
     @ParameterizedTest
     @MethodSource(value = "customerData")
     @Order(1)
-    void invalidinputAddCustomerTest(Customer invalidCustomer) throws InvalidInputException {
+    void addCustomer_InvalidInputTest(Customer invalidCustomer){
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.addCustomer(invalidCustomer));
+
         assertEquals("Invalid input", exception.getMessage());
 
     }
@@ -83,19 +96,27 @@ class CustomerServiceIMPLTest {
     void addCustomerTest() throws InvalidInputException {
 
         customer = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").build();
+
         customerServiceIMPL.addCustomer(customer);
+
         Optional<Customer> savedCustomer = customerRepository.findByUsername(customer.getEmail());
+
         Customer saveCustomer = savedCustomer.get();
+
         Customer sCustomer = Customer.builder().name(saveCustomer.getName()).familyName(saveCustomer.getFamilyName()).email(saveCustomer.getEmail()).password(saveCustomer.getPassword()).build();
+
         assertEquals(customer, sCustomer);
+
     }
 
     @Test
     @Order(3)
-    void repeatCustomerAddCustomerTest() throws InvalidInputException {
+    void addCustomer_RepeatCustomerTest() throws InvalidInputException {
 
         customer = Customer.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").build();
+
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.addCustomer(customer));
+
         assertEquals("Customer already exist with given email:" + customer.getEmail(), exception.getMessage());
 
     }
@@ -103,28 +124,32 @@ class CustomerServiceIMPLTest {
 
     @Test
     @Order(4)
-    void invalidUserNameChangPasswordTest() {
+    void changPassword_InvalidUserNameTest() {
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.changPassword("fahim@gmail.com", "Fahime12", "Fahime12"));
+
         assertEquals("Invalid Username", exception.getMessage());
 
     }
 
     @Test
     @Order(5)
-    void invalidPasswordRepeatChangPasswordTest() {
+    void changPassword_InvalidPasswordRepeatTest() {
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.changPassword("fahime@gmail.com", "Fahime12", "Fahime34"));
+
         assertEquals("password and repeatPassword must be equal", exception.getMessage());
 
     }
 
     @Test
     @Order(6)
-    void changPasswordTestTest() throws InvalidInputException {
+    void changPasswordTest() throws InvalidInputException {
 
         customerServiceIMPL.changPassword("fahime@gmail.com", "Fahime12", "Fahime12");
+
         Customer savedCustomer = customerRepository.findByUsername("fahime@gmail.com").get();
+
         assertEquals("Fahime12", savedCustomer.getPassword());
 
     }
@@ -132,18 +157,20 @@ class CustomerServiceIMPLTest {
     //signIn-------------------------------------------------------------------------------------------------------------
     @Test
     @Order(7)
-    void invalidUsernameSignInTest() {
+    void SignIn_InvalidUsernameTest() {
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.signIn("fahime@gmail.co", "Fahime12"));
+
         assertEquals("Invalid Username", exception.getMessage());
 
     }
 
     @Test
     @Order(8)
-    void invalidPasswordSignInTest() {
+    void signIn_InvalidPasswordTest() {
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.signIn("fahime@gmail.com", "Fahime1"));
+
         assertEquals("The password is not correct", exception.getMessage());
     }
 
@@ -152,49 +179,64 @@ class CustomerServiceIMPLTest {
     void signInTest() throws InvalidInputException {
 
         Customer signInCustomer = customerServiceIMPL.signIn("fahime@gmail.com", "Fahime12");
+
         assertNotNull(signInCustomer);
 
     }
 
     //customerGetOrder---------------------------------------------------------------------------------------------------------------
+
     @Test
     @Order(10)
-    void customerGetOrder() {
+    void customerGetOrderTest() {
 
-        Date preferDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 02, 11, 10, 30));
+        Date preferDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 2, 11, 10, 30));
+
         SubService subService = subServiceServiceIMPL.getSubServiceByName("kitchen");
+
         CustomerOrder customerOrder = CustomerOrder.builder().description("firstOrder").proposedPrice(30e5).address(Address.builder().city("tehran").alley("ghadiyani").street("satarkhan").houseNumber("124").build()).preferDate(preferDate).build();
+
         customerOrder.setSubService(subService);
+
         customerServiceIMPL.customerGetOrder(customerOrder, "fahime@gmail.com");
 
         assertTrue(customerRepository.findByUsername("fahime@gmail.com").get().getOrderList().size() > 0);
     }
 
     //getAllCustomerOrders---------------------------------------------------------------------------------------------------------
+
     @Test
     @Order(11)
-    void getAllCustomerOrders() {
+    void getAllCustomerOrdersTest() {
+
         List<CustomerOrder> customerOrderList = customerServiceIMPL.getAllCustomerOrders("fahime@gmail.com");
+
         assertTrue(customerOrderList.size() > 0);
+
     }
 
 //getOrdersWaitingExpertSelection---------------------------------------------------------------------------------------------
 
     @Test
     @Order(12)
-    void getOrdersWaitingExpertSelection() {
+    void getOrdersWaitingExpertSelectionTest() {
+
         customerOrderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertSelection(1L);
+
         List<CustomerOrder> customerOrderList = customerServiceIMPL.getOrdersWaitingExpertSelection("fahime@gmail.com");
+
         assertTrue(customerOrderList.size() > 0);
 
     }
 
     //selectExpert-----------------------------------------------------------------------------------------------------------------
+
     @Test
     @Order(13)
-    void selectExpert() {
+    void selectExpertTest() {
 
         Offers offers=offersServiceIMPL.getOffersById(1L);
+
         offers.setCustomerOrder(customerOrderServiceIMPL.getCustomerOrderById(1L));
 
         customerServiceIMPL.selectExpert(offers);

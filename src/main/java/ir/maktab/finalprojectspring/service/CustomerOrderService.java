@@ -1,7 +1,6 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
-import ir.maktab.finalprojectspring.exception.InvalidInputException;
 
 import java.util.List;
 
@@ -20,4 +19,5 @@ public interface CustomerOrderService {
     void changeCustomerOrderConditionToStarted(Long id);
 
     void changeCustomerOrderConditionToDone(Long id);
+
 }

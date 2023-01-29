@@ -17,7 +17,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 
 public class CustomerServiceIMPL implements CustomerService {
 
@@ -34,15 +33,23 @@ public class CustomerServiceIMPL implements CustomerService {
     public void addCustomer(Customer customer) {
 
         Validation.validateName(customer.getName());
+
         Validation.validateName(customer.getFamilyName());
+
         Validation.validateEmail(customer.getEmail());
+
         Validation.validatePassword(customer.getPassword());
+
         customer.setCredit((double) 0);
+
         customer.setUsername(customer.getEmail());
 
         try {
+
             customerRepository.save(customer);
+
         } catch (DataIntegrityViolationException e) {
+
             throw new InvalidInputException("Customer already exist with given email:" + customer.getEmail());
 
         }
@@ -67,17 +74,22 @@ public class CustomerServiceIMPL implements CustomerService {
     public Customer signIn(String username, String password) {
 
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
+
         Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
 
         if (!customer.getPassword().equals(password))
+
             throw new InvalidInputException("The password is not correct");
+
         return customer;
 
     }
 
+    @Transactional
     public void customerGetOrder(CustomerOrder order, String username) {
 
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
+
         Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
 
         orderServiceIMPL.addOrder(order);
@@ -101,6 +113,7 @@ public class CustomerServiceIMPL implements CustomerService {
     public List<CustomerOrder> getAllCustomerOrders(String username) {
 
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
+
         Customer customer = signInCustomer.orElseThrow(() -> new NotFoundException("Invalid Username"));
 
         return customer.getOrderList();
@@ -114,19 +127,26 @@ public class CustomerServiceIMPL implements CustomerService {
         List<CustomerOrder> orderListWaitingForExpertSelection = new ArrayList<>();
 
         for (CustomerOrder c : orderList) {
+
             if (c.getOrderCondition().equals(OrderCondition.WAITING_EXPERT_SELECTION))
+
                 orderListWaitingForExpertSelection.add(c);
+
         }
 
         return orderListWaitingForExpertSelection;
 
     }
 
+    @Transactional
     public void selectExpert(Offers offers) {
 
         Offers savedOffer =offersServiceIMPL.getOffersById(offers.getId());
+
         orderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertComing(offers.getCustomerOrder().getId());
+
         savedOffer.setAcceptOffer(true);
+
         offersServiceIMPL.updateOffers(savedOffer);
 
     }

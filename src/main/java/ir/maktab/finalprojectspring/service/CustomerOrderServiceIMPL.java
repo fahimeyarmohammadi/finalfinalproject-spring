@@ -16,13 +16,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 
 public class CustomerOrderServiceIMPL implements CustomerOrderService{
 
     private final CustomerOrderRepository orderRepository;
 
     private final SubServiceServiceIMPL subServiceServiceIMPL;
+
 
     public void addOrder(CustomerOrder order){
 
@@ -38,6 +38,7 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService{
         order.setOrderCondition(OrderCondition.WAITING_EXPERT_SUGGESTION);
 
         orderRepository.save(order);
+
     }
 
     public List<CustomerOrder> getAllCustomerOrderSInSubService(String subName) {

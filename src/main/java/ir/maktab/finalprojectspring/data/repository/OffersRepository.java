@@ -9,13 +9,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OffersRepository extends JpaRepository<Offers,Long> {
+public interface OffersRepository extends JpaRepository<Offers, Long> {
 
     @Query(value = "from Offers o where o.customerOrder.id=?1 ORDER BY o.offerPrice ASC")
+
     List<Offers> offersListOrderedByPrice(@Param("id") Long id);
 
     @Query(value = "from Offers o where o.customerOrder.id=?1 ORDER BY o.expert.score DESC ")
-    List<Offers> offersListOrderedByExpertScore(@Param("id") Long id);
 
+    List<Offers> offersListOrderedByExpertScore(@Param("id") Long id);
 
 }

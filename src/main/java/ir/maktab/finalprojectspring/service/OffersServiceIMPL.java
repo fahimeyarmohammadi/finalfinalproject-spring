@@ -7,9 +7,7 @@ import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.DateUtil;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,15 +15,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 
-public class OffersServiceIMPL implements OffersService{
+public class OffersServiceIMPL implements OffersService {
 
     private final OffersRepository offersRepository;
 
-    public  void addOffers(Offers offers){
+    public void addOffers(Offers offers) {
 
-        if(offers.getOfferPrice()<offers.getCustomerOrder().getSubService().getBasePrice()){
+        if (offers.getOfferPrice() < offers.getCustomerOrder().getSubService().getBasePrice()) {
             throw new InvalidInputException("the offers price must be greater than subService Base price");
         }
 
@@ -36,26 +33,27 @@ public class OffersServiceIMPL implements OffersService{
 
     }
 
-    public void updateOffers(Offers offers){
+    public void updateOffers(Offers offers) {
         offersRepository.save(offers);
     }
 
-    public List<Offers> getOffersListOrderedByPrice(CustomerOrder order){
+    public List<Offers> getOffersListOrderedByPrice(CustomerOrder order) {
 
         return offersRepository.offersListOrderedByPrice(order.getId());
 
     }
 
-    public List<Offers> getOffersListOrderedByExpertScore(CustomerOrder order){
+    public List<Offers> getOffersListOrderedByExpertScore(CustomerOrder order) {
 
         return offersRepository.offersListOrderedByExpertScore(order.getId());
 
     }
 
-    public Offers getOffersById(Long id){
+    public Offers getOffersById(Long id) {
 
-        Optional<Offers> optionalOffers=offersRepository.findById(id);
-               return optionalOffers.orElseThrow(() -> new NotFoundException("this offers not found"));
+        Optional<Offers> optionalOffers = offersRepository.findById(id);
+
+        return optionalOffers.orElseThrow(() -> new NotFoundException("this offers not found"));
     }
 
 }

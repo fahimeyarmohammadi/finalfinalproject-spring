@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 class OffersServiceIMPLTest {
 
     @Autowired
@@ -38,35 +39,52 @@ class OffersServiceIMPLTest {
 
     @BeforeAll
     static void setup(@Autowired DataSource dataSource) {
+
         try (Connection connection = dataSource.getConnection()) {
+
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("OffersServiceData.sql"));
+
         } catch (SQLException e) {
+
             e.printStackTrace();
         }
+
     }
+
+
+    //addOffers---------------------------------------------------------------------------------------------------------------
 
     @Test
     @Order(1)
-    void addOffers() {
+    void addOffersTest() {
 
         Expert expert = expertServiceIMPL.getByUsername("fahime@gmail.com");
+
         customerOrder = customerOrderServiceIMPL.getCustomerOrderById(1L);
-        Date startDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 02, 12, 10, 30));
+
+        Date startDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 2, 12, 10, 30));
+
         Offers offers = Offers.builder().offerPrice(32e5).startWork(startDate).build();
+
         offers.setCustomerOrder(customerOrder);
+
         offers.setExpert(expert);
+
         offers.setDuration(Duration.ofHours(3));
+
         offersServiceIMPL.addOffers(offers);
+
         Offers savedOffers = offersServiceIMPL.getOffersById(1L);
 
         assertEquals(32e5, savedOffers.getOfferPrice());
 
     }
 
-    //-------------------------------------------------------------------
+    //getOffersListOrderedByPriceTest-----------------------------------------------------------------------------------------
+
     @Test
     @Order(2)
-    void getOffersListOrderedByPrice() {
+    void getOffersListOrderedByPriceTest() {
 
         customerOrder = customerOrderServiceIMPL.getCustomerOrderById(1L);
 
@@ -76,15 +94,29 @@ class OffersServiceIMPLTest {
 
     }
 
+    //getOffersListOrderedByExpertScoreTest---------------------------------------------------------------------------------
+
     @Test
     @Order(3)
-    void getOffersListOrderedByExpertScore() {
+    void getOffersListOrderedByExpertScoreTest() {
 
         customerOrder = customerOrderServiceIMPL.getCustomerOrderById(1L);
 
         List<Offers> offersList = offersServiceIMPL.getOffersListOrderedByExpertScore(customerOrder);
 
         assertTrue(offersList.get(0).getExpert().getScore()>=offersList.get(1).getExpert().getScore());
+
+    }
+
+    //getOffersByIdTest-----------------------------------------------------------------------------------------------------
+
+    @Test
+    @Order(4)
+    void getOffersByIdTest(){
+
+        Offers offers=offersServiceIMPL.getOffersById(1L);
+
+        assertEquals(32e5,offers.getOfferPrice());
 
     }
 }

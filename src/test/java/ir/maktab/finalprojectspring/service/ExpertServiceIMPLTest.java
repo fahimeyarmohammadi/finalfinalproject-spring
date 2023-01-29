@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 class ExpertServiceIMPLTest {
 
     @Autowired
@@ -31,16 +32,20 @@ class ExpertServiceIMPLTest {
     @Autowired
     private ExpertRepository expertRepository;
 
-     private Expert expert;
-
 
     @BeforeAll
     static void setup(@Autowired DataSource dataSource) {
+
         try (Connection connection = dataSource.getConnection()) {
+
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("ExpertServiceData.sql"));
+
         } catch (SQLException e) {
+
             e.printStackTrace();
+
         }
+
     }
 
     public static Expert[] expertData() {
@@ -48,109 +53,153 @@ class ExpertServiceIMPLTest {
         Expert[] experts = new Expert[6];
 
         experts[0] = Expert.builder().name("fahime123").familyName("yarmohammadi").email("fahimea@gmail").password("Fy123456").path("image/valid.jpg").build();
+
         experts[1] = Expert.builder().name("fahime").familyName("yarmoha123mmadi").email("fahimea@gmail").password("Fy123456").path("image/valid.jpg").build();
+
         experts[2] = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime.gmail").password("Fy123456").path("image/valid.jpg").build();
+
         experts[3] = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy1234").path("image/valid.jpg").build();
-        experts[4] =Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/format.png").build();
-        experts[5] =Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/bigSize.jpg").build();
-        experts[5] =Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/bigSize.jpg").build();
+
+        experts[4] = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/format.png").build();
+
+        experts[5] = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/bigSize.jpg").build();
+
         return experts;
 
     }
 
+    //addExpert---------------------------------------------------------------------------------------------------------------
+
     @ParameterizedTest
     @MethodSource(value = "expertData")
     @Order(1)
+    void addExpert_InvalidInformationTest(Expert invalidExpert) {
 
-    void addExpertInvalidInformationTest(Expert invalidExpert) {
         Throwable exception = assertThrows(InvalidInputException.class, () -> expertServiceIMPL.addExpert(invalidExpert));
+
         assertEquals("Invalid input", exception.getMessage());
+
     }
 
     @Test
     @Order(2)
     void addExpertTest() throws IOException {
 
-        expert = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/valid.jpg").build();
+        Expert expert = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/valid.jpg").build();
+
         expertServiceIMPL.addExpert(expert);
+
         Optional<Expert> savedExpert = expertRepository.findByUsername("fahime@gmail.com");
+
         Expert saveExpert = savedExpert.get();
+
         Expert sExpert = Expert.builder().name(saveExpert.getName()).familyName(saveExpert.getFamilyName()).email(saveExpert.getEmail()).password(saveExpert.getPassword()).path(expert.getPath()).build();
-       assertEquals("fahime",sExpert.getName());
+
+        assertEquals("fahime", sExpert.getName());
 
     }
-//changePassword-----------------------------------------------------------------------------------------------------
+
+    //changePassword-----------------------------------------------------------------------------------------------------
+
     @Test
     @Order(3)
-    void changPassword() {
+    void changPasswordTest() {
 
-       expertServiceIMPL.changPassword("fahime@gmail.com", "Fahime12", "Fahime12");
+        expertServiceIMPL.changPassword("fahime@gmail.com", "Fahime12", "Fahime12");
+
         Expert savedExpert = expertRepository.findByUsername("fahime@gmail.com").get();
+
         assertEquals("Fahime12", savedExpert.getPassword());
 
     }
-//signIn---------------------------------------------------------------------------------------------------------------
+
+    //signIn---------------------------------------------------------------------------------------------------------------
     @Test
     @Order(4)
-    void signIn() {
+    void signInTest() {
 
         Expert signInExpert = expertServiceIMPL.signIn("fahime@gmail.com", "Fahime12");
+
         assertNotNull(signInExpert);
 
     }
+
 //getByUserName--------------------------------------------------------------------------------------------------------------
 
     @Test
     @Order(5)
-    void getByUsername() {
+    void getByUsernameTest() {
 
-        Expert savedExpert=expertServiceIMPL.getByUsername("fahime@gmail.com");
-        assertEquals("fahime",savedExpert.getName());
+        Expert savedExpert = expertServiceIMPL.getByUsername("fahime@gmail.com");
+
+        assertEquals("fahime", savedExpert.getName());
 
     }
-//getExpertNotAccepted----------------------------------------------------------------------------------------------------
+
+    //getExpertNotAccepted----------------------------------------------------------------------------------------------------
+
     @Test
     @Order(6)
-    void getExpertNotAccepted() {
+    void getExpertNotAcceptedTest() {
 
-        List<Expert>expertList=expertServiceIMPL.getExpertNotAccepted();
-        assertTrue(expertList.size()>0);
+        List<Expert> expertList = expertServiceIMPL.getExpertNotAccepted();
+
+        assertTrue(expertList.size() > 0);
     }
-//acceptExpert------------------------------------------------------------------------
+
+    //acceptExpert------------------------------------------------------------------------
+
     @Test
     @Order(7)
-    void acceptExpert() {
+    void acceptExpertTest() {
+
         expertServiceIMPL.acceptExpert("fahime@gmail.com");
-        Expert acceptedExpert=expertServiceIMPL.getByUsername("fahime@gmail.com");
-        assertTrue(acceptedExpert.getExpertCondition().equals(ACCEPTED));
+
+        Expert acceptedExpert = expertServiceIMPL.getByUsername("fahime@gmail.com");
+
+        assertEquals(acceptedExpert.getExpertCondition(), ACCEPTED);
 
     }
-//addSubServiceToExpertList-----------------------------------------------------------
+
+    //addSubServiceToExpertList-----------------------------------------------------------
+
     @Test
     @Order(8)
-    void addSubServiceToExpertList() {
-        expertServiceIMPL.addSubServiceToExpertList("fahime@gmail.com","kitchen");
-        expertServiceIMPL.addSubServiceToExpertList("fahime@gmail.com","bathroom");
-        Expert savedExpert=expertServiceIMPL.getByUsername("fahime@gmail.com");
-        assertTrue(savedExpert.getSubServiceList().size()>0);
+    void addSubServiceToExpertListTest() {
+
+        expertServiceIMPL.addSubServiceToExpertList("fahime@gmail.com", "kitchen");
+
+        expertServiceIMPL.addSubServiceToExpertList("fahime@gmail.com", "bathroom");
+
+        Expert savedExpert = expertServiceIMPL.getByUsername("fahime@gmail.com");
+
+        assertTrue(savedExpert.getSubServiceList().size() > 0);
+
     }
-//deleteSubServiceFromExpertList--------------------------------------------------------
+
+    //deleteSubServiceFromExpertList--------------------------------------------------------
+
     @Test
     @Order(9)
-    void deleteSubServiceFromExpertList() {
-        int listSize=expertServiceIMPL.getByUsername("fahime@gmail.com").getSubServiceList().size();
-        expertServiceIMPL.deleteSubServiceFromExpertList("fahime@gmail.com","kitchen");
-        int afterDeleteListSize=expertServiceIMPL.getByUsername("fahime@gmail.com").getSubServiceList().size();
-        assertTrue(afterDeleteListSize==listSize-1);
+    void deleteSubServiceFromExpertListTest() {
+
+        int listSize = expertServiceIMPL.getByUsername("fahime@gmail.com").getSubServiceList().size();
+
+        expertServiceIMPL.deleteSubServiceFromExpertList("fahime@gmail.com", "kitchen");
+
+        int afterDeleteListSize = expertServiceIMPL.getByUsername("fahime@gmail.com").getSubServiceList().size();
+
+        assertEquals(afterDeleteListSize, listSize - 1);
+
     }
 
     //convertArrayByteToImage-------------------------------------------------------------------------------
+
     @Test
     @Order(10)
-   void  convertArrayByteToImage() throws IOException {
+    void convertArrayByteToImageTest() throws IOException {
 
-        Expert savedExpert=expertServiceIMPL.getByUsername("fahime@gmail.com");
-        assertFalse(expertServiceIMPL.convertArrayByteToImage(savedExpert.getImage()).isEmpty());
+        assertFalse(expertServiceIMPL.convertArrayByteToImage("fahime@gmail.com").isEmpty());
 
     }
 }

@@ -3,7 +3,6 @@ package ir.maktab.finalprojectspring.service;
 import ir.maktab.finalprojectspring.data.model.BaseService;
 import ir.maktab.finalprojectspring.data.repository.BaseServiceRepository;
 import ir.maktab.finalprojectspring.exception.ObjectExistException;
-import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -14,13 +13,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 
-public class BaseServiceServiceIMPL implements BaseServiceService{
+public class BaseServiceServiceIMPL implements BaseServiceService {
 
     private final BaseServiceRepository baseServiceRepository;
 
-    public void addBaseService(BaseService baseService)  {
+    public void addBaseService(BaseService baseService) {
 
         try {
 
@@ -33,11 +31,12 @@ public class BaseServiceServiceIMPL implements BaseServiceService{
         }
 
     }
+
     public List<BaseService> getAllBaseService() {
-        return  baseServiceRepository.findAll();
+        return baseServiceRepository.findAll();
     }
 
-    public Optional<BaseService> getBaseServiceByName(String baseServiceName){
+    public Optional<BaseService> getBaseServiceByName(String baseServiceName) {
 
         return baseServiceRepository.findByName(baseServiceName);
 
