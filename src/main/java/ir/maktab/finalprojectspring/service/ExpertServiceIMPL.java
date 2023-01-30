@@ -161,6 +161,10 @@ public class ExpertServiceIMPL implements ExpertService {
 
         Expert expert = getByUsername(userName);
 
+        if (! expert.getExpertCondition().equals(ExpertCondition.ACCEPTED))
+
+            throw new InvalidInputException("you dont accepted from manager");
+
         List<CustomerOrder> customerOrderList = new ArrayList<>();
 
         for (SubService s : expert.getSubServiceList()) {
@@ -174,6 +178,11 @@ public class ExpertServiceIMPL implements ExpertService {
 
     @Transactional
     public void registerOffer(Offers offers){
+
+        if (! offers.getExpert().getExpertCondition().equals(ExpertCondition.ACCEPTED))
+
+            throw new InvalidInputException("you dont accepted from manager");
+
 
         offersServiceIMPL.addOffers(offers);
 
