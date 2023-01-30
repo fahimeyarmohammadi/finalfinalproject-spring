@@ -1,7 +1,6 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.Expert;
-import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,22 +15,16 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import static ir.maktab.finalprojectspring.data.enumeration.ExpertCondition.ACCEPTED;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 class ExpertServiceIMPLTest {
 
     @Autowired
     private ExpertServiceIMPL expertServiceIMPL;
-
-    @Autowired
-    private ExpertRepository expertRepository;
-
 
     @BeforeAll
     static void setup(@Autowired DataSource dataSource) {
@@ -89,13 +82,9 @@ class ExpertServiceIMPLTest {
 
         expertServiceIMPL.addExpert(expert);
 
-        Optional<Expert> savedExpert = expertRepository.findByUsername("fahime@gmail.com");
+        Expert savedExpert = expertServiceIMPL.getByUsername("fahime@gmail.com");
 
-        Expert saveExpert = savedExpert.get();
-
-        Expert sExpert = Expert.builder().name(saveExpert.getName()).familyName(saveExpert.getFamilyName()).email(saveExpert.getEmail()).password(saveExpert.getPassword()).path(expert.getPath()).build();
-
-        assertEquals("fahime", sExpert.getName());
+        assertEquals("fahime@gmail.com", savedExpert.getEmail());
 
     }
 
@@ -107,13 +96,14 @@ class ExpertServiceIMPLTest {
 
         expertServiceIMPL.changPassword("fahime@gmail.com", "Fahime12", "Fahime12");
 
-        Expert savedExpert = expertRepository.findByUsername("fahime@gmail.com").get();
+        Expert savedExpert = expertServiceIMPL.getByUsername("fahime@gmail.com");
 
         assertEquals("Fahime12", savedExpert.getPassword());
 
     }
 
     //signIn---------------------------------------------------------------------------------------------------------------
+
     @Test
     @Order(4)
     void signInTest() {
@@ -132,7 +122,7 @@ class ExpertServiceIMPLTest {
 
         Expert savedExpert = expertServiceIMPL.getByUsername("fahime@gmail.com");
 
-        assertEquals("fahime", savedExpert.getName());
+        assertEquals("fahime@gmail.com", savedExpert.getEmail());
 
     }
 

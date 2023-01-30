@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 class CustomerOrderServiceIMPLTest {
 
     @Autowired

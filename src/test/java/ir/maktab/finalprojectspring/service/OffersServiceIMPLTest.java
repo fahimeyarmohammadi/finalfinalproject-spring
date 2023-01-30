@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 class OffersServiceIMPLTest {
 
     @Autowired
@@ -90,7 +89,7 @@ class OffersServiceIMPLTest {
 
         List<Offers> offersList = offersServiceIMPL.getOffersListOrderedByPrice(customerOrder);
 
-        assertTrue(offersList.get(0).getOfferPrice()<=offersList.get(1).getOfferPrice());
+        assertTrue(offersList.get(0).getOfferPrice() <= offersList.get(1).getOfferPrice());
 
     }
 
@@ -104,7 +103,7 @@ class OffersServiceIMPLTest {
 
         List<Offers> offersList = offersServiceIMPL.getOffersListOrderedByExpertScore(customerOrder);
 
-        assertTrue(offersList.get(0).getExpert().getScore()>=offersList.get(1).getExpert().getScore());
+        assertTrue(offersList.get(0).getExpert().getScore() >= offersList.get(1).getExpert().getScore());
 
     }
 
@@ -112,11 +111,11 @@ class OffersServiceIMPLTest {
 
     @Test
     @Order(4)
-    void getOffersByIdTest(){
+    void getOffersByIdTest() {
 
-        Offers offers=offersServiceIMPL.getOffersById(1L);
+        Offers offers = offersServiceIMPL.getOffersById(1L);
 
-        assertEquals(32e5,offers.getOfferPrice());
+        assertEquals(32e5, offers.getOfferPrice());
 
     }
 }

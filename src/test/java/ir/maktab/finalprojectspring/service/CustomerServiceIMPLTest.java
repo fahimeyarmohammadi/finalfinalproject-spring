@@ -1,7 +1,6 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.*;
-import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.util.DateUtil;
 import org.junit.jupiter.api.*;
@@ -18,20 +17,16 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 class CustomerServiceIMPLTest {
 
     @Autowired
     private CustomerServiceIMPL customerServiceIMPL;
 
-    @Autowired
-    private CustomerRepository customerRepository;
 
     @Autowired
 
@@ -83,7 +78,7 @@ class CustomerServiceIMPLTest {
     @ParameterizedTest
     @MethodSource(value = "customerData")
     @Order(1)
-    void addCustomer_InvalidInputTest(Customer invalidCustomer){
+    void addCustomer_InvalidInputTest(Customer invalidCustomer) {
 
         Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.addCustomer(invalidCustomer));
 
@@ -99,9 +94,7 @@ class CustomerServiceIMPLTest {
 
         customerServiceIMPL.addCustomer(customer);
 
-        Optional<Customer> savedCustomer = customerRepository.findByUsername(customer.getEmail());
-
-        Customer saveCustomer = savedCustomer.get();
+        Customer saveCustomer = customerServiceIMPL.getByUsername(customer.getEmail());
 
         Customer sCustomer = Customer.builder().name(saveCustomer.getName()).familyName(saveCustomer.getFamilyName()).email(saveCustomer.getEmail()).password(saveCustomer.getPassword()).build();
 
@@ -148,7 +141,7 @@ class CustomerServiceIMPLTest {
 
         customerServiceIMPL.changPassword("fahime@gmail.com", "Fahime12", "Fahime12");
 
-        Customer savedCustomer = customerRepository.findByUsername("fahime@gmail.com").get();
+        Customer savedCustomer = customerServiceIMPL.getByUsername("fahime@gmail.com");
 
         assertEquals("Fahime12", savedCustomer.getPassword());
 
@@ -200,7 +193,7 @@ class CustomerServiceIMPLTest {
 
         customerServiceIMPL.customerGetOrder(customerOrder, "fahime@gmail.com");
 
-        assertTrue(customerRepository.findByUsername("fahime@gmail.com").get().getOrderList().size() > 0);
+        assertTrue(customerServiceIMPL.getByUsername("fahime@gmail.com").getOrderList().size() > 0);
     }
 
     //getAllCustomerOrders---------------------------------------------------------------------------------------------------------
@@ -235,15 +228,26 @@ class CustomerServiceIMPLTest {
     @Order(13)
     void selectExpertTest() {
 
-        Offers offers=offersServiceIMPL.getOffersById(1L);
+        Offers offers = offersServiceIMPL.getOffersById(1L);
 
         offers.setCustomerOrder(customerOrderServiceIMPL.getCustomerOrderById(1L));
 
         customerServiceIMPL.selectExpert(offers);
 
-        Offers acceptOffers=offersServiceIMPL.getOffersById(1L);
+        Offers acceptOffers = offersServiceIMPL.getOffersById(1L);
 
         assertTrue(acceptOffers.isAcceptOffer());
+
+    }
+
+    //getByUsername----------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Order(14)
+    void getByUsername() {
+        Customer savedCustomer = customerServiceIMPL.getByUsername("fahime@gmail.com");
+
+        assertEquals("fahime@gmail.com", savedCustomer.getEmail());
 
     }
 }

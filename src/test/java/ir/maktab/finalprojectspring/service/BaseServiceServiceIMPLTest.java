@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 class BaseServiceServiceIMPLTest {
 
     @Autowired

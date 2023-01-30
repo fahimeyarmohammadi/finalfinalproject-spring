@@ -27,4 +27,6 @@ public interface CustomerService {
     void changeCustomerOrderConditionToStarted(Offers offers);
 
     void changeCustomerOrderConditionToDone(Offers offers);
+
+    Customer getByUsername(String username);
 }

@@ -163,4 +163,11 @@ public class CustomerServiceIMPL implements CustomerService {
 
     }
 
+    public Customer getByUsername(String username) {
+
+        Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
+
+        return signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
+
+    }
 }
