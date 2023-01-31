@@ -1,15 +1,15 @@
 package ir.maktab.finalprojectspring.mapper;
 
 import ir.maktab.finalprojectspring.data.dto.CustomerDto;
+import ir.maktab.finalprojectspring.data.dto.ExpertDto;
 import ir.maktab.finalprojectspring.data.model.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
 @Mapper
-public interface CustomerMapper {
+public interface ExpertMapper {
 
-    CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
+    ExpertMapper INSTANCE = Mappers.getMapper( ExpertMapper.class);
 
-    Customer dtoToModel(CustomerDto expertDto);
+    Customer dtoToModel(ExpertDto expertDto);
 
 }
