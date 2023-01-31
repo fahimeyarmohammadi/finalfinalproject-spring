@@ -46,6 +46,12 @@
             <artifactId>mapstruct</artifactId>
             <version>1.5.3.Final</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok-mapstruct-binding -->
         <dependency>
             <groupId>org.projectlombok</groupId>
