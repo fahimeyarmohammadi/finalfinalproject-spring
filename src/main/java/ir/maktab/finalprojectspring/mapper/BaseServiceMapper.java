@@ -12,4 +12,7 @@ public interface BaseServiceMapper {
 
     BaseService dtoToModel(BaseServiceDto expertDto);
 
+    BaseServiceDto objToDto(BaseService baseService);
+
 }
+

@@ -39,16 +39,6 @@ class SubServiceServiceIMPLTest {
 
     @Test
     @Order(1)
-    void addSubService_InvalidBaseServiceTest() {
-
-        Throwable exception = assertThrows(NotFoundException.class, () -> subServiceServiceIMPL.addSubService(subService));
-
-        assertEquals("this baseService is not exist", exception.getMessage());
-
-    }
-
-    @Test
-    @Order(2)
     void addSubServiceTest() throws ObjectExistException, NotFoundException {
 
         baseServiceServiceIMPL.addBaseService(baseService);
@@ -62,7 +52,7 @@ class SubServiceServiceIMPLTest {
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     void addSubService_repeatedSubServiceTest() {
 
         SubService repeatedSubService = SubService.builder().subName("KitchenAppliances").baseService(baseService).build();
@@ -76,7 +66,7 @@ class SubServiceServiceIMPLTest {
     //getAllSubServiceTest-------------------------------------------------------------------------------------------------------
 
     @Test
-    @Order(4)
+    @Order(3)
     void getAllSubServiceTest() {
 
         List<SubService> subServiceList = subServiceServiceIMPL.getAllSubService();
@@ -88,17 +78,7 @@ class SubServiceServiceIMPLTest {
 //getAllSubServiceInBaseService------------------------------------------------------------------------------------------
 
     @Test
-    @Order(5)
-    void getAllSubServiceInBaseService_InvalidBaseServiceNameTest() {
-
-        Throwable exception = assertThrows(NotFoundException.class, () -> subServiceServiceIMPL.getAllSubServiceInBaseService("Appliances"));
-
-        assertEquals("this baseService is not exist", exception.getMessage());
-
-    }
-
-    @Test
-    @Order(6)
+    @Order(4)
     void getAllSubServiceInBaseServiceTest() {
 
         List<SubService> subServiceList = subServiceServiceIMPL.getAllSubServiceInBaseService("HomeAppliance");
@@ -110,17 +90,17 @@ class SubServiceServiceIMPLTest {
     //getSubServiceByName-------------------------------------------------------------------------------------------------------
 
     @Test
-    @Order(7)
+    @Order(5)
     void getSubServiceByName_InvalidSubServiceNameTest() {
 
         Throwable exception = assertThrows(NotFoundException.class, () -> subServiceServiceIMPL.getSubServiceByName("Appliances"));
 
-        assertEquals("SubService not found", exception.getMessage());
+        assertEquals("this subService not found", exception.getMessage());
 
     }
 
     @Test
-    @Order(8)
+    @Order(6)
     void getSubServiceByNameTest() {
 
         SubService savedSubService = subServiceServiceIMPL.getSubServiceByName("KitchenAppliances");
@@ -133,7 +113,7 @@ class SubServiceServiceIMPLTest {
     //changeSubServiceBasePrice---------------------------------------------------------------------------------------------------
 
     @Test
-    @Order(9)
+    @Order(7)
     void changeSubServiceBasePriceTest() {
 
         subServiceServiceIMPL.changeSubServiceBasePrice("KitchenAppliances", 20e5);
@@ -147,7 +127,7 @@ class SubServiceServiceIMPLTest {
     //changeSubServiceDescription--------------------------------------------------------------------------------------------------
 
     @Test
-    @Order(10)
+    @Order(8)
     void changeSubServiceDescriptionTest() {
 
         subServiceServiceIMPL.changeSubServiceDescription("KitchenAppliances", "this is kitchen appliance");

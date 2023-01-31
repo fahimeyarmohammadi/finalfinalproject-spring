@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -152,6 +153,10 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     public void changeCustomerOrderConditionToStarted(Offers offers) {
+
+        if(new Date().before(offers.getStartWork()))
+
+            throw new InvalidInputException("when you want to change order condition to start must be work started!!");
 
         orderServiceIMPL.changeCustomerOrderConditionToStarted(offers.getCustomerOrder().getId());
 

@@ -11,5 +11,5 @@ public interface BaseServiceService {
 
     List<BaseService> getAllBaseService();
 
-    Optional<BaseService> getBaseServiceByName(String baseServiceName);
+    BaseService getBaseServiceByName(String baseServiceName);
 }

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,7 +47,7 @@ class BaseServiceServiceIMPLTest {
 
         baseServiceServiceIMPL.addBaseService(addedBaseService);
 
-        assertTrue(baseServiceServiceIMPL.getBaseServiceByName("BuildingFacilities").isPresent());
+        assertEquals("BuildingFacilities",baseServiceServiceIMPL.getBaseServiceByName("BuildingFacilities").getName());
 
     }
 
@@ -69,8 +69,8 @@ class BaseServiceServiceIMPLTest {
     @Order(4)
     void getBaseServiceByNameTest() {
 
-        Optional<BaseService> optionalBaseService = baseServiceServiceIMPL.getBaseServiceByName("BuildingFacilities");
+        BaseService baseService = baseServiceServiceIMPL.getBaseServiceByName("BuildingFacilities");
 
-        assertTrue(optionalBaseService.isPresent());
+        assertEquals("BuildingFacilities",baseService.getName());
     }
 }

@@ -1,7 +1,9 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.BaseService;
+import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.repository.BaseServiceRepository;
+import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.exception.ObjectExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -36,9 +38,9 @@ public class BaseServiceServiceIMPL implements BaseServiceService {
         return baseServiceRepository.findAll();
     }
 
-    public Optional<BaseService> getBaseServiceByName(String baseServiceName) {
+    public BaseService getBaseServiceByName(String baseServiceName) {
 
-        return baseServiceRepository.findByName(baseServiceName);
+        return baseServiceRepository.findByName(baseServiceName).orElseThrow(() -> new NotFoundException("Invalid name"));
 
     }
 }

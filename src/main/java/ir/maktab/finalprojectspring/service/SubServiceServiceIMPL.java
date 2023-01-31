@@ -1,5 +1,6 @@
 package ir.maktab.finalprojectspring.service;
 
+import ir.maktab.finalprojectspring.data.model.BaseService;
 import ir.maktab.finalprojectspring.data.model.SubService;
 import ir.maktab.finalprojectspring.data.repository.SubServiceRepository;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
@@ -21,9 +22,7 @@ public class SubServiceServiceIMPL implements SubServiceService {
 
     public void addSubService(SubService subService) {
 
-        if (baseServiceServiceIMPL.getBaseServiceByName(subService.getBaseService().getName()).isEmpty())
-
-            throw new NotFoundException("this baseService is not exist");
+        BaseService baseService=baseServiceServiceIMPL.getBaseServiceByName(subService.getBaseService().getName());
 
         try {
 
@@ -43,9 +42,7 @@ public class SubServiceServiceIMPL implements SubServiceService {
 
     public List<SubService> getAllSubServiceInBaseService(String baseServiceName) {
 
-        if (baseServiceServiceIMPL.getBaseServiceByName(baseServiceName).isEmpty())
-
-            throw new NotFoundException("this baseService is not exist");
+        BaseService baseService=baseServiceServiceIMPL.getBaseServiceByName(baseServiceName);
 
         return subServiceRepository.findAllByBaseService_Name(baseServiceName);
 
