@@ -7,8 +7,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-
-public class CustomerDto {
+public class ExpertDto {
 
     private String name;
 
