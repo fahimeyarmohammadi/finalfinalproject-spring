@@ -17,20 +17,22 @@ import java.util.Date;
 
 public class OffersDto {
 
-    @NotNull
-    Double offerPrice;
+    private Long id;
 
     @NotNull
-    Date startWork;
+    private Double offerPrice;
 
     @NotNull
-    ExpertDto expert;
+    private Date startWork;
 
     @NotNull
-    Duration duration;
+    private ExpertDto expert;
 
     @NotNull
-    CustomerOrderDto customerOrder;
+    private Duration duration;
 
-    boolean acceptOffer;
+    @NotNull
+    private CustomerOrderDto customerOrder;
+
+    private boolean acceptOffer;
 }

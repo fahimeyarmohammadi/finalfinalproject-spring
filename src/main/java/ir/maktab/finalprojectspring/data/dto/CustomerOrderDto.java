@@ -16,6 +16,8 @@ import java.util.Date;
 
 public class CustomerOrderDto {
 
+    private Long id;
+
     @NotNull
     private Double proposedPrice;
 
