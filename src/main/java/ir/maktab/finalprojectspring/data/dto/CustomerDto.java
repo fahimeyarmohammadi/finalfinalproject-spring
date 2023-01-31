@@ -21,13 +21,13 @@ public class CustomerDto {
     @Pattern(regexp = "^[a-z_A-Z]{3,}$")
     private String familyName;
 
-    @Email
+    @NotNull
+    @Email(message = "Invalid email! Please enter valid email")
     private String email;
 
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&#^])[A-Za-z0-9@$!%*?&]{8}$",
             message = "password must :8 char, at least one uppercase, one lowercase, one number and one (!@#$%^&*) ")
     private String password;
-
 
 }

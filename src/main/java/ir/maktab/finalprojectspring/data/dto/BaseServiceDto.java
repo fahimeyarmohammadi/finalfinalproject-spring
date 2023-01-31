@@ -14,7 +14,6 @@ import lombok.*;
 public class BaseServiceDto {
 
     @NotNull
-    @Pattern(regexp = "^[a-z_A-Z]{3,}$")
     private String name;
 
 }
