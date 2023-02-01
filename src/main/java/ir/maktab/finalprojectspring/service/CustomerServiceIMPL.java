@@ -59,8 +59,9 @@ public class CustomerServiceIMPL implements CustomerService {
 
     public void changPassword(String username, String repeatNewPassword, String newPassword) {
 
-        if (!newPassword.equals(repeatNewPassword))
+        if (!(newPassword.equals(repeatNewPassword))) {
             throw new InvalidInputException("password and repeatPassword must be equal");
+        }
 
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
 
