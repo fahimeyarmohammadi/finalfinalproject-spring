@@ -10,7 +10,7 @@ public interface BaseServiceMapper {
 
     BaseServiceMapper INSTANCE = Mappers.getMapper(BaseServiceMapper.class);
 
-    BaseService dtoToModel(BaseServiceDto expertDto);
+    BaseService dtoToModel(BaseServiceDto baseServiceDto);
 
     BaseServiceDto objToDto(BaseService baseService);
 

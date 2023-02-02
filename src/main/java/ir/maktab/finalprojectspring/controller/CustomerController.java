@@ -10,7 +10,9 @@ import ir.maktab.finalprojectspring.mapper.CustomerMapper;
 import ir.maktab.finalprojectspring.mapper.CustomerOrderMapper;
 import ir.maktab.finalprojectspring.mapper.SubServiceMapper;
 import ir.maktab.finalprojectspring.service.CustomerServiceIMPL;
+import ir.maktab.finalprojectspring.service.SubServiceServiceIMPL;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,13 +20,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
+@RequiredArgsConstructor
 public class CustomerController {
 
     private final CustomerServiceIMPL customerServiceIMPL;
 
-    public CustomerController(CustomerServiceIMPL customerServiceIMPL) {
-        this.customerServiceIMPL = customerServiceIMPL;
-    }
+    private final SubServiceServiceIMPL subServiceServiceIMPL;
+
 
     @PostMapping("/register")
     public String register(@Valid @RequestBody CustomerDto customerDto) {
@@ -72,7 +74,7 @@ public class CustomerController {
     }
 
     @GetMapping("/getAllSubServiceInBaseService")
-        public List<SubServiceDto> getAllSubServiceInBaseService(@RequestParam String baseServiceName){
+        public List<SubServiceDto> getAllSubServiceInBaseService(@Valid@RequestParam String baseServiceName){
 
         List<SubService>subServiceList=customerServiceIMPL.getAllSubServiceInBaseService(baseServiceName);
 
@@ -93,6 +95,8 @@ public class CustomerController {
     public String customerGetOrder(@RequestBody CustomerOrderDto customerOrderDto, @RequestParam String username) {
 
         CustomerOrder customerOrder = CustomerOrderMapper.INSTANCE.dtoToModel(customerOrderDto);
+
+        customerOrder.setSubService(subServiceServiceIMPL.getSubServiceByName(customerOrderDto.getSubServiceName()));
 
         customerServiceIMPL.customerGetOrder(customerOrder, username);
 

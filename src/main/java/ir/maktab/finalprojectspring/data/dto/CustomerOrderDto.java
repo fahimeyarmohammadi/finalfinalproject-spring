@@ -30,5 +30,5 @@ public class CustomerOrderDto {
     @NotNull
     private String subServiceName;
 
-    Address address;
+    AddressDto addressDto;
 }
