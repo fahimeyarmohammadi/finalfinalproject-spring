@@ -90,9 +90,7 @@ public class CustomerServiceIMPL implements CustomerService {
     @Transactional
     public void customerGetOrder(CustomerOrder order, String username) {
 
-        Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
-
-        Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
+        Customer customer = getByUsername(username);
 
         orderServiceIMPL.addOrder(order);
 

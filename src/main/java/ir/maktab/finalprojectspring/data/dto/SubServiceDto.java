@@ -15,7 +15,5 @@ public class SubServiceDto {
     @NotNull
     private String subName;
 
-    @NotNull
-    private BaseService baseServiceDto;
 
 }

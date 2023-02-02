@@ -12,4 +12,6 @@ public interface SubServiceMapper {
 
     SubService dtoToModel(SubServiceDto subServiceDto);
 
+    SubServiceDto objToDto(SubService subService);
+
 }

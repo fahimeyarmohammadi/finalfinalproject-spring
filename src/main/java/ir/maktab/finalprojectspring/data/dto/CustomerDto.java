@@ -30,5 +30,4 @@ public class CustomerDto {
             message = "password must :8 char, at least one uppercase, one lowercase and one number")
     private String password;
 
-
 }
