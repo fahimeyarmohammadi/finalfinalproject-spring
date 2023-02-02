@@ -36,7 +36,7 @@ public class ExpertServiceIMPL implements ExpertService {
 
     private final OffersServiceIMPL offersServiceIMPL;
 
-    public void addExpert(Expert expert) throws IOException {
+    public void addExpert(Expert expert) {
 
         Validation.validateName(expert.getName());
 
@@ -54,7 +54,13 @@ public class ExpertServiceIMPL implements ExpertService {
 
         expert.setUsername(expert.getEmail());
 
-        expert.setImage(Validation.validateImage(expert.getPath()));
+        try {
+            expert.setImage(Validation.validateImage(expert.getPath()));
+        } catch (IOException e) {
+
+            throw new InvalidInputException("invalid image file");
+
+        }
 
         try {
 

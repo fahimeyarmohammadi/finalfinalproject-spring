@@ -1,14 +1,8 @@
 package ir.maktab.finalprojectspring.controller;
 
 import ir.maktab.finalprojectspring.data.dto.*;
-import ir.maktab.finalprojectspring.data.model.BaseService;
-import ir.maktab.finalprojectspring.data.model.Customer;
-import ir.maktab.finalprojectspring.data.model.CustomerOrder;
-import ir.maktab.finalprojectspring.data.model.SubService;
-import ir.maktab.finalprojectspring.mapper.BaseServiceMapper;
-import ir.maktab.finalprojectspring.mapper.CustomerMapper;
-import ir.maktab.finalprojectspring.mapper.CustomerOrderMapper;
-import ir.maktab.finalprojectspring.mapper.SubServiceMapper;
+import ir.maktab.finalprojectspring.data.model.*;
+import ir.maktab.finalprojectspring.mapper.*;
 import ir.maktab.finalprojectspring.service.CustomerServiceIMPL;
 import ir.maktab.finalprojectspring.service.SubServiceServiceIMPL;
 import jakarta.validation.Valid;
@@ -92,7 +86,7 @@ public class CustomerController {
 
     @PostMapping("/customerGetOrder")
 
-    public String customerGetOrder(@RequestBody CustomerOrderDto customerOrderDto, @RequestParam String username) {
+    public String customerGetOrder(@Valid@RequestBody CustomerOrderDto customerOrderDto,@Valid @RequestParam String username) {
 
         CustomerOrder customerOrder = CustomerOrderMapper.INSTANCE.dtoToModel(customerOrderDto);
 

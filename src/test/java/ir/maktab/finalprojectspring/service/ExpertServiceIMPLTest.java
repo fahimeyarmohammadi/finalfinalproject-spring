@@ -45,13 +45,13 @@ class ExpertServiceIMPLTest {
 
         Expert[] experts = new Expert[6];
 
-        experts[0] = Expert.builder().name("fahime123").familyName("yarmohammadi").email("fahimea@gmail").password("Fy123456").path("image/valid.jpg").build();
+        experts[0] = Expert.builder().name("fahime123").familyName("yarmohammadi").email("fahimea@gmail").password("Fy123456").path("image/aa.jpg").build();
 
-        experts[1] = Expert.builder().name("fahime").familyName("yarmoha123mmadi").email("fahimea@gmail").password("Fy123456").path("image/valid.jpg").build();
+        experts[1] = Expert.builder().name("fahime").familyName("yarmoha123mmadi").email("fahimea@gmail").password("Fy123456").path("image/aa.jpg").build();
 
-        experts[2] = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime.gmail").password("Fy123456").path("image/valid.jpg").build();
+        experts[2] = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime.gmail").password("Fy123456").path("image/aa.jpg").build();
 
-        experts[3] = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy1234").path("image/valid.jpg").build();
+        experts[3] = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy1234").path("image/aa.jpg").build();
 
         experts[4] = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/format.png").build();
 
@@ -78,7 +78,7 @@ class ExpertServiceIMPLTest {
     @Order(2)
     void addExpertTest() throws IOException {
 
-        Expert expert = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/valid.jpg").build();
+        Expert expert = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/aa.jpg").build();
 
         expertServiceIMPL.addExpert(expert);
 

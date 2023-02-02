@@ -25,8 +25,10 @@ public class ExpertDto {
     private String email;
 
     @NotNull
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&#^])[A-Za-z0-9@$!%*?&]{8}$",
-            message = "password must :8 char, at least one uppercase, one lowercase, one number and one (!@#$%^&*) ")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9]{8}$",
+            message = "password must :8 char, at least one uppercase, one lowercase, and number ")
     private String password;
+
+    private String path;
 
 }
