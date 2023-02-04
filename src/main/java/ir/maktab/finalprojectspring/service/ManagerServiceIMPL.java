@@ -1,10 +1,13 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.model.BaseService;
+import ir.maktab.finalprojectspring.data.model.Expert;
 import ir.maktab.finalprojectspring.data.model.SubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,31 @@ public class ManagerServiceIMPL implements ManagerService {
 
         subServiceServiceIMPL.addSubService(subService);
 
+    }
+
+    public List<BaseService> getAllBaseService() {
+        return baseServiceServiceIMPL.getAllBaseService();
+    }
+
+    public List<SubService> getAllSubServiceInBaseService(String baseServiceName) {
+
+        return subServiceServiceIMPL.getAllSubServiceInBaseService(baseServiceName);
+
+    }
+
+    public void updateSubServiceDescription(String subName, String newDescription){
+
+        subServiceServiceIMPL.changeSubServiceDescription(subName,newDescription);
+    }
+
+    public void updateSubServicePrice(String subName,Double newPrice){
+
+        subServiceServiceIMPL.changeSubServiceBasePrice(subName,newPrice);
+    }
+
+    public List<Expert> getExpertNotAccepted(){
+
+        return expertServiceIMPL.getExpertNotAccepted();
     }
 
     public void acceptExpert(String username) {

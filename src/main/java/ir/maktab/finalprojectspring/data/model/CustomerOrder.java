@@ -43,7 +43,7 @@ public class CustomerOrder {
     @Temporal(value = TemporalType.TIMESTAMP)
     Date doneDate;
 
-    @OneToOne(cascade =CascadeType.PERSIST)
+    @OneToOne(cascade =CascadeType.ALL)
     Address address;
 
 }

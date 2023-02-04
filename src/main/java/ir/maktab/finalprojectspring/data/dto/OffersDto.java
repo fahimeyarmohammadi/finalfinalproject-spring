@@ -23,7 +23,7 @@ public class OffersDto {
     private Double offerPrice;
 
     @NotNull
-    private Date startWork;
+    private String startWork;
 
     @NotNull
     private ExpertDto expert;

@@ -15,5 +15,10 @@ public class SubServiceDto {
     @NotNull
     private String subName;
 
+    @NotNull
+    private Double basePrice;
+
+    @NotNull
+    private String description;
 
 }

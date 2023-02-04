@@ -68,7 +68,7 @@ public class CustomerController {
     }
 
     @GetMapping("/getAllSubServiceInBaseService")
-        public List<SubServiceDto> getAllSubServiceInBaseService(@Valid@RequestParam String baseServiceName){
+        public List<SubServiceDto> getAllSubServiceInBaseService(@RequestParam String baseServiceName){
 
         List<SubService>subServiceList=customerServiceIMPL.getAllSubServiceInBaseService(baseServiceName);
 
@@ -86,11 +86,11 @@ public class CustomerController {
 
     @PostMapping("/customerGetOrder")
 
-    public String customerGetOrder(@Valid@RequestBody CustomerOrderDto customerOrderDto,@Valid @RequestParam String username) {
+    public String customerGetOrder(@Valid@RequestBody CustomerOrderDto customerOrderDto,@RequestParam String username,@RequestParam String subServiceName) {
 
         CustomerOrder customerOrder = CustomerOrderMapper.INSTANCE.dtoToModel(customerOrderDto);
 
-        customerOrder.setSubService(subServiceServiceIMPL.getSubServiceByName(customerOrderDto.getSubServiceName()));
+        customerOrder.setSubService(subServiceServiceIMPL.getSubServiceByName(subServiceName));
 
         customerServiceIMPL.customerGetOrder(customerOrder, username);
 

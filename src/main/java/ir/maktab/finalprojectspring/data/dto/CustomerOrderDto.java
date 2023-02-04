@@ -2,15 +2,11 @@ package ir.maktab.finalprojectspring.data.dto;
 
 import ir.maktab.finalprojectspring.data.model.Address;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-
-import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 
 @Setter
 @Getter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
 
 public class CustomerOrderDto {
 
@@ -21,10 +17,8 @@ public class CustomerOrderDto {
     private String description;
 
     @NotNull
-    private Date preferDate;
+    private String preferDate;
 
-    @NotNull
-    private String subServiceName;
 
     Address address;
 }

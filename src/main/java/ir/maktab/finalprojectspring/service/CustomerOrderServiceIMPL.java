@@ -17,14 +17,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 
-public class CustomerOrderServiceIMPL implements CustomerOrderService{
+public class CustomerOrderServiceIMPL implements CustomerOrderService {
 
     private final CustomerOrderRepository orderRepository;
 
     private final SubServiceServiceIMPL subServiceServiceIMPL;
 
-
-    public void addOrder(CustomerOrder order){
+    @Transactional
+    public void addOrder(CustomerOrder order) {
 
         if (order.getProposedPrice() < order.getSubService().getBasePrice())
             throw new InvalidInputException("the proposedPrice must greater than subServer basePrice");
@@ -49,16 +49,16 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService{
 
     }
 
-    public CustomerOrder getCustomerOrderById(Long id){
+    public CustomerOrder getCustomerOrderById(Long id) {
 
-        Optional<CustomerOrder> optionalCustomerOrder=orderRepository.findById(id);
-       return optionalCustomerOrder.orElseThrow(() -> new NotFoundException("Invalid Username"));
+        Optional<CustomerOrder> optionalCustomerOrder = orderRepository.findById(id);
+        return optionalCustomerOrder.orElseThrow(() -> new NotFoundException("Invalid Username"));
 
     }
 
-    public void changeCustomerOrderConditionToWaitingForExpertSelection(Long id){
+    public void changeCustomerOrderConditionToWaitingForExpertSelection(Long id) {
 
-        CustomerOrder savedCustomerOrder=getCustomerOrderById(id);
+        CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
 
         savedCustomerOrder.setOrderCondition(OrderCondition.WAITING_EXPERT_SELECTION);
 
@@ -66,9 +66,9 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService{
 
     }
 
-    public void changeCustomerOrderConditionToWaitingForExpertComing(Long id){
+    public void changeCustomerOrderConditionToWaitingForExpertComing(Long id) {
 
-        CustomerOrder savedCustomerOrder=getCustomerOrderById(id);
+        CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
 
         savedCustomerOrder.setOrderCondition(OrderCondition.WAITING_FOR_EXPERT_COMING);
 
@@ -76,9 +76,9 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService{
 
     }
 
-    public void changeCustomerOrderConditionToStarted(Long id){
+    public void changeCustomerOrderConditionToStarted(Long id) {
 
-        CustomerOrder savedCustomerOrder=getCustomerOrderById(id);
+        CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
 
         savedCustomerOrder.setOrderCondition(OrderCondition.STARTED);
 
@@ -86,9 +86,9 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService{
 
     }
 
-    public void changeCustomerOrderConditionToDone(Long id){
+    public void changeCustomerOrderConditionToDone(Long id) {
 
-        CustomerOrder savedCustomerOrder=getCustomerOrderById(id);
+        CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
 
         savedCustomerOrder.setOrderCondition(OrderCondition.DONE);
 

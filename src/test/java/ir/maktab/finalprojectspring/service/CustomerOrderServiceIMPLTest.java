@@ -45,7 +45,7 @@ class CustomerOrderServiceIMPLTest {
     @Order(1)
     void addOrderTest() {
 
-        Date preferDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 2, 11, 10, 30));
+        Date preferDate = DateUtil.localDateTimeToDate(LocalDateTime.of(2023, 3, 25, 10, 30,00));
 
         SubService subService = subServiceServiceIMPL.getSubServiceByName("kitchen");
 
