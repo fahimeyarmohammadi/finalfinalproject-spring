@@ -29,4 +29,10 @@ public interface CustomerService {
     void changeCustomerOrderConditionToDone(Offers offers);
 
     Customer getByUsername(String username);
+
+
+   void creditPayment(String customerUsername,Long customerOrderId);
+
+   void onlinePayment(CardInformation cardInformation);
+
 }

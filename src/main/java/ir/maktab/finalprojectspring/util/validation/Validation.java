@@ -20,20 +20,20 @@ public class Validation {
             throw new InvalidInputException(m);
     };
 
-    public static void validateName(String name) throws InvalidInputException {
+    public static void validateName(String name){
 
         validate.accept(name, "^[a-zA-Z ]{2,}", "Invalid input");
 
     }
 
-    public static void validatePassword(String pass) throws InvalidInputException {
+    public static void validatePassword(String pass){
 
         validate.accept(pass, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8}$",
                 "Invalid input");
 
     }
 
-    public static void validateEmail(String email) throws InvalidInputException {
+    public static void validateEmail(String email){
 
         validate.accept(email, "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                         + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
@@ -74,6 +74,17 @@ public class Validation {
         return bos.toByteArray();
     }
 
+    public static void validateCardNumber(String cardNumber){
+
+        validate.accept(cardNumber,"^[0-9]{16}$","Invalid input");
+
+    }
+
+    public static void validateCvv2(String cvv2){
+
+        validate.accept(cvv2,"^[0-9]{3,4}$","Invalid input");
+
+    }
 }
 
 

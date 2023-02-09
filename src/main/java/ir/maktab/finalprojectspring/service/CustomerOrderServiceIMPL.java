@@ -95,4 +95,14 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
         orderRepository.save(savedCustomerOrder);
     }
 
+    public void changeCustomerOrderConditionToPaid(Long id){
+
+        CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
+
+        savedCustomerOrder.setOrderCondition(OrderCondition.PAID);
+
+        orderRepository.save(savedCustomerOrder);
+
+    }
+
 }

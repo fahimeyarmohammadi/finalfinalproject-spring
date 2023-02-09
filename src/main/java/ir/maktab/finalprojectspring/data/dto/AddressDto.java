@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 
 public class AddressDto {
+
     @NotNull
     private String city;
     @NotNull

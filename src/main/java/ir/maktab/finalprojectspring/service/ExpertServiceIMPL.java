@@ -1,13 +1,11 @@
 package ir.maktab.finalprojectspring.service;
 
-import ir.maktab.finalprojectspring.data.model.CustomerOrder;
-import ir.maktab.finalprojectspring.data.model.Expert;
-import ir.maktab.finalprojectspring.data.model.Offers;
-import ir.maktab.finalprojectspring.data.model.SubService;
+import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.enumeration.ExpertCondition;
 import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
+import ir.maktab.finalprojectspring.util.DateUtil;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +35,8 @@ public class ExpertServiceIMPL implements ExpertService {
     private final CustomerOrderServiceIMPL customerOrderServiceIMPL;
 
     private final OffersServiceIMPL offersServiceIMPL;
+
+    private final ReviewServiceIMPL reviewServiceIMPL;
 
     public void addExpert(Expert expert) {
 
@@ -210,5 +212,75 @@ public class ExpertServiceIMPL implements ExpertService {
 
         return "outputImage.jpg";
     }
+
+    public void minusExpertScore(Offers offers){
+
+        if(DateUtil.dateToLocalDateTime(offers.getStartWork()).plus(offers.getDuration()).isBefore(LocalDateTime.now())){
+
+            long lateTime= Duration.between(DateUtil.dateToLocalDateTime(offers.getStartWork()).plus(offers.getDuration()),LocalDateTime.now()).getSeconds();
+
+            int lateTimeHours= (int) (lateTime/3600);
+
+            Expert expert=offers.getExpert();
+
+            int newScore=expert.getScore()-lateTimeHours;
+
+
+            expert.setScore(newScore);
+
+            expertRepository.save(expert);
+
+            inActiveExpert(expert);
+        }
+    }
+
+    public void inActiveExpert(Expert expert){
+
+        if(expert.getScore()<0)
+
+            expert.setExpertCondition(ExpertCondition.INACTIVE);
+
+        expertRepository.save(expert);
+
+    }
+
+    public void increaseExpertCredit(Offers offers){
+
+        Expert expert=offers.getExpert();
+
+        Double newCredit=expert.getCredit()+(offers.getOfferPrice()*0.70);
+
+        expert.setCredit(newCredit);
+
+        expertRepository.save(expert);
+
+    }
+
+    public int expertGetOffersScore(Long offersId){
+
+        Review review=reviewServiceIMPL.getOffersScore(offersId);
+
+        return review.getScore();
+
+    }
+
+    public void addReviewToExpertReviewList(Review review){
+
+        Expert expert=review.getOffers().getExpert();
+
+        List<Review>reviewList = expert.getReviewList();
+
+        reviewList.add(review);
+
+        int score=expert.getScore()+review.getScore();
+
+        expert.setScore(score);
+
+        expert.setReviewList(reviewList);
+
+        expertRepository.save(expert);
+
+    }
+
 
 }

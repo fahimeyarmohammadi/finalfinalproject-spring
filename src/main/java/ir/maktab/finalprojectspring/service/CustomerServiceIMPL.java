@@ -5,12 +5,15 @@ import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
+import ir.maktab.finalprojectspring.util.DateUtil;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +21,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-
 public class CustomerServiceIMPL implements CustomerService {
 
     private final CustomerRepository customerRepository;
@@ -30,6 +32,10 @@ public class CustomerServiceIMPL implements CustomerService {
     private final CustomerOrderServiceIMPL orderServiceIMPL;
 
     private final OffersServiceIMPL offersServiceIMPL;
+
+    private final ExpertServiceIMPL expertServiceIMPL;
+
+    private final ReviewServiceIMPL reviewServiceIMPL;
 
     public void addCustomer(Customer customer) {
 
@@ -141,7 +147,7 @@ public class CustomerServiceIMPL implements CustomerService {
     @Transactional
     public void selectExpert(Offers offers) {
 
-        Offers savedOffer =offersServiceIMPL.getOffersById(offers.getId());
+        Offers savedOffer = offersServiceIMPL.getOffersById(offers.getId());
 
         orderServiceIMPL.changeCustomerOrderConditionToWaitingForExpertComing(offers.getCustomerOrder().getId());
 
@@ -153,7 +159,7 @@ public class CustomerServiceIMPL implements CustomerService {
 
     public void changeCustomerOrderConditionToStarted(Offers offers) {
 
-        if(new Date().before(offers.getStartWork()))
+        if (new Date().before(offers.getStartWork()))
 
             throw new InvalidInputException("when you want to change order condition to start must be work started!!");
 
@@ -172,6 +178,59 @@ public class CustomerServiceIMPL implements CustomerService {
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
 
         return signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
+
+    }
+
+
+    @Transactional
+    public void creditPayment(String customerUsername,Long customerOrderId) {
+
+        Offers offers = offersServiceIMPL.getOffersByCustomerOrderIdAndOffersCondition(customerOrderId);
+
+        Customer customer = getByUsername(customerUsername);
+
+        if (customer.getCredit() < offers.getOfferPrice())
+
+            throw new InvalidInputException("your credit not enough");
+
+        customer.setCredit(customer.getCredit() - offers.getOfferPrice());
+
+        customerRepository.save(customer);
+
+        orderServiceIMPL.changeCustomerOrderConditionToPaid(customerOrderId);
+
+        expertServiceIMPL.minusExpertScore(offers);
+
+        expertServiceIMPL.increaseExpertCredit(offers);
+
+    }
+
+    @Transactional
+    public void onlinePayment(CardInformation cardInformation) {
+
+        Offers offers = offersServiceIMPL.getOffersByCustomerOrderIdAndOffersCondition(Long.valueOf(cardInformation.getCustomerOrderId()));
+
+        Validation.validateCardNumber(cardInformation.getCardNumber());
+
+        Validation.validateCvv2(cardInformation.getCvv2());
+
+        orderServiceIMPL.changeCustomerOrderConditionToPaid(Long.valueOf(cardInformation.getCustomerOrderId()));
+
+        expertServiceIMPL.minusExpertScore(offers);
+
+        expertServiceIMPL.increaseExpertCredit(offers);
+
+    }
+
+    public void customerRegisterAReview(Review review){
+
+        if (! review.getCustomerOrder().getOrderCondition().equals(OrderCondition.DONE))
+
+            throw new InvalidInputException("you must after done work get review!!");
+
+        reviewServiceIMPL.addReview(review);
+
+        expertServiceIMPL.addReviewToExpertReviewList(review);
 
     }
 }

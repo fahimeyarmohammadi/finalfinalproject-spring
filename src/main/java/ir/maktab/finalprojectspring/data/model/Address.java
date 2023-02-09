@@ -1,10 +1,7 @@
 package ir.maktab.finalprojectspring.data.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -28,5 +25,6 @@ public class Address {
     private String street;
     private String alley;
     private String houseNumber;
+
 
 }

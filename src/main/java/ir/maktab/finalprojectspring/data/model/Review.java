@@ -25,4 +25,9 @@ public class Review {
 
     String comment;
 
+    @OneToOne
+    CustomerOrder customerOrder;
+
+    @OneToOne
+    Offers offers;
 }

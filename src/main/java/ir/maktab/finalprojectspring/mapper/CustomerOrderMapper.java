@@ -14,4 +14,6 @@ public interface CustomerOrderMapper {
     @Mapping(source = "preferDate", target = "preferDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     CustomerOrder dtoToModel(CustomerOrderDto customerOrderDto);
 
+    @Mapping(source = "address", target = "addressDto")
+    CustomerOrderDto objToDto(CustomerOrder customerOrder);
 }

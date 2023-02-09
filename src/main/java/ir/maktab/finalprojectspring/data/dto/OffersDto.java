@@ -3,6 +3,7 @@ package ir.maktab.finalprojectspring.data.dto;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.model.Expert;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -26,13 +27,13 @@ public class OffersDto {
     private String startWork;
 
     @NotNull
-    private ExpertDto expert;
+    private String duration;
 
     @NotNull
-    private Duration duration;
+    private Long customerOrderId;
 
     @NotNull
-    private CustomerOrderDto customerOrder;
+    @Email(message = "Invalid email! Please enter valid email")
+    private String expertUsername;
 
-    private boolean acceptOffer;
 }

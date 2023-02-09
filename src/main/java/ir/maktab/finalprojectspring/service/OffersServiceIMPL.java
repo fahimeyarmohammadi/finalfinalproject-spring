@@ -34,6 +34,7 @@ public class OffersServiceIMPL implements OffersService {
     }
 
     public void updateOffers(Offers offers) {
+
         offersRepository.save(offers);
     }
 
@@ -54,6 +55,11 @@ public class OffersServiceIMPL implements OffersService {
         Optional<Offers> optionalOffers = offersRepository.findById(id);
 
         return optionalOffers.orElseThrow(() -> new NotFoundException("this offers not found"));
+    }
+
+    public Offers getOffersByCustomerOrderIdAndOffersCondition(Long customerOrderId) {
+
+        return offersRepository.getOffersByCustomerOrderIdAndOffersCondition(customerOrderId).orElseThrow(() -> new NotFoundException("this offers not found"));
     }
 
 }

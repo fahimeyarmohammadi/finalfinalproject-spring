@@ -6,7 +6,9 @@ public enum ExpertCondition {
 
     AWAITING_CONFIRMATION,
 
-    ACCEPTED
+    ACCEPTED,
+
+    INACTIVE
     
 }
 

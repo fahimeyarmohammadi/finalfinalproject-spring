@@ -16,4 +16,6 @@ public interface OffersService {
     List<Offers> getOffersListOrderedByExpertScore(CustomerOrder customerOrder);
 
     Offers getOffersById(Long id);
+
+    Offers getOffersByCustomerOrderIdAndOffersCondition(Long customerOrderId);
 }
