@@ -1,4 +1,4 @@
-package ir.maktab.finalprojectspring.data.model;
+package ir.maktab.finalprojectspring.data.dto;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;

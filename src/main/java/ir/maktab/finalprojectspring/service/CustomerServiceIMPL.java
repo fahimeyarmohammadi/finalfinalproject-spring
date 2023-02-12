@@ -1,19 +1,17 @@
 package ir.maktab.finalprojectspring.service;
 
+import ir.maktab.finalprojectspring.data.dto.CardInformation;
 import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
-import ir.maktab.finalprojectspring.util.DateUtil;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
