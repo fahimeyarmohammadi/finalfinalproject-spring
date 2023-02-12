@@ -2,10 +2,9 @@ package ir.maktab.finalprojectspring.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -27,4 +26,11 @@ public class GlobalExceptionHandler {
         CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<?> BindExceptionHandler(BindException e) {
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        return new ResponseEntity<>(exception, exception.httpStatus());
+    }
+
 }
