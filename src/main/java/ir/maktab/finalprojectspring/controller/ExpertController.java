@@ -61,16 +61,7 @@ public class ExpertController {
     public List<CustomerOrderDto> getAllCustomerOrderInSubService(@RequestParam String username){
 
         List<CustomerOrder> customerOrderList=expertServiceIMPL.getAllCustomerOrderInSubService(username);
-
-        List<CustomerOrderDto> customerOrderDtoList=new ArrayList<>();
-
-        for (CustomerOrder c:customerOrderList) {
-
-            customerOrderDtoList.add(CustomerOrderMapper.INSTANCE.objToDto(c));
-
-        }
-
-        return customerOrderDtoList;
+        return CustomerOrderMapper.INSTANCE.listToDtoList(customerOrderList);
 
     }
 

@@ -1,7 +1,10 @@
 package ir.maktab.finalprojectspring.service;
 
+import ir.maktab.finalprojectspring.data.dto.CustomerRequestDto;
+import ir.maktab.finalprojectspring.data.dto.ExpertRequestDto;
 import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.enumeration.ExpertCondition;
+import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
@@ -281,6 +284,9 @@ public class ExpertServiceIMPL implements ExpertService {
         expertRepository.save(expert);
 
     }
+    public List<Expert> searchAndFilterExpert(ExpertRequestDto request){
 
+        return expertRepository.findAll(ExpertRepository.selectByConditions(request));
+    }
 
 }

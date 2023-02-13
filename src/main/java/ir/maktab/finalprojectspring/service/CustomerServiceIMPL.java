@@ -1,6 +1,7 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.dto.CardInformation;
+import ir.maktab.finalprojectspring.data.dto.CustomerRequestDto;
 import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
@@ -137,7 +138,6 @@ public class CustomerServiceIMPL implements CustomerService {
                 orderListWaitingForExpertSelection.add(c);
 
         }
-
         return orderListWaitingForExpertSelection;
 
     }
@@ -230,5 +230,10 @@ public class CustomerServiceIMPL implements CustomerService {
 
         expertServiceIMPL.addReviewToExpertReviewList(review);
 
+    }
+
+    public List<Customer> searchAndFilterCustomer(CustomerRequestDto request){
+
+        return customerRepository.findAll(CustomerRepository.selectByConditions(request));
     }
 }

@@ -1,16 +1,17 @@
 package ir.maktab.finalprojectspring.controller;
 
-import ir.maktab.finalprojectspring.data.dto.BaseServiceDto;
-import ir.maktab.finalprojectspring.data.dto.ExpertDto;
-import ir.maktab.finalprojectspring.data.dto.ExpertViewDto;
-import ir.maktab.finalprojectspring.data.dto.SubServiceDto;
+import ir.maktab.finalprojectspring.data.dto.*;
 import ir.maktab.finalprojectspring.data.model.BaseService;
+import ir.maktab.finalprojectspring.data.model.Customer;
 import ir.maktab.finalprojectspring.data.model.Expert;
 import ir.maktab.finalprojectspring.data.model.SubService;
 import ir.maktab.finalprojectspring.mapper.BaseServiceMapper;
+import ir.maktab.finalprojectspring.mapper.CustomerMapper;
 import ir.maktab.finalprojectspring.mapper.ExpertViewMapper;
 import ir.maktab.finalprojectspring.mapper.SubServiceMapper;
 import ir.maktab.finalprojectspring.service.BaseServiceServiceIMPL;
+import ir.maktab.finalprojectspring.service.CustomerServiceIMPL;
+import ir.maktab.finalprojectspring.service.ExpertServiceIMPL;
 import ir.maktab.finalprojectspring.service.ManagerServiceIMPL;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,10 @@ public class ManagerController {
 
     private final BaseServiceServiceIMPL baseServiceServiceIMPL;
 
+    private final CustomerServiceIMPL customerServiceIMPL;
+
+    private final ExpertServiceIMPL expertServiceIMPL;
+
     @PostMapping("/addBaseService")
     public String addBaseService(@Valid @RequestBody BaseServiceDto baseServiceDto) {
 
@@ -40,7 +45,6 @@ public class ManagerController {
     }
 
     @PostMapping("/addSubService")
-
     public String addSubService(@Valid @RequestBody SubServiceDto subServiceDto, @RequestParam String baseServiceName) {
 
         SubService subService = SubServiceMapper.INSTANCE.dtoToModel(subServiceDto);
@@ -54,21 +58,12 @@ public class ManagerController {
         return "subService added";
 
     }
-    @GetMapping("/getExpertNotAccepted")
 
+    @GetMapping("/getExpertNotAccepted")
     public List<ExpertViewDto> getExpertNotAccepted(){
 
         List<Expert> expertList= managerServiceIMPL.getExpertNotAccepted();
-
-        List<ExpertViewDto> expertViewDtoList=new ArrayList<>();
-
-        for (Expert e:expertList) {
-
-            expertViewDtoList.add(ExpertViewMapper.INSTANCE.objToDto(e));
-
-        }
-
-        return expertViewDtoList;
+        return ExpertViewMapper.INSTANCE.listToDtoList(expertList);
 
     }
 
@@ -99,41 +94,22 @@ public class ManagerController {
         return "expert deleted from subService";
 
     }
-    @GetMapping("/getAllBaseServiceList")
 
+    @GetMapping("/getAllBaseServiceList")
     public List<BaseServiceDto> getAllBaseServiceList(){
 
         List<BaseService> baseServiceList=managerServiceIMPL.getAllBaseService();
-
-        List<BaseServiceDto>baseServiceDtoList=new ArrayList<>();
-
-        for (BaseService b:baseServiceList) {
-
-            baseServiceDtoList.add(BaseServiceMapper.INSTANCE.objToDto(b));
-
-        }
-
-        return baseServiceDtoList;
+        return BaseServiceMapper.INSTANCE.listToDtoList(baseServiceList);
     }
 
     @GetMapping("/getAllSubServiceInBaseService")
     public List<SubServiceDto> getAllSubServiceInBaseService(@RequestParam String baseServiceName){
 
        List<SubService>subServiceList= managerServiceIMPL.getAllSubServiceInBaseService(baseServiceName);
-
-       List<SubServiceDto>subServiceDtoList=new ArrayList<>();
-
-        for (SubService s:subServiceList) {
-
-            subServiceDtoList.add(SubServiceMapper.INSTANCE.objToDto(s));
-
-        }
-
-        return subServiceDtoList;
+      return SubServiceMapper.INSTANCE.listToDtoList(subServiceList);
     }
 
     @PutMapping("/updateSubServiceDescription")
-
     public String updateSubServiceDescription(@RequestParam String subName,@RequestParam String newDescription){
 
         managerServiceIMPL.updateSubServiceDescription(subName,newDescription);
@@ -147,6 +123,21 @@ public class ManagerController {
         managerServiceIMPL.updateSubServicePrice(subName,newPrice);
 
         return "subService price update";
+    }
+
+    @GetMapping("/searchAndFilterCustomer")
+    public List<CustomerDto> searchAndFilterCustomer(@RequestBody CustomerRequestDto requestDto){
+
+        List<Customer> customerList=customerServiceIMPL.searchAndFilterCustomer(requestDto);
+        List<CustomerDto> customerDtoList=CustomerMapper.INSTANCE.listToDtoList(customerList);
+        return customerDtoList;
+    }
+
+    @GetMapping("/searchAndFilterExpert")
+    public List<ExpertViewDto>searchAndFilterExpert(@RequestBody ExpertRequestDto requestDto){
+
+        List<Expert> expertList=expertServiceIMPL.searchAndFilterExpert(requestDto);
+        return ExpertViewMapper.INSTANCE.listToDtoList(expertList);
     }
 
 }

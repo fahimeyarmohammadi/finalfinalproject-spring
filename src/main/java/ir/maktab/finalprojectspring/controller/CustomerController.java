@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -65,16 +64,7 @@ public class CustomerController {
     public List<BaseServiceDto> getAllBaseService() {
 
         List<BaseService> baseServiceList = customerServiceIMPL.getAllBaseService();
-
-        List<BaseServiceDto> baseServiceDtoList = new ArrayList<>();
-
-        for (BaseService b : baseServiceList) {
-
-            baseServiceDtoList.add(BaseServiceMapper.INSTANCE.objToDto(b));
-
-        }
-
-        return baseServiceDtoList;
+        return BaseServiceMapper.INSTANCE.listToDtoList(baseServiceList);
 
     }
 
@@ -82,16 +72,7 @@ public class CustomerController {
     public List<SubServiceDto> getAllSubServiceInBaseService(@RequestParam String baseServiceName) {
 
         List<SubService> subServiceList = customerServiceIMPL.getAllSubServiceInBaseService(baseServiceName);
-
-        List<SubServiceDto> subServiceDtoList = new ArrayList<>();
-
-        for (SubService s : subServiceList) {
-
-            subServiceDtoList.add(SubServiceMapper.INSTANCE.objToDto(s));
-
-        }
-
-        return subServiceDtoList;
+        return SubServiceMapper.INSTANCE.listToDtoList(subServiceList);
 
     }
 
@@ -117,31 +98,14 @@ public class CustomerController {
 
         List<CustomerOrder> customerOrderList = customerServiceIMPL.getAllCustomerOrders(username);
 
-        List<CustomerOrderDto> customerOrderDtoList = new ArrayList<>();
-
-        for (CustomerOrder c : customerOrderList) {
-
-            customerOrderDtoList.add(CustomerOrderMapper.INSTANCE.objToDto(c));
-
-        }
-
-        return customerOrderDtoList;
+        return CustomerOrderMapper.INSTANCE.listToDtoList(customerOrderList);
     }
 
     @GetMapping("/getOrdersWaitingExpertSelection")
     public List<CustomerOrderDto> getOrdersWaitingExpertSelection(@RequestParam String username) {
 
         List<CustomerOrder> customerOrderList = customerServiceIMPL.getOrdersWaitingExpertSelection(username);
-
-        List<CustomerOrderDto> customerOrderDtoList = new ArrayList<>();
-
-        for (CustomerOrder c : customerOrderList) {
-
-            customerOrderDtoList.add(CustomerOrderMapper.INSTANCE.objToDto(c));
-
-        }
-
-        return customerOrderDtoList;
+        return CustomerOrderMapper.INSTANCE.listToDtoList(customerOrderList);
     }
 
     @PutMapping("/selectExpert")
@@ -192,29 +156,20 @@ public class CustomerController {
     public String onlinePayment(@ModelAttribute CardInformation cardInformation, HttpServletRequest request) {
 
         if (cardInformation.getCaptcha().equals(request.getSession().getAttribute("captcha"))) {
-
             customerServiceIMPL.onlinePayment(cardInformation);
-
             return "Your payment has been successfully completed";
-
         } else {
-
             throw new InvalidInputException("please enter correct captcha");
-
         }
 
     }
 
     @PostMapping("/customerRegisterAReview")
-
     public String customerRegisterAReview(@RequestBody ReviewDto reviewDto) {
 
         Review review = ReviewMapper.INSTANCE.dtoToModel(reviewDto);
-
         CustomerOrder customerOrder = customerOrderServiceIMPL.getCustomerOrderById(reviewDto.getCustomerOrderId());
-
         Offers offers = offersServiceIMPL.getOffersById(reviewDto.getOffersId());
-
         review.setOffers(offers);
 
         review.setCustomerOrder(customerOrder);

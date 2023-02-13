@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface CustomerOrderMapper {
 
@@ -16,4 +18,7 @@ public interface CustomerOrderMapper {
 
     @Mapping(source = "address", target = "addressDto")
     CustomerOrderDto objToDto(CustomerOrder customerOrder);
+
+    @Mapping(source = "address", target = "addressDto")
+    List<CustomerOrderDto> listToDtoList(List<CustomerOrder> customerOrderList);
 }

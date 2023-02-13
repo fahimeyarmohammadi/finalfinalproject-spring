@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<?> BindExceptionHandler(BindException e) {
-        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, "validation failed");
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
 

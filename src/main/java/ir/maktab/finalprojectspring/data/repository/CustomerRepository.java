@@ -2,9 +2,12 @@ package ir.maktab.finalprojectspring.data.repository;
 
 import ir.maktab.finalprojectspring.data.dto.CustomerRequestDto;
 import ir.maktab.finalprojectspring.data.model.Customer;
+import ir.maktab.finalprojectspring.data.model.CustomerOrder;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
@@ -20,7 +23,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> , JpaS
     static Specification selectByConditions(CustomerRequestDto request) {
 
         return (Specification) (root, cq, cb) -> {
-            List predicateList = new ArrayList<>();
+
+            List<Predicate> predicateList = new ArrayList<>();
             if (request.getName() != null && request.getName().length() != 0)
                 predicateList.add(cb.equal(root.get("name"), request.getName()));
             if (request.getFamilyName()!= null && request.getFamilyName().length() != 0)
@@ -32,4 +36,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> , JpaS
         };
     }
 
+
 }
+

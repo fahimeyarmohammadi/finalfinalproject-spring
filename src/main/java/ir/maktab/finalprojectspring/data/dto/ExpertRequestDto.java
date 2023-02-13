@@ -7,8 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
-public class CustomerRequestDto {
+public class ExpertRequestDto {
 
     @Pattern(regexp = "^[a-z_A-Z]{3,}$")
     private String name;
@@ -19,4 +18,11 @@ public class CustomerRequestDto {
     @Email(message = "Invalid email! Please enter valid email")
     private String email;
 
+    private String minScore;
+
+    private String maxScore;
+
+    private String score;
+
+    private String subServiceName;
 }
