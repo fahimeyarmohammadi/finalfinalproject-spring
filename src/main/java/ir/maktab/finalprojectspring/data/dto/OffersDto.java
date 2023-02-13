@@ -35,5 +35,4 @@ public class OffersDto {
     @NotNull
     @Email(message = "Invalid email! Please enter valid email")
     private String expertUsername;
-
 }

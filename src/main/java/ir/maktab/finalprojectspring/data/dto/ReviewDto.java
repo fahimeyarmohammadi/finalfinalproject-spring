@@ -24,5 +24,4 @@ public class ReviewDto {
 
     @NotNull
     Long offersId;
-
 }

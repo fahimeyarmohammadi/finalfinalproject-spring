@@ -26,5 +26,4 @@ public class Customer extends Person {
 
     @OneToMany
     List<CustomerOrder> orderList = new ArrayList<>();
-
 }

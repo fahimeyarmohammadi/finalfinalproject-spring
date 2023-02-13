@@ -13,5 +13,4 @@ public interface OffersMapper {
 
     @Mapping(source = "startWork", target = "startWork", dateFormat = "yyyy-MM-dd HH:mm:ss")
     Offers dtoToModel(OffersDto expertDto);
-
 }

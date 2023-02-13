@@ -13,8 +13,6 @@ public class AddressServiceIMPL implements AddressService{
     private final AddressRepository addressRepository;
 
     public void addAddress(Address address){
-
         addressRepository.save(address);
-
     }
 }

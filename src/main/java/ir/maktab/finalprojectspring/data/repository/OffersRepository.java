@@ -13,15 +13,11 @@ import java.util.Optional;
 public interface OffersRepository extends JpaRepository<Offers, Long> {
 
     @Query(value = "from Offers o where o.customerOrder.id=?1 ORDER BY o.offerPrice ASC")
-
     List<Offers> offersListOrderedByPrice(@Param("id") Long id);
 
     @Query(value = "from Offers o where o.customerOrder.id=?1 ORDER BY o.expert.score DESC ")
-
     List<Offers> offersListOrderedByExpertScore(@Param("id") Long id);
 
     @Query(value = "from Offers o where o.customerOrder.id=?1 and o.acceptOffer=true ")
-
     Optional<Offers> getOffersByCustomerOrderIdAndOffersCondition(@Param("id") Long id);
-
 }

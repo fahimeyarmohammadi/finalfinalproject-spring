@@ -1,6 +1,7 @@
 package ir.maktab.finalprojectspring.service;
 
-import ir.maktab.finalprojectspring.data.dto.CardInformation;
+import ir.maktab.finalprojectspring.data.dto.CardInformationDto;
+import ir.maktab.finalprojectspring.data.dto.CustomerRequestDto;
 import ir.maktab.finalprojectspring.data.model.*;
 
 import java.util.List;
@@ -31,9 +32,11 @@ public interface CustomerService {
 
     Customer getByUsername(String username);
 
+    void creditPayment(String customerUsername, Long customerOrderId);
 
-   void creditPayment(String customerUsername,Long customerOrderId);
+    void onlinePayment(CardInformationDto cardInformation);
 
-   void onlinePayment(CardInformation cardInformation);
+    void customerRegisterAReview(Review review);
 
+    List<Customer> searchAndFilterCustomer(CustomerRequestDto request);
 }

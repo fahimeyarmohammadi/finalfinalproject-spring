@@ -21,5 +21,4 @@ public interface CustomerOrderService {
     void changeCustomerOrderConditionToDone(Long id);
 
     void changeCustomerOrderConditionToPaid(Long id);
-
 }

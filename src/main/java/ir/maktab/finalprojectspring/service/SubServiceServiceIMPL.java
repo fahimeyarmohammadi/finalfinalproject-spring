@@ -18,22 +18,16 @@ import java.util.Optional;
 public class SubServiceServiceIMPL implements SubServiceService {
 
     private final SubServiceRepository subServiceRepository;
+
     private final BaseServiceServiceIMPL baseServiceServiceIMPL;
 
     public void addSubService(SubService subService) {
-
         BaseService baseService=baseServiceServiceIMPL.getBaseServiceByName(subService.getBaseService().getName());
-
         try {
-
             subServiceRepository.save(subService);
-
         } catch (DataIntegrityViolationException e) {
-
             throw new ObjectExistException("this subService is exist");
-
         }
-
     }
 
     public List<SubService> getAllSubService() {
@@ -41,38 +35,25 @@ public class SubServiceServiceIMPL implements SubServiceService {
     }
 
     public List<SubService> getAllSubServiceInBaseService(String baseServiceName) {
-
         BaseService baseService=baseServiceServiceIMPL.getBaseServiceByName(baseServiceName);
-
         return subServiceRepository.findAllByBaseService_Name(baseServiceName);
-
     }
 
     public SubService getSubServiceByName(String subName) {
-
         Optional<SubService> optionalSubService = subServiceRepository.findBySubName(subName);
-
         return optionalSubService.orElseThrow(() -> new NotFoundException("this subService not found"));
     }
 
 
     public void changeSubServiceBasePrice(String subName, Double newPrice) {
-
         SubService savedSubService = getSubServiceByName(subName);
-
         savedSubService.setBasePrice(newPrice);
-
         subServiceRepository.save(savedSubService);
-
     }
 
     public void changeSubServiceDescription(String subName, String newDescription) {
-
         SubService savedSubService = getSubServiceByName(subName);
-
         savedSubService.setDescription(newDescription);
-
         subServiceRepository.save(savedSubService);
-
     }
 }

@@ -45,5 +45,4 @@ public class CustomerOrder {
 
     @OneToOne(cascade =CascadeType.ALL)
     Address address;
-
 }

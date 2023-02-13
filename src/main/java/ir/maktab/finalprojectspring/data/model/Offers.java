@@ -46,5 +46,4 @@ public class Offers {
     CustomerOrder customerOrder;
 
     boolean acceptOffer;
-
 }

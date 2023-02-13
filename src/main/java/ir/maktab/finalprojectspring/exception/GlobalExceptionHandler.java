@@ -32,5 +32,4 @@ public class GlobalExceptionHandler {
         CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, "validation failed");
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
-
 }

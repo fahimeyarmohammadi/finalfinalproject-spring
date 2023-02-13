@@ -11,5 +11,4 @@ public interface ExpertMapper {
     ExpertMapper INSTANCE = Mappers.getMapper(ExpertMapper.class);
 
     Expert dtoToModel(ExpertDto expertDto);
-
 }

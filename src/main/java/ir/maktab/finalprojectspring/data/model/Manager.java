@@ -25,5 +25,4 @@ public class Manager {
 
     @Column(nullable = false)
     String password;
-
 }

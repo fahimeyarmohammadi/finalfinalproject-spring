@@ -21,17 +21,11 @@ public class BaseServiceServiceIMPL implements BaseServiceService {
     private final BaseServiceRepository baseServiceRepository;
 
     public void addBaseService(BaseService baseService) {
-
         try {
-
             baseServiceRepository.save(baseService);
-
         } catch (DataIntegrityViolationException e) {
-
             throw new ObjectExistException("This baseService is exist");
-
         }
-
     }
 
     public List<BaseService> getAllBaseService() {
@@ -39,8 +33,6 @@ public class BaseServiceServiceIMPL implements BaseServiceService {
     }
 
     public BaseService getBaseServiceByName(String baseServiceName) {
-
         return baseServiceRepository.findByName(baseServiceName).orElseThrow(() -> new NotFoundException("Invalid name"));
-
     }
 }

@@ -13,6 +13,7 @@ public interface CustomerMapper {
     CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
 
     Customer dtoToModel(CustomerDto customerDto);
+
     CustomerDto objToDto(Customer customer);
 
     List<CustomerDto> listToDtoList(List<Customer> customerList);

@@ -7,5 +7,4 @@ import ir.maktab.finalprojectspring.exception.InvalidInputException;
 public interface ValidateInterface {
 
     void accept(String input, String regex, String errorMsg) throws InvalidInputException;
-
 }

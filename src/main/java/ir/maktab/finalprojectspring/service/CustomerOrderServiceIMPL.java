@@ -25,7 +25,6 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
 
     @Transactional
     public void addOrder(CustomerOrder order) {
-
         if (order.getProposedPrice() < order.getSubService().getBasePrice())
             throw new InvalidInputException("the proposedPrice must greater than subServer basePrice");
 
@@ -36,73 +35,47 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
             throw new InvalidInputException("you must have an address");
 
         order.setOrderCondition(OrderCondition.WAITING_EXPERT_SUGGESTION);
-
         orderRepository.save(order);
-
     }
 
     public List<CustomerOrder> getAllCustomerOrderSInSubService(String subName) {
-
         subServiceServiceIMPL.getSubServiceByName(subName);
-
         return orderRepository.getAllCustomerOrderInSubService(subName);
-
     }
 
     public CustomerOrder getCustomerOrderById(Long id) {
-
         Optional<CustomerOrder> optionalCustomerOrder = orderRepository.findById(id);
         return optionalCustomerOrder.orElseThrow(() -> new NotFoundException("Invalid Username"));
-
     }
 
     public void changeCustomerOrderConditionToWaitingForExpertSelection(Long id) {
-
         CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
-
         savedCustomerOrder.setOrderCondition(OrderCondition.WAITING_EXPERT_SELECTION);
-
         orderRepository.save(savedCustomerOrder);
-
     }
 
     public void changeCustomerOrderConditionToWaitingForExpertComing(Long id) {
-
         CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
-
         savedCustomerOrder.setOrderCondition(OrderCondition.WAITING_FOR_EXPERT_COMING);
-
         orderRepository.save(savedCustomerOrder);
-
     }
 
     public void changeCustomerOrderConditionToStarted(Long id) {
-
         CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
-
         savedCustomerOrder.setOrderCondition(OrderCondition.STARTED);
-
         orderRepository.save(savedCustomerOrder);
-
     }
 
     public void changeCustomerOrderConditionToDone(Long id) {
-
         CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
-
         savedCustomerOrder.setOrderCondition(OrderCondition.DONE);
-
         orderRepository.save(savedCustomerOrder);
     }
 
     public void changeCustomerOrderConditionToPaid(Long id){
-
         CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
-
         savedCustomerOrder.setOrderCondition(OrderCondition.PAID);
-
         orderRepository.save(savedCustomerOrder);
-
     }
 
 }

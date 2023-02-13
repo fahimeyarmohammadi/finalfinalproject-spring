@@ -1,8 +1,10 @@
 package ir.maktab.finalprojectspring.service;
 
+import ir.maktab.finalprojectspring.data.dto.ExpertRequestDto;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.model.Expert;
 import ir.maktab.finalprojectspring.data.model.Offers;
+import ir.maktab.finalprojectspring.data.model.Review;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,4 +33,15 @@ public interface ExpertService {
 
     String convertArrayByteToImage(String username) throws IOException;
 
+    void minusExpertScore(Offers offers);
+
+    void inActiveExpert(Expert expert);
+
+    void increaseExpertCredit(Offers offers);
+
+    int expertGetOffersScore(Long offersId);
+
+    void addReviewToExpertReviewList(Review review);
+
+    List<Expert> searchAndFilterExpert(ExpertRequestDto request);
 }

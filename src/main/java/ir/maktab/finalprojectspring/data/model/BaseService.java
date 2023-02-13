@@ -24,5 +24,4 @@ public class BaseService {
 
     @Column(nullable = false, unique = true)
     String name;
-
 }

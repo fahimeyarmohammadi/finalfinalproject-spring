@@ -20,5 +20,4 @@ public class SubServiceDto {
 
     @NotNull
     private String description;
-
 }

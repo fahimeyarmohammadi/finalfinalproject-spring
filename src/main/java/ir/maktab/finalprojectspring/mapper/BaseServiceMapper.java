@@ -11,9 +11,11 @@ import java.util.List;
 public interface BaseServiceMapper {
 
     BaseServiceMapper INSTANCE = Mappers.getMapper(BaseServiceMapper.class);
-    BaseService dtoToModel(BaseServiceDto baseServiceDto);
-    BaseServiceDto objToDto(BaseService baseService);
-    List<BaseServiceDto> listToDtoList(List<BaseService> baseServiceList);
 
+    BaseService dtoToModel(BaseServiceDto baseServiceDto);
+
+    BaseServiceDto objToDto(BaseService baseService);
+
+    List<BaseServiceDto> listToDtoList(List<BaseService> baseServiceList);
 }
 

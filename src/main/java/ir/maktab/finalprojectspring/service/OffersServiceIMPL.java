@@ -21,44 +21,33 @@ public class OffersServiceIMPL implements OffersService {
     private final OffersRepository offersRepository;
 
     public void addOffers(Offers offers) {
-
         if (offers.getOfferPrice() < offers.getCustomerOrder().getSubService().getBasePrice()) {
             throw new InvalidInputException("the offers price must be greater than subService Base price");
         }
-
         if (DateUtil.dateToLocalDateTime(offers.getStartWork()).isBefore(LocalDateTime.now()))
             throw new InvalidInputException("prefer Date must be after now");
 
         offersRepository.save(offers);
-
     }
 
     public void updateOffers(Offers offers) {
-
         offersRepository.save(offers);
     }
 
     public List<Offers> getOffersListOrderedByPrice(CustomerOrder order) {
-
         return offersRepository.offersListOrderedByPrice(order.getId());
-
     }
 
     public List<Offers> getOffersListOrderedByExpertScore(CustomerOrder order) {
-
         return offersRepository.offersListOrderedByExpertScore(order.getId());
-
     }
 
     public Offers getOffersById(Long id) {
-
         Optional<Offers> optionalOffers = offersRepository.findById(id);
-
         return optionalOffers.orElseThrow(() -> new NotFoundException("this offers not found"));
     }
 
     public Offers getOffersByCustomerOrderIdAndOffersCondition(Long customerOrderId) {
-
         return offersRepository.getOffersByCustomerOrderIdAndOffersCondition(customerOrderId).orElseThrow(() -> new NotFoundException("this offers not found"));
     }
 

@@ -22,8 +22,6 @@ public class CustomerChangePasswordDto {
             message = "password must :8 char, at least one uppercase, one lowercase and one number")
     private String newPassword;
 
-
-
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9]{8}$",
             message = "password must :8 char, at least one uppercase, one lowercase and one number")

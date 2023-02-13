@@ -12,8 +12,10 @@ import java.util.List;
 public interface ExpertViewMapper {
 
     ExpertViewMapper INSTANCE = Mappers.getMapper(ExpertViewMapper.class);
-    Expert dtoToModel(ExpertViewDto expertViewDto);
-    ExpertViewDto objToDto(Expert expert);
-    List<ExpertViewDto> listToDtoList(List<Expert> expertList);
 
+    Expert dtoToModel(ExpertViewDto expertViewDto);
+
+    ExpertViewDto objToDto(Expert expert);
+
+    List<ExpertViewDto> listToDtoList(List<Expert> expertList);
 }

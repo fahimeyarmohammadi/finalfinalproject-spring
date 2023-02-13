@@ -22,6 +22,5 @@ public class CustomerOrderDto {
     @NotNull
     private String preferDate;
 
-
     AddressDto addressDto;
 }

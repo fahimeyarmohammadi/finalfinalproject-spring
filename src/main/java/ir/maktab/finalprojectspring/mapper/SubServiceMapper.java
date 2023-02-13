@@ -17,5 +17,4 @@ public interface SubServiceMapper {
     SubServiceDto objToDto(SubService subService);
 
     List<SubServiceDto> listToDtoList(List<SubService> subServiceList);
-
 }

@@ -34,5 +34,4 @@ public class SubService {
 
     @ManyToOne
     BaseService baseService;
-
 }

@@ -13,12 +13,8 @@ import java.util.Optional;
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Long> {
 
     @Query(value = "from CustomerOrder c where c.subService.subName=?1 and (c.orderCondition=ir.maktab.finalprojectspring.data.enumeration.OrderCondition.WAITING_EXPERT_SELECTION or c.orderCondition=ir.maktab.finalprojectspring.data.enumeration.OrderCondition.WAITING_EXPERT_SUGGESTION)")
-
     List<CustomerOrder> getAllCustomerOrderInSubService(@Param("subNam") String subName);
 
     @Override
-
     Optional<CustomerOrder> findById(Long id);
-
-
 }

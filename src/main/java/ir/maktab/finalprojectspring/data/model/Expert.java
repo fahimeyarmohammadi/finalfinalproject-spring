@@ -40,5 +40,4 @@ public class Expert extends Person {
     byte[] image;
 
     String path;
-
 }

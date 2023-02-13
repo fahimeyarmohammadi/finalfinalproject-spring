@@ -13,5 +13,4 @@ public interface AddressMapper {
     Address dtoToModel(AddressDto addressDto);
 
     AddressDto objToDto(Address address);
-
 }

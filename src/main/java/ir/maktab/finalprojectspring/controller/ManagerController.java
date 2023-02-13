@@ -17,7 +17,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,108 +34,78 @@ public class ManagerController {
 
     @PostMapping("/addBaseService")
     public String addBaseService(@Valid @RequestBody BaseServiceDto baseServiceDto) {
-
         BaseService baseService = BaseServiceMapper.INSTANCE.dtoToModel(baseServiceDto);
-
         managerServiceIMPL.addBaseService(baseService);
-
         return "baseService added";
-
     }
 
     @PostMapping("/addSubService")
     public String addSubService(@Valid @RequestBody SubServiceDto subServiceDto, @RequestParam String baseServiceName) {
-
         SubService subService = SubServiceMapper.INSTANCE.dtoToModel(subServiceDto);
-
-        BaseService baseService=baseServiceServiceIMPL.getBaseServiceByName(baseServiceName);
-
+        BaseService baseService = baseServiceServiceIMPL.getBaseServiceByName(baseServiceName);
         subService.setBaseService(baseService);
-
         managerServiceIMPL.addSubService(subService);
-
         return "subService added";
-
     }
 
     @GetMapping("/getExpertNotAccepted")
-    public List<ExpertViewDto> getExpertNotAccepted(){
-
-        List<Expert> expertList= managerServiceIMPL.getExpertNotAccepted();
+    public List<ExpertViewDto> getExpertNotAccepted() {
+        List<Expert> expertList = managerServiceIMPL.getExpertNotAccepted();
         return ExpertViewMapper.INSTANCE.listToDtoList(expertList);
-
     }
 
     @PutMapping("/acceptExpert")
-    public String acceptExpert(@RequestParam String username){
-
+    public String acceptExpert(@RequestParam String username) {
         managerServiceIMPL.acceptExpert(username);
-
         return "expert accepted";
-
     }
 
     @PostMapping("/addExpertToSubService")
-
-    public String addExpertToSubService(@RequestParam String username,@RequestParam String subServiceName){
-
-        managerServiceIMPL.addExpertToSubService(username,subServiceName);
-
+    public String addExpertToSubService(@RequestParam String username, @RequestParam String subServiceName) {
+        managerServiceIMPL.addExpertToSubService(username, subServiceName);
         return "expert add to subService list";
     }
 
     @PostMapping("/deleteExpertFromSubService")
-
-    public String deleteExpertFromSubService(@RequestParam String username,@RequestParam String subServiceName){
-
-        managerServiceIMPL.deleteExpertFromSubService(username,subServiceName);
-
+    public String deleteExpertFromSubService(@RequestParam String username, @RequestParam String subServiceName) {
+        managerServiceIMPL.deleteExpertFromSubService(username, subServiceName);
         return "expert deleted from subService";
-
     }
 
     @GetMapping("/getAllBaseServiceList")
-    public List<BaseServiceDto> getAllBaseServiceList(){
-
-        List<BaseService> baseServiceList=managerServiceIMPL.getAllBaseService();
+    public List<BaseServiceDto> getAllBaseServiceList() {
+        List<BaseService> baseServiceList = managerServiceIMPL.getAllBaseService();
         return BaseServiceMapper.INSTANCE.listToDtoList(baseServiceList);
     }
 
     @GetMapping("/getAllSubServiceInBaseService")
-    public List<SubServiceDto> getAllSubServiceInBaseService(@RequestParam String baseServiceName){
-
-       List<SubService>subServiceList= managerServiceIMPL.getAllSubServiceInBaseService(baseServiceName);
-      return SubServiceMapper.INSTANCE.listToDtoList(subServiceList);
+    public List<SubServiceDto> getAllSubServiceInBaseService(@RequestParam String baseServiceName) {
+        List<SubService> subServiceList = managerServiceIMPL.getAllSubServiceInBaseService(baseServiceName);
+        return SubServiceMapper.INSTANCE.listToDtoList(subServiceList);
     }
 
     @PutMapping("/updateSubServiceDescription")
-    public String updateSubServiceDescription(@RequestParam String subName,@RequestParam String newDescription){
-
-        managerServiceIMPL.updateSubServiceDescription(subName,newDescription);
-
+    public String updateSubServiceDescription(@RequestParam String subName, @RequestParam String newDescription) {
+        managerServiceIMPL.updateSubServiceDescription(subName, newDescription);
         return "subService description update";
     }
 
     @PutMapping("/updateSubServicePrice")
-    public String updateSubServicePrice(@RequestParam String subName,@RequestParam Double newPrice){
-
-        managerServiceIMPL.updateSubServicePrice(subName,newPrice);
-
+    public String updateSubServicePrice(@RequestParam String subName, @RequestParam Double newPrice) {
+        managerServiceIMPL.updateSubServicePrice(subName, newPrice);
         return "subService price update";
     }
 
     @GetMapping("/searchAndFilterCustomer")
-    public List<CustomerDto> searchAndFilterCustomer(@RequestBody CustomerRequestDto requestDto){
-
-        List<Customer> customerList=customerServiceIMPL.searchAndFilterCustomer(requestDto);
-        List<CustomerDto> customerDtoList=CustomerMapper.INSTANCE.listToDtoList(customerList);
+    public List<CustomerDto> searchAndFilterCustomer(@RequestBody CustomerRequestDto requestDto) {
+        List<Customer> customerList = customerServiceIMPL.searchAndFilterCustomer(requestDto);
+        List<CustomerDto> customerDtoList = CustomerMapper.INSTANCE.listToDtoList(customerList);
         return customerDtoList;
     }
 
     @GetMapping("/searchAndFilterExpert")
-    public List<ExpertViewDto>searchAndFilterExpert(@RequestBody ExpertRequestDto requestDto){
-
-        List<Expert> expertList=expertServiceIMPL.searchAndFilterExpert(requestDto);
+    public List<ExpertViewDto> searchAndFilterExpert(@RequestBody ExpertRequestDto requestDto) {
+        List<Expert> expertList = expertServiceIMPL.searchAndFilterExpert(requestDto);
         return ExpertViewMapper.INSTANCE.listToDtoList(expertList);
     }
 
