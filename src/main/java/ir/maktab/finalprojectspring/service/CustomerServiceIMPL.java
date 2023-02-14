@@ -158,8 +158,8 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     public void customerRegisterAReview(Review review) {
-        if (!review.getCustomerOrder().getOrderCondition().equals(OrderCondition.DONE))
-            throw new InvalidInputException("you must after done work get review!!");
+        if (!((review.getCustomerOrder().getOrderCondition().equals(OrderCondition.DONE)) || (review.getCustomerOrder().getOrderCondition().equals(OrderCondition.PAID))))
+        throw new InvalidInputException("you must after done work get review!!");
         reviewServiceIMPL.addReview(review);
         expertServiceIMPL.addReviewToExpertReviewList(review);
     }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
 
     public CustomerOrder getCustomerOrderById(Long id) {
         Optional<CustomerOrder> optionalCustomerOrder = orderRepository.findById(id);
-        return optionalCustomerOrder.orElseThrow(() -> new NotFoundException("Invalid Username"));
+        return optionalCustomerOrder.orElseThrow(() -> new NotFoundException("Invalid order Id"));
     }
 
     public List<CustomerOrder> getCustomerOrderWaitingExpertSelection(String username){
@@ -77,6 +78,7 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
     public void changeCustomerOrderConditionToDone(Long id) {
         CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
         savedCustomerOrder.setOrderCondition(OrderCondition.DONE);
+        savedCustomerOrder.setDoneDate(new Date());
         orderRepository.save(savedCustomerOrder);
     }
 
