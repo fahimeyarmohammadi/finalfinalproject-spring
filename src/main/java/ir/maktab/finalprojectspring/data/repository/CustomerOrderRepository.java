@@ -17,4 +17,10 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
 
     @Override
     Optional<CustomerOrder> findById(Long id);
+
+    @Query(value = "from CustomerOrder c where c.customer.username=?1 and (c.orderCondition=ir.maktab.finalprojectspring.data.enumeration.OrderCondition.WAITING_EXPERT_SELECTION)")
+    List<CustomerOrder> getAllCustomerOrderWaitingExpertSelection(@Param("username") String username);
+
+    @Query(value="from CustomerOrder c where c.customer.username=?1 and (c.orderCondition=ir.maktab.finalprojectspring.data.enumeration.OrderCondition.DONE)")
+    List<CustomerOrder> getAllCustomerOrderDone(@Param("username") String username);
 }

@@ -54,7 +54,6 @@ public class CustomerServiceIMPL implements CustomerService {
         if (!(newPassword.equals(repeatNewPassword))) {
             throw new InvalidInputException("password and repeatPassword must be equal");
         }
-
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
         Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
         customer.setPassword(newPassword);
@@ -72,6 +71,7 @@ public class CustomerServiceIMPL implements CustomerService {
     @Transactional
     public void customerGetOrder(CustomerOrder order, String username) {
         Customer customer = getByUsername(username);
+        order.setCustomer(customer);
         orderServiceIMPL.addOrder(order);
         customer.getOrderList().add(order);
         customerRepository.save(customer);
@@ -86,19 +86,24 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     public List<CustomerOrder> getAllCustomerOrders(String username) {
-        Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
-        Customer customer = signInCustomer.orElseThrow(() -> new NotFoundException("Invalid Username"));
+        Customer customer =getByUsername(username);
         return customer.getOrderList();
     }
 
     public List<CustomerOrder> getOrdersWaitingExpertSelection(String username) {
-        List<CustomerOrder> orderList = getAllCustomerOrders(username);
-        List<CustomerOrder> orderListWaitingForExpertSelection = new ArrayList<>();
-        for (CustomerOrder c : orderList) {
-            if (c.getOrderCondition().equals(OrderCondition.WAITING_EXPERT_SELECTION))
-                orderListWaitingForExpertSelection.add(c);
-        }
-        return orderListWaitingForExpertSelection;
+//        List<CustomerOrder> orderList = getAllCustomerOrders(username);
+//        List<CustomerOrder> orderListWaitingForExpertSelection = new ArrayList<>();
+//        for (CustomerOrder c : orderList) {
+//            if (c.getOrderCondition().equals(OrderCondition.WAITING_EXPERT_SELECTION))
+//                orderListWaitingForExpertSelection.add(c);
+//        }
+        Customer customer=getByUsername(username);
+        return orderServiceIMPL.getCustomerOrderWaitingExpertSelection(username);
+    }
+
+    public List<CustomerOrder> getOrderDone(String username){
+        Customer customer=getByUsername(username);
+        return orderServiceIMPL.getAllCustomerOrderDone(username);
     }
 
     @Transactional
@@ -126,11 +131,12 @@ public class CustomerServiceIMPL implements CustomerService {
 
     @Transactional
     public void creditPayment(String customerUsername, Long customerOrderId) {
+        if (!(orderServiceIMPL.getCustomerOrderById(customerOrderId).getOrderCondition().equals(OrderCondition.DONE)))
+            throw new InvalidInputException("your order must be done for pay");
         Offers offers = offersServiceIMPL.getOffersByCustomerOrderIdAndOffersCondition(customerOrderId);
         Customer customer = getByUsername(customerUsername);
         if (customer.getCredit() < offers.getOfferPrice())
             throw new InvalidInputException("your credit not enough");
-
         customer.setCredit(customer.getCredit() - offers.getOfferPrice());
         customerRepository.save(customer);
         orderServiceIMPL.changeCustomerOrderConditionToPaid(customerOrderId);
@@ -140,6 +146,9 @@ public class CustomerServiceIMPL implements CustomerService {
 
     @Transactional
     public void onlinePayment(CardInformationDto cardInformation) {
+        if (!(orderServiceIMPL.getCustomerOrderById(Long.valueOf(cardInformation.getCustomerOrderId())).getOrderCondition().equals(OrderCondition.DONE)))
+            throw new InvalidInputException("your order must be done for pay");
+
         Offers offers = offersServiceIMPL.getOffersByCustomerOrderIdAndOffersCondition(Long.valueOf(cardInformation.getCustomerOrderId()));
         Validation.validateCardNumber(cardInformation.getCardNumber());
         Validation.validateCvv2(cardInformation.getCvv2());

@@ -12,6 +12,10 @@ public interface CustomerOrderService {
 
     CustomerOrder getCustomerOrderById(Long id);
 
+    List<CustomerOrder> getCustomerOrderWaitingExpertSelection(String username);
+
+    List<CustomerOrder> getAllCustomerOrderDone(String username);
+
     void changeCustomerOrderConditionToWaitingForExpertSelection(Long id);
 
     void changeCustomerOrderConditionToWaitingForExpertComing(Long id);

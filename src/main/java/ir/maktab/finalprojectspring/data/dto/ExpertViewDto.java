@@ -26,4 +26,6 @@ public class ExpertViewDto {
     private String email;
 
     private ExpertCondition expertCondition;
+
+    private int score;
 }

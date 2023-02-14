@@ -107,6 +107,7 @@ public class ManagerController {
     public List<ExpertViewDto> searchAndFilterExpert(@RequestBody ExpertRequestDto requestDto) {
         List<Expert> expertList = expertServiceIMPL.searchAndFilterExpert(requestDto);
         return ExpertViewMapper.INSTANCE.listToDtoList(expertList);
+
     }
 
 }

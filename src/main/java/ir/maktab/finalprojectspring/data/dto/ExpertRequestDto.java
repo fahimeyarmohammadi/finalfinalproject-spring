@@ -1,5 +1,6 @@
 package ir.maktab.finalprojectspring.data.dto;
 
+import ir.maktab.finalprojectspring.data.model.SubService;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -25,4 +26,6 @@ public class ExpertRequestDto {
     private String score;
 
     private String subServiceName;
+
+    private SubService subService;
 }

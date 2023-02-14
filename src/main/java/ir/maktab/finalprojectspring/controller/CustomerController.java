@@ -103,6 +103,12 @@ public class CustomerController {
         return "your order done!";
     }
 
+    @GetMapping("/getOrdersDone")
+    public List<CustomerOrderDto> getOrdersDone(@RequestParam String username) {
+        List<CustomerOrder> customerOrderList = customerServiceIMPL.getOrderDone(username);
+        return CustomerOrderMapper.INSTANCE.listToDtoList(customerOrderList);
+    }
+
     @PutMapping("/creditPayment")
     public String creditPayment(@RequestParam String customerUsername, @RequestParam Long customerOrderId) {
         customerServiceIMPL.creditPayment(customerUsername, customerOrderId);
@@ -110,7 +116,7 @@ public class CustomerController {
     }
 
     @PostMapping("/onlinePayment")
-    public String onlinePayment(@ModelAttribute CardInformationDto cardInformation, HttpServletRequest request) {
+    public String onlinePayment(@Valid @ModelAttribute CardInformationDto cardInformation, HttpServletRequest request) {
         if (cardInformation.getCaptcha().equals(request.getSession().getAttribute("captcha"))) {
             customerServiceIMPL.onlinePayment(cardInformation);
             return "Your payment has been successfully completed";

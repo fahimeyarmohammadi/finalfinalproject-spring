@@ -188,6 +188,8 @@ public class ExpertServiceIMPL implements ExpertService {
     }
 
     public List<Expert> searchAndFilterExpert(ExpertRequestDto request){
+        if(request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
+            request.setSubService(subServiceServiceIMPL.getSubServiceByName(request.getSubServiceName()));
         return expertRepository.findAll(ExpertRepository.selectByConditions(request));
     }
 }

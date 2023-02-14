@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="600">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Title</title>
 
     <style>
-
         * {
             padding: 0;
             margin: 0;
             box-sizing: border-box;
         }
-
         body {
-            background-color: gray;
+            background-color: aliceblue;
         }
-
         .main-container {
-            width: 300px;
-            height: 400px;
-            background-color: pink;
+            width: 400px;
+            height: 600px;
+            background-color:aqua;
             top: 50%;
             left: 50%;
             position: absolute;
@@ -28,49 +26,53 @@
             border-radius: 10px;
             padding: 20px;
         }
-
         .main-container * {
             margin-top: 10px;
         }
-
         input {
-            border-radius: 10px;
-            border: none;
+            border-radius: 20px;
+            border:none;
         }
-
-
     </style>
-
-
 </head>
 <body>
 <div class="main-container">
-    <form action="">
-        <label for="cardNumber">
-            <input id="cardNumber" placeholder="card number"  type="text">
-        </label>
-        <label for="cvv2">
-            <input id="cvv2" placeholder="cvv2" type="text">
-        </label>
-        <label for="customerOrderId">
-            <input id="customerOrderId" placeholder="customerOrder id" type="text" required="true">
-        </label>
-
+    <h3>
+        enter your card information:
+    </h3>
+    <form>
+        <div class="form-group">
+            <label for="cardNumber">Card Number</label><br>
+            <input type="text" class="form-control" id="cardNumber" placeholder="Enter Card Number">
+        </div>
+        <div class="form-group">
+            <label for="cvv2">Cvv2</label><br>
+            <input type="text" class="form-control" id="cvv2" placeholder="Cvv2">
+        </div>
+        <div class="form-group">
+            <label for="orderId">CustomerOrder Id</label><br>
+            <input type="text" class="form-control" id="orderId" placeholder="Customer Order Id">
+        </div>
         <div>
             <div>
                 <img alt="captcha" src="/captcha-servlet">
             </div>
-            <div>
-                <input id="captcha" placeholder="Enter Captcha" type="text"/>
+            <div class="form-group">
+                <label for="captcha">Captcha</label><br>
+                <input type="text" class="form-control" id="captcha" placeholder="Enter Captcha">
             </div>
         </div>
-        <label for="submit">
-            <input id="submit" type="submit">
-        </label>
+
+        <label for="submit"></label>
+        <button type="submit" class="btn btn-primary" id="submit" >Pay</button>
     </form>
+
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <script>
 
     //const button = document.getElementById("submit");
@@ -79,33 +81,31 @@
         e.preventDefault();
         const cardNumber = document.getElementById("cardNumber");
         const cvv2 = document.getElementById("cvv2");
-        const customerOrderId=document.getElementById("customerOrderId");
-        const captcha=document.getElementById("captcha");
+        const customerOrderId = document.getElementById("orderId");
+        const captcha = document.getElementById("captcha");
 
         const form = new FormData();
         form.append("cardNumber", cardNumber.value);
         form.append("cvv2", cvv2.value);
-        form.append("customerOrderId",customerOrderId.value);
-        form.append("captcha",captcha.value);
+        form.append("customerOrderId", customerOrderId.value);
+        form.append("captcha", captcha.value);
 
         $.ajax({
             type: "POST",
             url: "http://localhost:8080/customer/onlinePayment",
             data: form,
-            processData : false,
-            contentType : false,
-            dataType:"text",
-            success: function(response){
+            processData: false,
+            contentType: false,
+            dataType: "text",
+            success: function (response) {
                 e.preventDefault();
                 alert("success")
-            }, error: function(xhr){
+            }, error: function (xhr) {
                 alert('Request Status: ' + xhr.status + ' Status Text: ' + xhr.statusText);
             }
         });
-     })
+    })
 
 </script>
 </body>
-
-
 </html>

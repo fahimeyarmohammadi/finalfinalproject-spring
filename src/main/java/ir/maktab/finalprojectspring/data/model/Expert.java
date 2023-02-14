@@ -21,7 +21,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-
 public class Expert extends Person {
 
     @Enumerated(value = EnumType.STRING)

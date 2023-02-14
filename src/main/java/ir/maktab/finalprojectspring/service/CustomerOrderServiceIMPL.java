@@ -48,6 +48,14 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
         return optionalCustomerOrder.orElseThrow(() -> new NotFoundException("Invalid Username"));
     }
 
+    public List<CustomerOrder> getCustomerOrderWaitingExpertSelection(String username){
+        return orderRepository.getAllCustomerOrderWaitingExpertSelection(username);
+    }
+
+    public List<CustomerOrder> getAllCustomerOrderDone(String username){
+        return orderRepository.getAllCustomerOrderDone(username);
+    }
+
     public void changeCustomerOrderConditionToWaitingForExpertSelection(Long id) {
         CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
         savedCustomerOrder.setOrderCondition(OrderCondition.WAITING_EXPERT_SELECTION);
