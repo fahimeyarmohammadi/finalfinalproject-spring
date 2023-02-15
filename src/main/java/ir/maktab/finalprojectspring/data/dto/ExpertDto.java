@@ -30,5 +30,4 @@ public class ExpertDto {
     private String password;
 
     private String path;
-
 }

@@ -6,14 +6,12 @@ import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
-import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -91,12 +89,6 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     public List<CustomerOrder> getOrdersWaitingExpertSelection(String username) {
-//        List<CustomerOrder> orderList = getAllCustomerOrders(username);
-//        List<CustomerOrder> orderListWaitingForExpertSelection = new ArrayList<>();
-//        for (CustomerOrder c : orderList) {
-//            if (c.getOrderCondition().equals(OrderCondition.WAITING_EXPERT_SELECTION))
-//                orderListWaitingForExpertSelection.add(c);
-//        }
         Customer customer=getByUsername(username);
         return orderServiceIMPL.getCustomerOrderWaitingExpertSelection(username);
     }

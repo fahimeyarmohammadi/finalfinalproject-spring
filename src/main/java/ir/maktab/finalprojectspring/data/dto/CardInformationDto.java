@@ -18,5 +18,4 @@ public class CardInformationDto {
     private String customerOrderId;
 
     private String captcha;
-
 }

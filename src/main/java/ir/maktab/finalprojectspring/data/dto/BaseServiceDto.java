@@ -14,5 +14,4 @@ public class BaseServiceDto {
 
     @NotNull
     private String name;
-
 }

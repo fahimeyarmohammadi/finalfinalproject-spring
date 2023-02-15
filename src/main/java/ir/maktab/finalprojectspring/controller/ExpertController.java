@@ -11,7 +11,6 @@ import ir.maktab.finalprojectspring.mapper.ExpertMapper;
 import ir.maktab.finalprojectspring.mapper.OffersMapper;
 import ir.maktab.finalprojectspring.service.CustomerOrderServiceIMPL;
 import ir.maktab.finalprojectspring.service.ExpertServiceIMPL;
-import ir.maktab.finalprojectspring.service.ReviewServiceIMPL;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,6 @@ public class ExpertController {
 
     private final CustomerOrderServiceIMPL customerOrderServiceIMPL;
 
-    private final ReviewServiceIMPL reviewServiceIMPL;
 
     @PostMapping("/register")
     public String register(@Valid @RequestBody ExpertDto expertDto) {

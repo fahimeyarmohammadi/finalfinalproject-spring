@@ -56,9 +56,9 @@ public class CaptchaServlet extends HttpServlet {
         String captcha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuffer captchaBuffer = new StringBuffer();
         Random random = new Random();
-        while(captchaBuffer.length() < captchaLength) {
+        while (captchaBuffer.length() < captchaLength) {
             int index = (int) (random.nextFloat() * captcha.length());
-            captchaBuffer.append(captcha.substring(index, index+1));
+            captchaBuffer.append(captcha.substring(index, index + 1));
         }
         return captchaBuffer.toString();
     }

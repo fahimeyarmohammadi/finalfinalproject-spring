@@ -99,8 +99,7 @@ public class ManagerController {
     @GetMapping("/searchAndFilterCustomer")
     public List<CustomerDto> searchAndFilterCustomer(@RequestBody CustomerRequestDto requestDto) {
         List<Customer> customerList = customerServiceIMPL.searchAndFilterCustomer(requestDto);
-        List<CustomerDto> customerDtoList = CustomerMapper.INSTANCE.listToDtoList(customerList);
-        return customerDtoList;
+        return CustomerMapper.INSTANCE.listToDtoList(customerList);
     }
 
     @GetMapping("/searchAndFilterExpert")
