@@ -116,10 +116,9 @@ public class CustomerController {
     }
 
     @PostMapping("/onlinePayment")
-    public String onlinePayment(@Valid @ModelAttribute CardInformationDto cardInformation, HttpServletRequest request) {
+    public void onlinePayment(@Valid @ModelAttribute CardInformationDto cardInformation, HttpServletRequest request) {
         if (cardInformation.getCaptcha().equals(request.getSession().getAttribute("captcha"))) {
             customerServiceIMPL.onlinePayment(cardInformation);
-            return "Your payment has been successfully completed";
         } else {
             throw new InvalidInputException("please enter correct captcha");
         }
@@ -135,4 +134,5 @@ public class CustomerController {
         customerServiceIMPL.customerRegisterAReview(review);
         return "your review register";
     }
+
 }

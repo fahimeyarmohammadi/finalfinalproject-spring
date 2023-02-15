@@ -1,8 +1,12 @@
 package ir.maktab.finalprojectspring.exception;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -32,4 +36,25 @@ public class GlobalExceptionHandler {
         CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, "validation failed");
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<?> NullPointerExceptionHandler(NullPointerException e) {
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        return new ResponseEntity<>(exception, exception.httpStatus());
+    }
+
+    // input not mapping to target definition
+    @ExceptionHandler(MismatchedInputException.class)
+    ResponseEntity<?> handleException(MismatchedInputException e) {
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        return new ResponseEntity<>(exception, exception.httpStatus());
+    }
+
+    // wrong mapping HTTP request, for example method is GET but request is POST
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    ResponseEntity<?> handleException(HttpRequestMethodNotSupportedException e) {
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        return new ResponseEntity<>(exception, exception.httpStatus());
+    }
+
 }
