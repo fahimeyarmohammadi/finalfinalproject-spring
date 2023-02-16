@@ -55,4 +55,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
 
+    @ExceptionHandler(StringIndexOutOfBoundsException.class)
+    ResponseEntity<?> handleException(StringIndexOutOfBoundsException e) {
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        return new ResponseEntity<>(exception, exception.httpStatus());
+    }
+
+
 }
