@@ -43,10 +43,11 @@ public class CustomerController {
     }
 
     @PutMapping("/changePassword")
-    public String changePassword(@Valid @RequestBody CustomerChangePasswordDto customerChangePasswordDto) {
-        customerServiceIMPL.changPassword(customerChangePasswordDto.getUsername(), customerChangePasswordDto.getRepeatNewPassword(), customerChangePasswordDto.getNewPassword());
+    public String changePassword(@RequestParam String username, String repeatNewPassword, String newPassword) {
+        customerServiceIMPL.changPassword(username, repeatNewPassword, newPassword);
         return "your password changed!";
     }
+
 
     @GetMapping("/getAllBaseService")
     public List<BaseServiceDto> getAllBaseService() {

@@ -34,7 +34,7 @@ public class ExpertController {
         return "you register successfully";
     }
 
-    @PostMapping("/logIn")
+    @GetMapping("/logIn")
     public String logIn(@RequestParam String username, @RequestParam String password) {
         expertServiceIMPL.signIn(username, password);
         return "ok";

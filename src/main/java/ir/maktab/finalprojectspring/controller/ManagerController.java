@@ -60,13 +60,13 @@ public class ManagerController {
         return "expert accepted";
     }
 
-    @PostMapping("/addExpertToSubService")
+    @GetMapping("/addExpertToSubService")
     public String addExpertToSubService(@RequestParam String username, @RequestParam String subServiceName) {
         managerServiceIMPL.addExpertToSubService(username, subServiceName);
         return "expert add to subService list";
     }
 
-    @PostMapping("/deleteExpertFromSubService")
+    @PutMapping("/deleteExpertFromSubService")
     public String deleteExpertFromSubService(@RequestParam String username, @RequestParam String subServiceName) {
         managerServiceIMPL.deleteExpertFromSubService(username, subServiceName);
         return "expert deleted from subService";
@@ -96,13 +96,13 @@ public class ManagerController {
         return "subService price update";
     }
 
-    @GetMapping("/searchAndFilterCustomer")
+    @PostMapping("/searchAndFilterCustomer")
     public List<CustomerDto> searchAndFilterCustomer(@RequestBody CustomerRequestDto requestDto) {
         List<Customer> customerList = customerServiceIMPL.searchAndFilterCustomer(requestDto);
         return CustomerMapper.INSTANCE.listToDtoList(customerList);
     }
 
-    @GetMapping("/searchAndFilterExpert")
+    @PostMapping("/searchAndFilterExpert")
     public List<ExpertViewDto> searchAndFilterExpert(@RequestBody ExpertRequestDto requestDto) {
         List<Expert> expertList = expertServiceIMPL.searchAndFilterExpert(requestDto);
         return ExpertViewMapper.INSTANCE.listToDtoList(expertList);
