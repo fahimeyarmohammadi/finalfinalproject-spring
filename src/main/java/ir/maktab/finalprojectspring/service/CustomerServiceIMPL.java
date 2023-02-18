@@ -3,12 +3,14 @@ package ir.maktab.finalprojectspring.service;
 import ir.maktab.finalprojectspring.data.dto.CardInformationDto;
 import ir.maktab.finalprojectspring.data.dto.CustomerRequestDto;
 import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
+import ir.maktab.finalprojectspring.data.enumeration.UserType;
 import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +36,15 @@ public class CustomerServiceIMPL implements CustomerService {
 
     private final ReviewServiceIMPL reviewServiceIMPL;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
     public void addCustomer(Customer customer) {
         Validation.validateName(customer.getName());
         Validation.validateName(customer.getFamilyName());
         Validation.validateEmail(customer.getEmail());
         Validation.validatePassword(customer.getPassword());
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+        customer.setUserType(UserType.ROLE_CUSTOMER);
         customer.setCredit((double) 0);
         customer.setUsername(customer.getEmail());
         try {

@@ -2,6 +2,7 @@ package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.dto.ExpertRequestDto;
 import ir.maktab.finalprojectspring.data.enumeration.ExpertCondition;
+import ir.maktab.finalprojectspring.data.enumeration.UserType;
 import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
@@ -10,6 +11,7 @@ import ir.maktab.finalprojectspring.util.DateUtil;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,11 +41,15 @@ public class ExpertServiceIMPL implements ExpertService {
 
     private final ReviewServiceIMPL reviewServiceIMPL;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
     public void addExpert(Expert expert) {
         Validation.validateName(expert.getName());
         Validation.validateName(expert.getFamilyName());
         Validation.validateEmail(expert.getEmail());
         Validation.validatePassword(expert.getPassword());
+        expert.setPassword(passwordEncoder.encode(expert.getPassword()));
+        expert.setUserType(UserType.ROLE_EXPERT);
         expert.setCredit((double) 0);
         expert.setScore(0);
         expert.setExpertCondition(ExpertCondition.NEW);
