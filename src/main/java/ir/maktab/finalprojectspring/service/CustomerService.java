@@ -39,4 +39,8 @@ public interface CustomerService {
     void customerRegisterAReview(Review review);
 
     List<Customer> searchAndFilterCustomer(CustomerRequestDto request);
+
+    List<Offers> getOffersListOrderedByPrice(CustomerOrder order);
+
+    List<Offers> getOffersListOrderedByExpertScore(CustomerOrder order);
 }

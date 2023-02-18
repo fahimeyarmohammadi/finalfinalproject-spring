@@ -83,6 +83,20 @@ public class CustomerController {
         return CustomerOrderMapper.INSTANCE.listToDtoList(customerOrderList);
     }
 
+    @GetMapping("/getOffersListOrderedByPrice")
+    public List<OffersDto> getOffersListOrderedByPrice(@RequestParam Long orderId) {
+        CustomerOrder customerOrder = customerOrderServiceIMPL.getCustomerOrderById(orderId);
+        List<Offers> offersList = customerServiceIMPL.getOffersListOrderedByPrice(customerOrder);
+        return OffersMapper.INSTANCE.listToDtoList(offersList);
+    }
+
+    @GetMapping("/getOffersListOrderedByExpertScore")
+    public List<OffersDto> getOffersListOrderedByExpertScore(@RequestParam Long orderId) {
+        CustomerOrder customerOrder = customerOrderServiceIMPL.getCustomerOrderById(orderId);
+        List<Offers> offersList = customerServiceIMPL.getOffersListOrderedByExpertScore(customerOrder);
+        return OffersMapper.INSTANCE.listToDtoList(offersList);
+    }
+
     @PutMapping("/selectExpert")
     public String selectExpert(@RequestParam Long offersId) {
         Offers offers = offersServiceIMPL.getOffersById(offersId);

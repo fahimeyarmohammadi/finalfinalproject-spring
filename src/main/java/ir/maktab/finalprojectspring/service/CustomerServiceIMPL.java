@@ -159,4 +159,12 @@ public class CustomerServiceIMPL implements CustomerService {
     public List<Customer> searchAndFilterCustomer(CustomerRequestDto request) {
         return customerRepository.findAll(CustomerRepository.selectByConditions(request));
     }
+
+    public List<Offers> getOffersListOrderedByPrice(CustomerOrder order) {
+        return offersServiceIMPL.getOffersListOrderedByPrice(order);
+    }
+
+    public List<Offers> getOffersListOrderedByExpertScore(CustomerOrder order){
+        return offersServiceIMPL.getOffersListOrderedByExpertScore(order);
+    }
 }

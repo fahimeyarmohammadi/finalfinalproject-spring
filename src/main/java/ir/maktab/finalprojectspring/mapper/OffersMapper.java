@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface OffersMapper {
 
@@ -13,4 +15,6 @@ public interface OffersMapper {
 
     @Mapping(source = "startWork", target = "startWork", dateFormat = "yyyy-MM-dd HH:mm:ss")
     Offers dtoToModel(OffersDto expertDto);
+
+    List<OffersDto> listToDtoList(List<Offers> offersList);
 }
