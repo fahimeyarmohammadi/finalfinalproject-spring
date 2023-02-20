@@ -1,14 +1,8 @@
 package ir.maktab.finalprojectspring.controller;
 
 import ir.maktab.finalprojectspring.data.dto.*;
-import ir.maktab.finalprojectspring.data.model.BaseService;
-import ir.maktab.finalprojectspring.data.model.Customer;
-import ir.maktab.finalprojectspring.data.model.Expert;
-import ir.maktab.finalprojectspring.data.model.SubService;
-import ir.maktab.finalprojectspring.mapper.BaseServiceMapper;
-import ir.maktab.finalprojectspring.mapper.CustomerMapper;
-import ir.maktab.finalprojectspring.mapper.ExpertViewMapper;
-import ir.maktab.finalprojectspring.mapper.SubServiceMapper;
+import ir.maktab.finalprojectspring.data.model.*;
+import ir.maktab.finalprojectspring.mapper.*;
 import ir.maktab.finalprojectspring.service.BaseServiceServiceIMPL;
 import ir.maktab.finalprojectspring.service.CustomerServiceIMPL;
 import ir.maktab.finalprojectspring.service.ExpertServiceIMPL;
@@ -107,6 +101,16 @@ public class ManagerController {
         List<Expert> expertList = expertServiceIMPL.searchAndFilterExpert(requestDto);
         return ExpertViewMapper.INSTANCE.listToDtoList(expertList);
 
+    }
+
+    @PostMapping("/getCustomerOrderByManager")
+    public List<CustomerOrderDto> getCustomerOrderByManager(@RequestBody CustomerOrderRequestDto request){
+        return CustomerOrderMapper.INSTANCE.listToDtoList(managerServiceIMPL.getCustomerOrderByManager(request));
+    }
+
+    @GetMapping("/getAllCustomerOrders")
+    public List<CustomerOrderDto> getAllCustomerOrders(@RequestParam String username){
+        return CustomerOrderMapper.INSTANCE.listToDtoList(managerServiceIMPL.getAllCustomerOrders(username));
     }
 
 }

@@ -1,7 +1,9 @@
 package ir.maktab.finalprojectspring.service;
 
+import ir.maktab.finalprojectspring.data.dto.OrderRequestDto;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.model.Offers;
+import ir.maktab.finalprojectspring.data.repository.CustomerOrderRepository;
 import ir.maktab.finalprojectspring.data.repository.OffersRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
@@ -50,5 +52,10 @@ public class OffersServiceIMPL implements OffersService {
     public Offers getOffersByCustomerOrderIdAndOffersCondition(Long customerOrderId) {
         return offersRepository.getOffersByCustomerOrderIdAndOffersCondition(customerOrderId).orElseThrow(() -> new NotFoundException("this offers not found"));
     }
+
+    public List<Offers> getCustomerOrderByCondition(OrderRequestDto request) {
+        return offersRepository.findAll(OffersRepository.selectByCondition(request));
+    }
+
 
 }

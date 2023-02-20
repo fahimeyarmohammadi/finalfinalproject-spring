@@ -1,5 +1,6 @@
 package ir.maktab.finalprojectspring.data.dto;
 
+import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -23,5 +24,7 @@ public class CustomerOrderDto {
     private String preferDate;
 
     private AddressDto addressDto;
+
+    private OrderCondition orderCondition;
 
 }

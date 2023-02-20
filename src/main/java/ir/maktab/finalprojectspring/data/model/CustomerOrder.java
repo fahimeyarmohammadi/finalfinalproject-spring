@@ -43,9 +43,11 @@ public class CustomerOrder {
     @Temporal(value = TemporalType.TIMESTAMP)
     Date doneDate;
 
-    @OneToOne(cascade =CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     Address address;
 
     @ManyToOne()
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     Customer customer;
 }

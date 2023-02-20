@@ -150,4 +150,14 @@ public class CustomerController {
         return "your review register";
     }
 
+    @GetMapping("/getCredit")
+    public Double customerGetCredit(){
+        return customerServiceIMPL.getCredit();
+    }
+
+    @PostMapping("/getCustomerOrderByCondition")
+    public List<CustomerOrderDto> getCustomerOrderByCondition(@RequestBody OrderRequestDto orderRequestDto){
+        return CustomerOrderMapper.INSTANCE.listToDtoList(customerServiceIMPL.getCustomerOrderByCondition(orderRequestDto));
+    }
+
 }

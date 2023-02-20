@@ -2,6 +2,7 @@ package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.dto.CardInformationDto;
 import ir.maktab.finalprojectspring.data.dto.CustomerRequestDto;
+import ir.maktab.finalprojectspring.data.dto.OrderRequestDto;
 import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.data.enumeration.UserType;
 import ir.maktab.finalprojectspring.data.model.*;
@@ -10,6 +11,9 @@ import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +81,7 @@ public class CustomerServiceIMPL implements CustomerService {
         Customer customer = getByUsername(username);
         order.setCustomer(customer);
         orderServiceIMPL.addOrder(order);
-        customer.getOrderList().add(order);
+      //  customer.getOrderList().add(order);
         customerRepository.save(customer);
     }
 
@@ -91,7 +95,7 @@ public class CustomerServiceIMPL implements CustomerService {
 
     public List<CustomerOrder> getAllCustomerOrders(String username) {
         Customer customer =getByUsername(username);
-        return customer.getOrderList();
+        return orderServiceIMPL.getAllCustomerOrder(username);
     }
 
     public List<CustomerOrder> getOrdersWaitingExpertSelection(String username) {
@@ -172,5 +176,19 @@ public class CustomerServiceIMPL implements CustomerService {
 
     public List<Offers> getOffersListOrderedByExpertScore(CustomerOrder order){
         return offersServiceIMPL.getOffersListOrderedByExpertScore(order);
+    }
+
+    public Double getCredit(){
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Customer customer=getByUsername( userDetails.getUsername());
+        return customer.getCredit();
+    }
+
+    public List<CustomerOrder> getCustomerOrderByCondition(OrderRequestDto request) {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        request.setCustomer(getByUsername(userDetails.getUsername()));
+      return orderServiceIMPL.getCustomerOrderByCondition(request);
     }
 }

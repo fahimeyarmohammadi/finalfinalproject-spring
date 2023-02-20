@@ -193,7 +193,7 @@ class CustomerServiceIMPLTest {
 
         customerServiceIMPL.customerGetOrder(customerOrder, "fahime@gmail.com");
 
-        assertTrue(customerServiceIMPL.getByUsername("fahime@gmail.com").getOrderList().size() > 0);
+        assertTrue(customerServiceIMPL.getAllCustomerOrders("fahime@gmail.com").size()>0);
     }
 
     //getAllCustomerOrders---------------------------------------------------------------------------------------------------------

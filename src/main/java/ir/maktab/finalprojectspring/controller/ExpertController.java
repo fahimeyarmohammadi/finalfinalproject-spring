@@ -3,6 +3,7 @@ package ir.maktab.finalprojectspring.controller;
 import ir.maktab.finalprojectspring.data.dto.CustomerOrderDto;
 import ir.maktab.finalprojectspring.data.dto.ExpertDto;
 import ir.maktab.finalprojectspring.data.dto.OffersDto;
+import ir.maktab.finalprojectspring.data.dto.OrderRequestDto;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.model.Expert;
 import ir.maktab.finalprojectspring.data.model.Offers;
@@ -66,6 +67,11 @@ public class ExpertController {
     @GetMapping("/expertGetOffersScore")
     public String expertGetOffersScore(@RequestParam Long offersId) {
         return "your score is : " + expertServiceIMPL.expertGetOffersScore(offersId);
+    }
+
+    @PostMapping("/getCustomerOrderByCondition")
+    public List<OffersDto> getCustomerOrderByCondition(@RequestBody OrderRequestDto request) {
+        return OffersMapper.INSTANCE.listToDtoList(expertServiceIMPL.getCustomerOrderByCondition(request));
     }
 }
 

@@ -31,9 +31,6 @@ import java.util.List;
 
 public class Customer extends Person implements UserDetails {
 
-    @OneToMany(mappedBy = "customer")
-    List<CustomerOrder> orderList = new ArrayList<>();
-
     @Enumerated(EnumType.STRING)
     private UserType userType;
 

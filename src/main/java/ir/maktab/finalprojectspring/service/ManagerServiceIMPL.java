@@ -1,17 +1,17 @@
 package ir.maktab.finalprojectspring.service;
 
+import ir.maktab.finalprojectspring.data.dto.CustomerOrderRequestDto;
 import ir.maktab.finalprojectspring.data.enumeration.UserType;
-import ir.maktab.finalprojectspring.data.model.BaseService;
-import ir.maktab.finalprojectspring.data.model.Expert;
-import ir.maktab.finalprojectspring.data.model.Manager;
-import ir.maktab.finalprojectspring.data.model.SubService;
+import ir.maktab.finalprojectspring.data.model.*;
 import ir.maktab.finalprojectspring.data.repository.ManagerRepository;
+import ir.maktab.finalprojectspring.exception.NotFoundException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +28,14 @@ public class ManagerServiceIMPL implements ManagerService {
 
     private final ManagerRepository managerRepository;
 
+    private final CustomerOrderServiceIMPL customerOrderServiceIMPL;
+
+    private final CustomerServiceIMPL customerServiceIMPL;
+
     @PostConstruct
     public void init(){
         Manager manager=new Manager();
-        manager.setUsername("admin");
+        manager.setUsername("manager");
         manager.setPassword("1234");
         manager.setUserType(UserType.ROLE_MANAGER);
         this.addManager(manager);
@@ -43,6 +47,11 @@ public class ManagerServiceIMPL implements ManagerService {
         managerRepository.save(manager);
     }
 
+    public Manager findByUsername(String username){
+        Optional<Manager> optionalManager = managerRepository.findByUsername(username);
+        return optionalManager.orElseThrow(() -> new NotFoundException("Invalid Username"));
+    }
+
     public void addBaseService(BaseService baseService) {
         baseServiceServiceIMPL.addBaseService(baseService);
     }
@@ -51,7 +60,8 @@ public class ManagerServiceIMPL implements ManagerService {
         subServiceServiceIMPL.addSubService(subService);
     }
 
-    public List<BaseService> getAllBaseService() {
+    public List<BaseService> getAllBaseService()
+    {
         return baseServiceServiceIMPL.getAllBaseService();
     }
 
@@ -83,4 +93,11 @@ public class ManagerServiceIMPL implements ManagerService {
         expertServiceIMPL.deleteSubServiceFromExpertList(username, subServiceName);
     }
 
+    public List<CustomerOrder> getCustomerOrderByManager(CustomerOrderRequestDto request){
+        return customerOrderServiceIMPL.getCustomerOrderByManager(request);
+    }
+    public List<CustomerOrder> getAllCustomerOrders(String username){
+        Customer customer=customerServiceIMPL.getByUsername(username);
+        return customerOrderServiceIMPL.getAllCustomerOrder(username);
+    }
 }

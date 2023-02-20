@@ -1,12 +1,20 @@
 package ir.maktab.finalprojectspring.service;
 
+import ir.maktab.finalprojectspring.data.dto.CustomerOrderRequestDto;
+import ir.maktab.finalprojectspring.data.dto.CustomerRequestDto;
+import ir.maktab.finalprojectspring.data.dto.OrderRequestDto;
+import ir.maktab.finalprojectspring.data.model.Customer;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.repository.CustomerOrderRepository;
 import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
+import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.DateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,6 +94,18 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
         CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
         savedCustomerOrder.setOrderCondition(OrderCondition.PAID);
         orderRepository.save(savedCustomerOrder);
+    }
+
+    public List<CustomerOrder> getCustomerOrderByCondition(OrderRequestDto request) {
+        return orderRepository.findAll(CustomerOrderRepository.selectByConditions(request));
+    }
+
+    public List<CustomerOrder> getAllCustomerOrder(String username) {
+        return orderRepository.getAllCustomerOrder(username);
+    }
+
+    public List<CustomerOrder> getCustomerOrderByManager(CustomerOrderRequestDto request){
+        return orderRepository.findAll(CustomerOrderRepository.selectOrderByManager(request));
     }
 
 }

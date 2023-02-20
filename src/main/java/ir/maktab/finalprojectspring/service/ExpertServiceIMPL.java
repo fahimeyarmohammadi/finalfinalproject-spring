@@ -1,6 +1,7 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.dto.ExpertRequestDto;
+import ir.maktab.finalprojectspring.data.dto.OrderRequestDto;
 import ir.maktab.finalprojectspring.data.enumeration.ExpertCondition;
 import ir.maktab.finalprojectspring.data.enumeration.UserType;
 import ir.maktab.finalprojectspring.data.model.*;
@@ -11,6 +12,9 @@ import ir.maktab.finalprojectspring.util.DateUtil;
 import ir.maktab.finalprojectspring.util.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -195,5 +199,12 @@ public class ExpertServiceIMPL implements ExpertService {
         if(request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
             request.setSubService(subServiceServiceIMPL.getSubServiceByName(request.getSubServiceName()));
         return expertRepository.findAll(ExpertRepository.selectByConditions(request));
+    }
+
+    public List<Offers> getCustomerOrderByCondition(OrderRequestDto request) {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        request.setExpert(getByUsername(userDetails.getUsername()));
+        return offersServiceIMPL.getCustomerOrderByCondition(request);
     }
 }
