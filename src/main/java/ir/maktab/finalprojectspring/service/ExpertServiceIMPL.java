@@ -58,11 +58,11 @@ public class ExpertServiceIMPL implements ExpertService {
         expert.setScore(0);
         expert.setExpertCondition(ExpertCondition.NEW);
         expert.setUsername(expert.getEmail());
-        try {
-            expert.setImage(Validation.validateImage(expert.getPath()));
-        } catch (IOException e) {
-            throw new InvalidInputException("invalid image file");
-        }
+//        try {
+//            expert.setImage(Validation.validateImage(expert.getPath()));
+//        } catch (IOException e) {
+//            throw new InvalidInputException("invalid image file");
+//        }
 
         try {
             expertRepository.save(expert);
@@ -76,7 +76,7 @@ public class ExpertServiceIMPL implements ExpertService {
             throw new InvalidInputException("password and repeatPassword must be equal");
         Optional<Expert> signInExpert = expertRepository.findByUsername(username);
         Expert expert = signInExpert.orElseThrow(() -> new InvalidInputException("Invalid Username"));
-        expert.setPassword(newPassword);
+        expert.setPassword(passwordEncoder.encode(newPassword));
         expertRepository.save(expert);
     }
 

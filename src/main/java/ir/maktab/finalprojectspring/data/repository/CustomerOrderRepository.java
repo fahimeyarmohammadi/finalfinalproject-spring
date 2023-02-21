@@ -55,6 +55,8 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
                 predicateList.add(cb.equal(root.get("subService").get("subName"), request.getSubServiceName()));
             if (request.getBaseServiceName() != null && request.getBaseServiceName().length() != 0)
                 predicateList.add(cb.equal(root.get("subService").get("baseService").get("name"), request.getBaseServiceName()));
+           // if(request.getStartDate()!= null && request.getStartDate().length()!= 0 )
+
             return cb.and(predicateList.toArray(new Predicate[0]));
         };
     }

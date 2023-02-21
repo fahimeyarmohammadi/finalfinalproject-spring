@@ -9,6 +9,7 @@ import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.DateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -55,6 +56,10 @@ public class OffersServiceIMPL implements OffersService {
 
     public List<Offers> getCustomerOrderByCondition(OrderRequestDto request) {
         return offersRepository.findAll(OffersRepository.selectByCondition(request));
+    }
+
+    public List<Offers> getAcceptOffers(String username){
+      return offersRepository.getAcceptOffers(username);
     }
 
 

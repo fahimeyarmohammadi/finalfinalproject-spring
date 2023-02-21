@@ -64,7 +64,7 @@ public class CustomerServiceIMPL implements CustomerService {
         }
         Optional<Customer> signInCustomer = customerRepository.findByUsername(username);
         Customer customer = signInCustomer.orElseThrow(() -> new InvalidInputException("Invalid Username"));
-        customer.setPassword(newPassword);
+        customer.setPassword(passwordEncoder.encode(newPassword));
         customerRepository.save(customer);
     }
 

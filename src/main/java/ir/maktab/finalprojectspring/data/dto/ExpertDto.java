@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -29,5 +30,5 @@ public class ExpertDto {
             message = "password must :8 char, at least one uppercase, one lowercase, and number ")
     private String password;
 
-    private String path;
+    private MultipartFile image;
 }

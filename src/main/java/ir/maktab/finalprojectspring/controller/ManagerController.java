@@ -113,4 +113,9 @@ public class ManagerController {
         return CustomerOrderMapper.INSTANCE.listToDtoList(managerServiceIMPL.getAllCustomerOrders(username));
     }
 
+    @GetMapping("/getExpertAllCustomerOrder")
+    public List<CustomerOrderDto> getExpertAllCustomerOrder(@RequestParam String username){
+        return CustomerOrderMapper.INSTANCE.listToDtoList(managerServiceIMPL.getExpertAllCustomerOrder(username));
+    }
+
 }

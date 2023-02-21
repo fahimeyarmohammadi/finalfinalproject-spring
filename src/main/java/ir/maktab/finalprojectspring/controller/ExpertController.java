@@ -14,6 +14,7 @@ import ir.maktab.finalprojectspring.service.CustomerOrderServiceIMPL;
 import ir.maktab.finalprojectspring.service.ExpertServiceIMPL;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +29,8 @@ public class ExpertController {
     private final CustomerOrderServiceIMPL customerOrderServiceIMPL;
 
 
-    @PostMapping("/register")
-    public String register(@Valid @RequestBody ExpertDto expertDto) {
+    @PostMapping(value = "/register",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String register(@Valid@ModelAttribute ExpertDto expertDto) {
         Expert expert = ExpertMapper.INSTANCE.dtoToModel(expertDto);
         expertServiceIMPL.addExpert(expert);
         return "you register successfully";

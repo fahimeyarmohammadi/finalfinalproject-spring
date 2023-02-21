@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,8 @@ public class ManagerServiceIMPL implements ManagerService {
     private final CustomerOrderServiceIMPL customerOrderServiceIMPL;
 
     private final CustomerServiceIMPL customerServiceIMPL;
+
+    private final OffersServiceIMPL offersServiceIMPL;
 
     @PostConstruct
     public void init(){
@@ -99,5 +102,15 @@ public class ManagerServiceIMPL implements ManagerService {
     public List<CustomerOrder> getAllCustomerOrders(String username){
         Customer customer=customerServiceIMPL.getByUsername(username);
         return customerOrderServiceIMPL.getAllCustomerOrder(username);
+    }
+
+    public List<CustomerOrder> getExpertAllCustomerOrder(String username){
+        Expert expert=expertServiceIMPL.getByUsername(username);
+        List<Offers>offersList=offersServiceIMPL.getAcceptOffers(username);
+        List<CustomerOrder> customerOrderList=new ArrayList<>();
+        for (Offers o:offersList) {
+            customerOrderList.add(o.getCustomerOrder());
+        }
+        return customerOrderList;
     }
 }

@@ -30,6 +30,9 @@ public interface OffersRepository extends JpaRepository<Offers, Long> , JpaSpeci
     @Query(value = "from Offers o where o.customerOrder.id=?1 and o.acceptOffer=true ")
     Optional<Offers> getOffersByCustomerOrderIdAndOffersCondition(@Param("id") Long id);
 
+    @Query(value = "from Offers o where o.expert.username=?1 and o.acceptOffer=true ")
+    List<Offers> getAcceptOffers(@Param("username") String username);
+
 
     static Specification selectByCondition(OrderRequestDto request) {
         return (Specification) (root, cq, cb) -> {

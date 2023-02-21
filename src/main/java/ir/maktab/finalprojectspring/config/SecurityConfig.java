@@ -46,31 +46,31 @@ public class SecurityConfig {
     }
 
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth)
-            throws Exception {
-
-        auth
-                .userDetailsService(username -> managerRepository
-                        .findByUsername(username)
-                        .orElseThrow(() -> new NotFoundException(String
-                             .format("this %s not found", username))))
-                .passwordEncoder(passwordEncoder).and()
-
-                .userDetailsService((username) -> expertRepository
-                        .findByUsername(username)
-                        .orElseThrow(() -> new NotFoundException(String.format("this %s notFound!", username))))
-                .passwordEncoder(passwordEncoder).and()
-
-        .userDetailsService(username -> customerRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new NotFoundException(String
-                        .format("this %s not found", username))))
-                .passwordEncoder(passwordEncoder);
-
-        System.out.println("hello");
-        System.out.println("");
-    }
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth)
+//            throws Exception {
+//
+//        auth
+//                .userDetailsService(username -> managerRepository
+//                        .findByUsername(username)
+//                        .orElseThrow(() -> new NotFoundException(String
+//                             .format("this %s not found", username))))
+//                .passwordEncoder(passwordEncoder).and()
+//
+//                .userDetailsService((username) -> expertRepository
+//                        .findByUsername(username)
+//                        .orElseThrow(() -> new NotFoundException(String.format("this %s notFound!", username))))
+//                .passwordEncoder(passwordEncoder).and()
+//
+//        .userDetailsService(username -> customerRepository
+//                .findByUsername(username)
+//                .orElseThrow(() -> new NotFoundException(String
+//                        .format("this %s not found", username))))
+//                .passwordEncoder(passwordEncoder);
+//
+//        System.out.println("hello");
+//        System.out.println("");
+//    }
 
 
 
