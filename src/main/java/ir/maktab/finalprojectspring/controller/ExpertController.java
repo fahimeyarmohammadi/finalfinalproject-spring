@@ -12,8 +12,10 @@ import ir.maktab.finalprojectspring.mapper.ExpertMapper;
 import ir.maktab.finalprojectspring.mapper.OffersMapper;
 import ir.maktab.finalprojectspring.service.CustomerOrderServiceIMPL;
 import ir.maktab.finalprojectspring.service.ExpertServiceIMPL;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +32,27 @@ public class ExpertController {
 
 
     @PostMapping(value = "/register",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String register(@Valid@ModelAttribute ExpertDto expertDto) {
+    public String register(@Valid@ModelAttribute ExpertDto expertDto,HttpServletRequest request) {
         Expert expert = ExpertMapper.INSTANCE.dtoToModel(expertDto);
-        expertServiceIMPL.addExpert(expert);
+        expertServiceIMPL.addExpert(expert,getSiteURL(request));
         return "you register successfully";
     }
+
+    private String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
+    }
+
+    @GetMapping("/verify")
+    public String verifyUser(@RequestParam("code") String code) {
+        if (expertServiceIMPL.verify(code)) {
+            return "verify_success";
+        } else {
+            return "verify_fail";
+        }
+    }
+
+
 
     @GetMapping("/logIn")
     public String logIn(@RequestParam String username, @RequestParam String password) {

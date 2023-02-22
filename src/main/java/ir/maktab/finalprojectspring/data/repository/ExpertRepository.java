@@ -2,6 +2,7 @@ package ir.maktab.finalprojectspring.data.repository;
 
 import ir.maktab.finalprojectspring.data.dto.ExpertRequestDto;
 import ir.maktab.finalprojectspring.data.model.Expert;
+import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,9 @@ public interface ExpertRepository extends JpaRepository<Expert, Long>, JpaSpecif
 
     @Query(value = "From Expert e where e.expertCondition=ir.maktab.finalprojectspring.data.enumeration.ExpertCondition.NEW or e.expertCondition=ir.maktab.finalprojectspring.data.enumeration.ExpertCondition.AWAITING_CONFIRMATION")
     List<Expert> getAllExpertNotAccepted();
+
+    @Query("FROM Expert e WHERE e.verificationCode = ?1")
+    public Expert findByVerificationCode(String code);
 
     static Specification selectByConditions(ExpertRequestDto request) {
         return (Specification) (root, cq, cb) -> {
@@ -40,6 +46,20 @@ public interface ExpertRepository extends JpaRepository<Expert, Long>, JpaSpecif
                 predicateList.add(cb.lessThanOrEqualTo(root.get("score"), Integer.parseInt(request.getMaxScore())));
             if (request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
                 predicateList.add(cb.isMember(request.getSubService(),root.get("subServiceList")));
+            if(request.getStartDate()!= null && request.getStartDate().length()!= 0 ) {
+                try {
+                    predicateList.add(cb.greaterThanOrEqualTo(root.get("date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getStartDate())));
+                } catch (ParseException e) {
+                    throw new InvalidInputException("can not convert string to date");
+                }
+            }
+            if(request.getEndDate()!= null && request.getEndDate().length()!= 0){
+                try {
+                    predicateList.add(cb.lessThanOrEqualTo(root.get("date"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getEndDate())));
+                } catch (ParseException e) {
+                    throw new InvalidInputException("can not convert string to date");
+                }
+            }
             return cb.and(predicateList.toArray(new Predicate[0]));
         };
     }

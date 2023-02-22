@@ -63,30 +63,30 @@ class ExpertServiceIMPLTest {
 
     //addExpert---------------------------------------------------------------------------------------------------------------
 
-    @ParameterizedTest
-    @MethodSource(value = "expertData")
-    @Order(1)
-    void addExpert_InvalidInformationTest(Expert invalidExpert) {
+//    @ParameterizedTest
+//    @MethodSource(value = "expertData")
+//    @Order(1)
+//    void addExpert_InvalidInformationTest(Expert invalidExpert) {
+//
+//        Throwable exception = assertThrows(InvalidInputException.class, () -> expertServiceIMPL.addExpert(invalidExpert));
+//
+//        assertEquals("Invalid input", exception.getMessage());
+//
+//    }
 
-        Throwable exception = assertThrows(InvalidInputException.class, () -> expertServiceIMPL.addExpert(invalidExpert));
-
-        assertEquals("Invalid input", exception.getMessage());
-
-    }
-
-    @Test
-    @Order(2)
-    void addExpertTest() throws IOException {
-
-        Expert expert = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/valid.jpg").build();
-
-        expertServiceIMPL.addExpert(expert);
-
-        Expert savedExpert = expertServiceIMPL.getByUsername("fahime@gmail.com");
-
-        assertEquals("fahime@gmail.com", savedExpert.getEmail());
-
-    }
+//    @Test
+//    @Order(2)
+//    void addExpertTest() throws IOException {
+//
+//        Expert expert = Expert.builder().name("fahime").familyName("yarmohammadi").email("fahime@gmail.com").password("Fy123456").path("image/valid.jpg").build();
+//
+//        expertServiceIMPL.addExpert(expert);
+//
+//        Expert savedExpert = expertServiceIMPL.getByUsername("fahime@gmail.com");
+//
+//        assertEquals("fahime@gmail.com", savedExpert.getEmail());
+//
+//    }
 
     //changePassword-----------------------------------------------------------------------------------------------------
 

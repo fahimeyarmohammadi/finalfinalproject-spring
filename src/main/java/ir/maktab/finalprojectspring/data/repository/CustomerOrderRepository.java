@@ -5,6 +5,7 @@ import ir.maktab.finalprojectspring.data.dto.CustomerRequestDto;
 import ir.maktab.finalprojectspring.data.dto.OrderRequestDto;
 import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
+import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +58,20 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
                 predicateList.add(cb.equal(root.get("subService").get("subName"), request.getSubServiceName()));
             if (request.getBaseServiceName() != null && request.getBaseServiceName().length() != 0)
                 predicateList.add(cb.equal(root.get("subService").get("baseService").get("name"), request.getBaseServiceName()));
-           // if(request.getStartDate()!= null && request.getStartDate().length()!= 0 )
+            if(request.getStartDate()!= null && request.getStartDate().length()!= 0 ) {
+                try {
+                    predicateList.add(cb.greaterThanOrEqualTo(root.get("preferDate"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getStartDate())));
+                } catch (ParseException e) {
+                    throw new InvalidInputException("can not convert string to date");
+                }
+            }
+                if(request.getEndDate()!= null && request.getEndDate().length()!= 0){
+                    try {
+                        predicateList.add(cb.lessThanOrEqualTo(root.get("preferDate"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getEndDate())));
+                    } catch (ParseException e) {
+                        throw new InvalidInputException("can not convert string to date");
+                    }
+                }
 
             return cb.and(predicateList.toArray(new Predicate[0]));
         };

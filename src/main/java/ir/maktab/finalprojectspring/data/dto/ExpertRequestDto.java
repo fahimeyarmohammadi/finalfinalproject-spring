@@ -28,4 +28,8 @@ public class ExpertRequestDto {
     private String subServiceName;
 
     private SubService subService;
+
+    private String startDate;
+
+    private String endDate;
 }

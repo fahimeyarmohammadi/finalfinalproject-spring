@@ -48,6 +48,11 @@ public class Expert extends Person  implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+
+    private boolean enabled;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(getUserType().name()));
@@ -70,9 +75,9 @@ public class Expert extends Person  implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        if (expertCondition.equals(ExpertCondition.INACTIVE))
-            return false;
-        else
-            return true;
+//        if (expertCondition.equals(ExpertCondition.INACTIVE))
+//            return false;
+//        else
+            return enabled;
     }
 }

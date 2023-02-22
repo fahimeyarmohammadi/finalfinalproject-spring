@@ -10,20 +10,26 @@ import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.DateUtil;
 import ir.maktab.finalprojectspring.util.validation.Validation;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import net.bytebuddy.utility.RandomString;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,7 +53,9 @@ public class ExpertServiceIMPL implements ExpertService {
 
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public void addExpert(Expert expert) {
+    private final JavaMailSender mailSender;
+
+    public void addExpert(Expert expert, String siteURL) {
         Validation.validateName(expert.getName());
         Validation.validateName(expert.getFamilyName());
         Validation.validateEmail(expert.getEmail());
@@ -64,11 +72,67 @@ public class ExpertServiceIMPL implements ExpertService {
 //            throw new InvalidInputException("invalid image file");
 //        }
 
+        String randomCode = RandomString.make(64);
+        expert.setVerificationCode(randomCode);
+        expert.setEnabled(false);
+
         try {
             expertRepository.save(expert);
         } catch (DataIntegrityViolationException e) {
             throw new InvalidInputException("Customer already exist with given email:" + expert.getEmail());
         }
+
+        try {
+            sendVerificationEmail(expert, siteURL);
+        } catch (MessagingException e) {
+            throw new InvalidInputException("MessagingException in sendVerificationEmail");
+        } catch (UnsupportedEncodingException e) {
+            throw new InvalidInputException("UnsupportedEncodingException in sendVerificationEmail");
+        }
+    }
+
+    private void sendVerificationEmail(Expert expert, String siteURL) throws MessagingException, UnsupportedEncodingException {
+
+        String toAddress = expert.getEmail();
+        String fromAddress = "Your email address";
+        String senderName = "Your company name";
+        String subject = "Please verify your registration";
+        String content = "Dear [[name]],<br>"
+                + "Please click the link below to verify your registration:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Thank you,<br>"
+                + "Your company name.";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+
+        content = content.replace("[[name]]", expert.getName());
+        String verifyURL = siteURL + "/verify?code=" + expert.getVerificationCode();
+
+        content = content.replace("[[URL]]", verifyURL);
+
+        helper.setText(content, true);
+
+        mailSender.send(message);
+    }
+
+    public boolean verify(String verificationCode) {
+        Expert expert= expertRepository.findByVerificationCode(verificationCode);
+
+        if (expert == null || expert.isEnabled()) {
+            return false;
+        } else {
+            expert.setVerificationCode(null);
+            expert.setEnabled(true);
+            expertRepository.save(expert);
+
+            return true;
+        }
+
     }
 
     public void changPassword(String username, String repeatNewPassword, String newPassword){

@@ -18,4 +18,8 @@ public class CustomerRequestDto {
 
     @Email(message = "Invalid email! Please enter valid email")
     private String email;
+
+    private String startDate;
+
+    private String endDate;
 }

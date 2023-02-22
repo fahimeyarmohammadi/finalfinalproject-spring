@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ExpertService {
 
-    void addExpert(Expert expert) throws IOException;
+    void addExpert(Expert expert,String siteURL);
 
     void changPassword(String username, String repeatNewPassword, String newPassword);
 
