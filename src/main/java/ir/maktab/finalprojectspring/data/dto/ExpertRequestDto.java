@@ -32,4 +32,8 @@ public class ExpertRequestDto {
     private String startDate;
 
     private String endDate;
+
+    private String customerOrderMinNumber;
+
+    private String customerOrderMaxNumber;
 }

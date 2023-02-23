@@ -27,40 +27,6 @@ public interface ExpertRepository extends JpaRepository<Expert, Long>, JpaSpecif
     List<Expert> getAllExpertNotAccepted();
 
     @Query("FROM Expert e WHERE e.verificationCode = ?1")
-    public Expert findByVerificationCode(String code);
+    Expert findByVerificationCode(String code);
 
-    static Specification selectByConditions(ExpertRequestDto request) {
-        return (Specification) (root, cq, cb) -> {
-            List<Predicate> predicateList = new ArrayList<>();
-            if (request.getName() != null && request.getName().length() != 0)
-                predicateList.add(cb.equal(root.get("name"), request.getName()));
-            if (request.getFamilyName() != null && request.getFamilyName().length() != 0)
-                predicateList.add(cb.equal(root.get("familyName"), request.getFamilyName()));
-            if (request.getEmail() != null && request.getEmail().length() != 0)
-                predicateList.add(cb.equal(root.get("email"), request.getEmail()));
-            if (request.getScore() != null && request.getScore().length() != 0)
-                predicateList.add(cb.equal(root.get("score"), Integer.parseInt(request.getScore())));
-            if (request.getMinScore() != null && request.getMinScore().length() != 0)
-                predicateList.add(cb.greaterThanOrEqualTo(root.get("score"), Integer.parseInt(request.getMinScore())));
-            if (request.getMaxScore() != null && request.getMaxScore().length() != 0)
-                predicateList.add(cb.lessThanOrEqualTo(root.get("score"), Integer.parseInt(request.getMaxScore())));
-            if (request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
-                predicateList.add(cb.isMember(request.getSubService(),root.get("subServiceList")));
-            if(request.getStartDate()!= null && request.getStartDate().length()!= 0 ) {
-                try {
-                    predicateList.add(cb.greaterThanOrEqualTo(root.get("date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getStartDate())));
-                } catch (ParseException e) {
-                    throw new InvalidInputException("can not convert string to date");
-                }
-            }
-            if(request.getEndDate()!= null && request.getEndDate().length()!= 0){
-                try {
-                    predicateList.add(cb.lessThanOrEqualTo(root.get("date"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getEndDate())));
-                } catch (ParseException e) {
-                    throw new InvalidInputException("can not convert string to date");
-                }
-            }
-            return cb.and(predicateList.toArray(new Predicate[0]));
-        };
-    }
 }

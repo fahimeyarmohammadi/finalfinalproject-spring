@@ -43,7 +43,9 @@ public class Expert extends Person  implements UserDetails {
     @Column(length = 300000)
     byte[] image;
 
-    String path;
+    private String path;
+
+    private int customerOrderNumber;
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
@@ -75,9 +77,9 @@ public class Expert extends Person  implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-//        if (expertCondition.equals(ExpertCondition.INACTIVE))
-//            return false;
-//        else
+        if (expertCondition.equals(ExpertCondition.INACTIVE))
+            return false;
+        else
             return enabled;
     }
 }

@@ -52,14 +52,6 @@ public class ExpertController {
         }
     }
 
-
-
-    @GetMapping("/logIn")
-    public String logIn(@RequestParam String username, @RequestParam String password) {
-        expertServiceIMPL.signIn(username, password);
-        return "ok";
-    }
-
     @PutMapping("/changePassword")
     public String changePassword(@RequestParam String username, String repeatNewPassword, String newPassword) {
         expertServiceIMPL.changPassword(username, repeatNewPassword, newPassword);
@@ -77,9 +69,7 @@ public class ExpertController {
         CustomerOrder customerOrder = customerOrderServiceIMPL.getCustomerOrderById(offersDto.getCustomerOrderId());
         Expert expert = expertServiceIMPL.getByUsername(offersDto.getExpertUsername());
         Offers offers = OffersMapper.INSTANCE.dtoToModel(offersDto);
-        offers.setExpert(expert);
-        offers.setCustomerOrder(customerOrder);
-        expertServiceIMPL.registerOffer(offers);
+        expertServiceIMPL.registerOffer(offers,expert,customerOrder);
         return "your offer register";
     }
 

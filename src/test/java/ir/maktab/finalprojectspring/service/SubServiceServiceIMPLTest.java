@@ -39,11 +39,11 @@ class SubServiceServiceIMPLTest {
 
     @Test
     @Order(1)
-    void addSubServiceTest() throws ObjectExistException, NotFoundException {
+    void addSubServiceTest(){
 
         baseServiceServiceIMPL.addBaseService(baseService);
 
-        subServiceServiceIMPL.addSubService(subService);
+        subServiceServiceIMPL.addSubService(subService,baseService);
 
         SubService saveSubService = subServiceServiceIMPL.getSubServiceByName("KitchenAppliances");
 
@@ -57,7 +57,7 @@ class SubServiceServiceIMPLTest {
 
         SubService repeatedSubService = SubService.builder().subName("KitchenAppliances").baseService(baseService).build();
 
-        Throwable exception = assertThrows(ObjectExistException.class, () -> subServiceServiceIMPL.addSubService(repeatedSubService));
+        Throwable exception = assertThrows(ObjectExistException.class, () -> subServiceServiceIMPL.addSubService(repeatedSubService,baseService));
 
         assertEquals("this subService is exist", exception.getMessage());
 

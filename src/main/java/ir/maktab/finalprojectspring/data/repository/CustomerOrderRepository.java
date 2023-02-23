@@ -26,9 +26,6 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
     @Query(value = "from CustomerOrder c where c.subService.subName=?1 and (c.orderCondition=ir.maktab.finalprojectspring.data.enumeration.OrderCondition.WAITING_EXPERT_SELECTION or c.orderCondition=ir.maktab.finalprojectspring.data.enumeration.OrderCondition.WAITING_EXPERT_SUGGESTION)")
     List<CustomerOrder> getAllCustomerOrderInSubService(@Param("subNam") String subName);
 
-    @Override
-    Optional<CustomerOrder> findById(Long id);
-
     @Query(value = "from CustomerOrder c where c.customer.username=?1 and (c.orderCondition=ir.maktab.finalprojectspring.data.enumeration.OrderCondition.WAITING_EXPERT_SELECTION)")
     List<CustomerOrder> getAllCustomerOrderWaitingExpertSelection(@Param("username") String username);
 
@@ -37,44 +34,4 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
 
     @Query(value = "from CustomerOrder c where c.customer.username=?1")
     List<CustomerOrder> getAllCustomerOrder(@Param("username") String username);
-
-    static Specification selectByConditions(OrderRequestDto request) {
-        return (Specification) (root, cq, cb) -> {
-            List<Predicate> predicateList = new ArrayList<>();
-            if (request.getCustomer() != null)
-                predicateList.add(cb.equal(root.get("customer"), request.getCustomer()));
-            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)
-                predicateList.add(cb.equal(root.get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));
-            return cb.and(predicateList.toArray(new Predicate[0]));
-        };
-    }
-
-    static Specification selectOrderByManager(CustomerOrderRequestDto request) {
-        return (Specification) (root, cq, cb) -> {
-            List<Predicate> predicateList = new ArrayList<>();
-            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)
-                predicateList.add(cb.equal(root.get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));
-            if (request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
-                predicateList.add(cb.equal(root.get("subService").get("subName"), request.getSubServiceName()));
-            if (request.getBaseServiceName() != null && request.getBaseServiceName().length() != 0)
-                predicateList.add(cb.equal(root.get("subService").get("baseService").get("name"), request.getBaseServiceName()));
-            if(request.getStartDate()!= null && request.getStartDate().length()!= 0 ) {
-                try {
-                    predicateList.add(cb.greaterThanOrEqualTo(root.get("preferDate"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getStartDate())));
-                } catch (ParseException e) {
-                    throw new InvalidInputException("can not convert string to date");
-                }
-            }
-                if(request.getEndDate()!= null && request.getEndDate().length()!= 0){
-                    try {
-                        predicateList.add(cb.lessThanOrEqualTo(root.get("preferDate"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getEndDate())));
-                    } catch (ParseException e) {
-                        throw new InvalidInputException("can not convert string to date");
-                    }
-                }
-
-            return cb.and(predicateList.toArray(new Predicate[0]));
-        };
-    }
-
 }

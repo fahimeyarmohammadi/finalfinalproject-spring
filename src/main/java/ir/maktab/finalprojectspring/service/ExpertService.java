@@ -15,7 +15,6 @@ public interface ExpertService {
 
     void changPassword(String username, String repeatNewPassword, String newPassword);
 
-    Expert signIn(String username, String password);
 
     Expert getByUsername(String username);
 
@@ -29,7 +28,7 @@ public interface ExpertService {
 
     List<CustomerOrder> getAllCustomerOrderInSubService(String userName);
 
-    void registerOffer(Offers offers);
+    void registerOffer(Offers offers,Expert expert,CustomerOrder customerOrder);
 
     String convertArrayByteToImage(String username) throws IOException;
 

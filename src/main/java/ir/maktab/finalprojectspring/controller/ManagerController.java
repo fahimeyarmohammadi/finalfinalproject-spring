@@ -34,11 +34,10 @@ public class ManagerController {
     }
 
     @PostMapping("/addSubService")
-    public String addSubService(@Valid @RequestBody SubServiceDto subServiceDto, @RequestParam String baseServiceName) {
+    public String addSubService(@Valid @RequestBody SubServiceDto subServiceDto , @RequestParam String baseServiceName) {
         SubService subService = SubServiceMapper.INSTANCE.dtoToModel(subServiceDto);
         BaseService baseService = baseServiceServiceIMPL.getBaseServiceByName(baseServiceName);
-        subService.setBaseService(baseService);
-        managerServiceIMPL.addSubService(subService);
+        managerServiceIMPL.addSubService(subService,baseService);
         return "subService added";
     }
 

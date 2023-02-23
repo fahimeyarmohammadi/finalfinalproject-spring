@@ -148,34 +148,34 @@ class CustomerServiceIMPLTest {
     }
 
     //signIn-------------------------------------------------------------------------------------------------------------
-    @Test
-    @Order(7)
-    void SignIn_InvalidUsernameTest() {
+//    @Test
+//    @Order(7)
+//    void SignIn_InvalidUsernameTest() {
+//
+//        Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.signIn("fahime@gmail.co", "Fahime12"));
+//
+//        assertEquals("Invalid Username", exception.getMessage());
+//
+//    }
 
-        Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.signIn("fahime@gmail.co", "Fahime12"));
+//    @Test
+//    @Order(8)
+//    void signIn_InvalidPasswordTest() {
+//
+//        Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.signIn("fahime@gmail.com", "Fahime1"));
+//
+//        assertEquals("The password is not correct", exception.getMessage());
+//    }
 
-        assertEquals("Invalid Username", exception.getMessage());
-
-    }
-
-    @Test
-    @Order(8)
-    void signIn_InvalidPasswordTest() {
-
-        Throwable exception = assertThrows(InvalidInputException.class, () -> customerServiceIMPL.signIn("fahime@gmail.com", "Fahime1"));
-
-        assertEquals("The password is not correct", exception.getMessage());
-    }
-
-    @Test
-    @Order(9)
-    void signInTest() throws InvalidInputException {
-
-        Customer signInCustomer = customerServiceIMPL.signIn("fahime@gmail.com", "Fahime12");
-
-        assertNotNull(signInCustomer);
-
-    }
+//    @Test
+//    @Order(9)
+//    void signInTest() throws InvalidInputException {
+//
+//        Customer signInCustomer = customerServiceIMPL.signIn("fahime@gmail.com", "Fahime12");
+//
+//        assertNotNull(signInCustomer);
+//
+//    }
 
     //customerGetOrder---------------------------------------------------------------------------------------------------------------
 
@@ -187,11 +187,13 @@ class CustomerServiceIMPLTest {
 
         SubService subService = subServiceServiceIMPL.getSubServiceByName("kitchen");
 
-        CustomerOrder customerOrder = CustomerOrder.builder().description("firstOrder").proposedPrice(30e5).address(Address.builder().city("tehran").alley("ghadiyani").street("satarkhan").houseNumber("124").build()).preferDate(preferDate).build();
+        CustomerOrder customerOrder = CustomerOrder.builder().description("firstOrder").proposedPrice(30e5).preferDate(preferDate).build();
 
         customerOrder.setSubService(subService);
 
-        customerServiceIMPL.customerGetOrder(customerOrder, "fahime@gmail.com");
+        Address address=Address.builder().city("tehran").alley("ghadiyani").street("satarkhan").houseNumber("124").build();
+
+        customerServiceIMPL.customerGetOrder(customerOrder, "fahime@gmail.com",address,subService);
 
         assertTrue(customerServiceIMPL.getAllCustomerOrders("fahime@gmail.com").size()>0);
     }

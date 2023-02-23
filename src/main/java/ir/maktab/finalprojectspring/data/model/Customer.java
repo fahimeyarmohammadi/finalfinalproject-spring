@@ -31,6 +31,8 @@ import java.util.List;
 
 public class Customer extends Person implements UserDetails {
 
+    private int customerOrderNumber;
+
     @Enumerated(EnumType.STRING)
     private UserType userType;
 

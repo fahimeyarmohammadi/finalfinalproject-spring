@@ -18,9 +18,6 @@ import java.util.Optional;
 @Repository
 public interface OffersRepository extends JpaRepository<Offers, Long> , JpaSpecificationExecutor {
 
-    @Override
-    List<Offers> findAll();
-
     @Query(value = "from Offers o where o.customerOrder.id=?1 ORDER BY o.offerPrice ASC")
     List<Offers> offersListOrderedByPrice(@Param("id") Long id);
 
@@ -32,16 +29,4 @@ public interface OffersRepository extends JpaRepository<Offers, Long> , JpaSpeci
 
     @Query(value = "from Offers o where o.expert.username=?1 and o.acceptOffer=true ")
     List<Offers> getAcceptOffers(@Param("username") String username);
-
-
-    static Specification selectByCondition(OrderRequestDto request) {
-        return (Specification) (root, cq, cb) -> {
-            List<Predicate> predicateList = new ArrayList<>();
-            if (request.getExpert() != null)
-                predicateList.add(cb.equal(root.get("expert"), request.getExpert()));
-            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)
-                predicateList.add(cb.equal(root.get("customerOrder").get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));
-            return cb.and(predicateList.toArray(new Predicate[0]));
-        };
-    }
 }

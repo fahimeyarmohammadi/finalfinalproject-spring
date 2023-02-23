@@ -21,8 +21,10 @@ public class SubServiceServiceIMPL implements SubServiceService {
 
     private final BaseServiceServiceIMPL baseServiceServiceIMPL;
 
-    public void addSubService(SubService subService) {
-        BaseService baseService=baseServiceServiceIMPL.getBaseServiceByName(subService.getBaseService().getName());
+    public void addSubService(SubService subService, BaseService baseService) {
+        BaseService SavedBaseService=baseServiceServiceIMPL.getBaseServiceByName(baseService.getName());
+        subService.setBaseService(baseService);
+
         try {
             subServiceRepository.save(subService);
         } catch (DataIntegrityViolationException e) {

@@ -19,4 +19,6 @@ public class SubServiceDto {
 
     @NotNull
     private String description;
+
+    private BaseServiceDto baseServiceDto;
 }

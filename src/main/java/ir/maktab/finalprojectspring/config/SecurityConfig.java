@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/expert/register").permitAll()
+                .requestMatchers("/expert/verify").permitAll()
                 .requestMatchers("/customer/register").permitAll()
                 .requestMatchers("/expert/**").hasRole("EXPERT")
                 .requestMatchers("/customer/**").hasRole("CUSTOMER")

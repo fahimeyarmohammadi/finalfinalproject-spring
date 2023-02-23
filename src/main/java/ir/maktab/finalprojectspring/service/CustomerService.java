@@ -12,9 +12,7 @@ public interface CustomerService {
 
     void changPassword(String username, String repeatNewPassword, String newPassword);
 
-    Customer signIn(String username, String password);
-
-    void customerGetOrder(CustomerOrder order, String username);
+    void customerGetOrder(CustomerOrder order, String username,Address address,SubService subService);
 
     List<BaseService> getAllBaseService();
 
@@ -36,7 +34,7 @@ public interface CustomerService {
 
     void onlinePayment(CardInformationDto cardInformation);
 
-    void customerRegisterAReview(Review review);
+    void customerRegisterAReview(Review review,Offers offers,CustomerOrder customerOrder);
 
     List<Customer> searchAndFilterCustomer(CustomerRequestDto request);
 

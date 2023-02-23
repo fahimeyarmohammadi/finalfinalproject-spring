@@ -22,4 +22,8 @@ public class CustomerRequestDto {
     private String startDate;
 
     private String endDate;
+
+    private String customerOrderMinNumber;
+
+    private String customerOrderMaxNumber;
 }

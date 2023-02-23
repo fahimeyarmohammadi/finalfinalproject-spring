@@ -1,18 +1,20 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.dto.OrderRequestDto;
+import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.model.Offers;
-import ir.maktab.finalprojectspring.data.repository.CustomerOrderRepository;
 import ir.maktab.finalprojectspring.data.repository.OffersRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.DateUtil;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,12 +57,21 @@ public class OffersServiceIMPL implements OffersService {
     }
 
     public List<Offers> getCustomerOrderByCondition(OrderRequestDto request) {
-        return offersRepository.findAll(OffersRepository.selectByCondition(request));
+        return offersRepository.findAll(selectByCondition(request));
     }
 
-    public List<Offers> getAcceptOffers(String username){
-      return offersRepository.getAcceptOffers(username);
+    static Specification selectByCondition(OrderRequestDto request) {
+        return (Specification) (root, cq, cb) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+            if (request.getExpert() != null)
+                predicateList.add(cb.equal(root.get("expert"), request.getExpert()));
+            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)
+                predicateList.add(cb.equal(root.get("customerOrder").get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));
+            return cb.and(predicateList.toArray(new Predicate[0]));
+        };
     }
 
-
+    public List<Offers> getAcceptOffers(String username) {
+        return offersRepository.getAcceptOffers(username);
+    }
 }

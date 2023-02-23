@@ -104,15 +104,15 @@ class ExpertServiceIMPLTest {
 
     //signIn---------------------------------------------------------------------------------------------------------------
 
-    @Test
-    @Order(4)
-    void signInTest() {
-
-        Expert signInExpert = expertServiceIMPL.signIn("fahime@gmail.com", "Fahime12");
-
-        assertNotNull(signInExpert);
-
-    }
+//    @Test
+//    @Order(4)
+//    void signInTest() {
+//
+//        Expert signInExpert = expertServiceIMPL.signIn("fahime@gmail.com", "Fahime12");
+//
+//        assertNotNull(signInExpert);
+//
+//    }
 
 //getByUserName--------------------------------------------------------------------------------------------------------------
 

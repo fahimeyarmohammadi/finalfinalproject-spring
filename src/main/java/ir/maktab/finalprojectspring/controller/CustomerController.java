@@ -36,11 +36,6 @@ public class CustomerController {
         return "you register successfully";
     }
 
-    @PostMapping("/logIn")
-    public String logIn(@Valid @RequestBody CustomerLogInDto customerLogInDto) {
-        customerServiceIMPL.signIn(customerLogInDto.getUsername(), customerLogInDto.getPassword());
-        return "ok";
-    }
 
     @PutMapping("/changePassword")
     public String changePassword(@RequestParam String username, String repeatNewPassword, String newPassword) {
@@ -64,10 +59,9 @@ public class CustomerController {
     @PostMapping("/customerGetOrder")
     public String customerGetOrder(@Valid @RequestBody CustomerOrderDto customerOrderDto, @RequestParam String username, @RequestParam String subServiceName) {
         CustomerOrder customerOrder = CustomerOrderMapper.INSTANCE.dtoToModel(customerOrderDto);
-        customerOrder.setSubService(subServiceServiceIMPL.getSubServiceByName(subServiceName));
         Address address = AddressMapper.INSTANCE.dtoToModel(customerOrderDto.getAddressDto());
-        customerOrder.setAddress(address);
-        customerServiceIMPL.customerGetOrder(customerOrder, username);
+        SubService subService=subServiceServiceIMPL.getSubServiceByName(subServiceName);
+        customerServiceIMPL.customerGetOrder(customerOrder,username,address,subService);
         return "your order save";
     }
 
@@ -144,9 +138,7 @@ public class CustomerController {
         Review review = ReviewMapper.INSTANCE.dtoToModel(reviewDto);
         CustomerOrder customerOrder = customerOrderServiceIMPL.getCustomerOrderById(reviewDto.getCustomerOrderId());
         Offers offers = offersServiceIMPL.getOffersById(reviewDto.getOffersId());
-        review.setOffers(offers);
-        review.setCustomerOrder(customerOrder);
-        customerServiceIMPL.customerRegisterAReview(review);
+        customerServiceIMPL.customerRegisterAReview(review, offers,customerOrder);
         return "your review register";
     }
 

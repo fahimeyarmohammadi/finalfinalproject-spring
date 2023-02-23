@@ -10,7 +10,7 @@ public interface ManagerService {
 
     void addBaseService(BaseService baseService);
 
-    void addSubService(SubService subService);
+    void addSubService(SubService subService,BaseService baseService);
 
     List<BaseService> getAllBaseService();
 

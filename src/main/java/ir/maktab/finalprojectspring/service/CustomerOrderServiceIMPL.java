@@ -1,24 +1,23 @@
 package ir.maktab.finalprojectspring.service;
 
 import ir.maktab.finalprojectspring.data.dto.CustomerOrderRequestDto;
-import ir.maktab.finalprojectspring.data.dto.CustomerRequestDto;
 import ir.maktab.finalprojectspring.data.dto.OrderRequestDto;
-import ir.maktab.finalprojectspring.data.model.Customer;
+import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.repository.CustomerOrderRepository;
-import ir.maktab.finalprojectspring.data.enumeration.OrderCondition;
-import ir.maktab.finalprojectspring.data.repository.CustomerRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.DateUtil;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -57,11 +56,11 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
         return optionalCustomerOrder.orElseThrow(() -> new NotFoundException("Invalid order Id"));
     }
 
-    public List<CustomerOrder> getCustomerOrderWaitingExpertSelection(String username){
+    public List<CustomerOrder> getCustomerOrderWaitingExpertSelection(String username) {
         return orderRepository.getAllCustomerOrderWaitingExpertSelection(username);
     }
 
-    public List<CustomerOrder> getAllCustomerOrderDone(String username){
+    public List<CustomerOrder> getAllCustomerOrderDone(String username) {
         return orderRepository.getAllCustomerOrderDone(username);
     }
 
@@ -90,22 +89,61 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
         orderRepository.save(savedCustomerOrder);
     }
 
-    public void changeCustomerOrderConditionToPaid(Long id){
+    public void changeCustomerOrderConditionToPaid(Long id) {
         CustomerOrder savedCustomerOrder = getCustomerOrderById(id);
         savedCustomerOrder.setOrderCondition(OrderCondition.PAID);
         orderRepository.save(savedCustomerOrder);
     }
 
     public List<CustomerOrder> getCustomerOrderByCondition(OrderRequestDto request) {
-        return orderRepository.findAll(CustomerOrderRepository.selectByConditions(request));
+        return orderRepository.findAll(selectByConditions(request));
     }
 
     public List<CustomerOrder> getAllCustomerOrder(String username) {
         return orderRepository.getAllCustomerOrder(username);
     }
 
-    public List<CustomerOrder> getCustomerOrderByManager(CustomerOrderRequestDto request){
-        return orderRepository.findAll(CustomerOrderRepository.selectOrderByManager(request));
+    public List<CustomerOrder> getCustomerOrderByManager(CustomerOrderRequestDto request) {
+        return orderRepository.findAll(selectOrderByManager(request));
+    }
+
+    static Specification selectByConditions(OrderRequestDto request) {
+        return (Specification) (root, cq, cb) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+            if (request.getCustomer() != null)
+                predicateList.add(cb.equal(root.get("customer"), request.getCustomer()));
+            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)
+                predicateList.add(cb.equal(root.get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));
+            return cb.and(predicateList.toArray(new Predicate[0]));
+        };
+    }
+
+    static Specification selectOrderByManager(CustomerOrderRequestDto request) {
+        return (Specification) (root, cq, cb) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)
+                predicateList.add(cb.equal(root.get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));
+            if (request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
+                predicateList.add(cb.equal(root.get("subService").get("subName"), request.getSubServiceName()));
+            if (request.getBaseServiceName() != null && request.getBaseServiceName().length() != 0)
+                predicateList.add(cb.equal(root.get("subService").get("baseService").get("name"), request.getBaseServiceName()));
+            if (request.getStartDate() != null && request.getStartDate().length() != 0) {
+                try {
+                    predicateList.add(cb.greaterThanOrEqualTo(root.get("preferDate"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getStartDate())));
+                } catch (ParseException e) {
+                    throw new InvalidInputException("can not convert string to date");
+                }
+            }
+            if (request.getEndDate() != null && request.getEndDate().length() != 0) {
+                try {
+                    predicateList.add(cb.lessThanOrEqualTo(root.get("preferDate"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getEndDate())));
+                } catch (ParseException e) {
+                    throw new InvalidInputException("can not convert string to date");
+                }
+            }
+
+            return cb.and(predicateList.toArray(new Predicate[0]));
+        };
     }
 
 }

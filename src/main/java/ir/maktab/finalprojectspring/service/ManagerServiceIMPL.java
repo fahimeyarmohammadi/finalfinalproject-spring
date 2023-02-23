@@ -59,8 +59,8 @@ public class ManagerServiceIMPL implements ManagerService {
         baseServiceServiceIMPL.addBaseService(baseService);
     }
 
-    public void addSubService(SubService subService) {
-        subServiceServiceIMPL.addSubService(subService);
+    public void addSubService(SubService subService, BaseService baseService) {
+        subServiceServiceIMPL.addSubService(subService,baseService);
     }
 
     public List<BaseService> getAllBaseService()

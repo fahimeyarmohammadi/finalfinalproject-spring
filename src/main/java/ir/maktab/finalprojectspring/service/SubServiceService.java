@@ -1,12 +1,13 @@
 package ir.maktab.finalprojectspring.service;
 
+import ir.maktab.finalprojectspring.data.model.BaseService;
 import ir.maktab.finalprojectspring.data.model.SubService;
 
 import java.util.List;
 
 public interface SubServiceService {
 
-    void addSubService(SubService subService);
+    void addSubService(SubService subService, BaseService baseService);
 
     List<SubService> getAllSubService();
 
