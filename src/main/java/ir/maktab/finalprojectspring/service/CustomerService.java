@@ -46,7 +46,7 @@ public interface CustomerService {
 
     List<Offers> getOffersListOrderedByExpertScore(CustomerOrder order);
 
-    Specification selectByConditions(CustomerRequestDto request);
+    Specification<Customer> selectByConditions(CustomerRequestDto request);
 
     Double getCredit();
 

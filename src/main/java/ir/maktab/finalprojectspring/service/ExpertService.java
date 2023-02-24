@@ -49,7 +49,7 @@ public interface ExpertService {
 
     void sendVerificationEmail(Expert expert);
 
-    Specification selectByConditions(ExpertRequestDto request);
+    Specification<Expert> selectByConditions(ExpertRequestDto request);
 
     List<Offers> getCustomerOrderByCondition(OrderRequestDto request);
 

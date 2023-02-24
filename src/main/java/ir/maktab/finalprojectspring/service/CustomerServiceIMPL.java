@@ -174,7 +174,7 @@ public class CustomerServiceIMPL implements CustomerService {
         return customerRepository.findAll(selectByConditions(request));
     }
 
-    public Specification selectByConditions(CustomerRequestDto request) {
+    public Specification<Customer> selectByConditions(CustomerRequestDto request) {
         return (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getName() != null && request.getName().length() != 0)

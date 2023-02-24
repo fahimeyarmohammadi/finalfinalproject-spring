@@ -23,7 +23,7 @@ public interface OffersService {
 
     List<Offers> getCustomerOrderByCondition(OrderRequestDto request);
 
-    Specification selectByCondition(OrderRequestDto request);
+    Specification<Offers> selectByCondition(OrderRequestDto request);
 
     List<Offers> getAcceptOffers(String username);
 }

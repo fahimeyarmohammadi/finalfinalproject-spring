@@ -263,7 +263,7 @@ public class ExpertServiceIMPL implements ExpertService {
         return expertRepository.findAll(selectByConditions(request));
     }
 
-    public Specification selectByConditions(ExpertRequestDto request) {
+    public Specification<Expert> selectByConditions(ExpertRequestDto request) {
         return (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getName() != null && request.getName().length() != 0)

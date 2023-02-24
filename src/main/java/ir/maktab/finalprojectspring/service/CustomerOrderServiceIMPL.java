@@ -107,7 +107,7 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
         return orderRepository.findAll(selectOrderByManager(request));
     }
 
-    public Specification selectByConditions(OrderRequestDto request) {
+    public Specification<CustomerOrder> selectByConditions(OrderRequestDto request) {
         return (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getCustomer() != null)
@@ -118,7 +118,7 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
         };
     }
 
-    public Specification selectOrderByManager(CustomerOrderRequestDto request) {
+    public Specification<CustomerOrder> selectOrderByManager(CustomerOrderRequestDto request) {
         return (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)

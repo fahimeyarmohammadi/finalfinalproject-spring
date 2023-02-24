@@ -35,7 +35,7 @@ public interface CustomerOrderService {
 
     List<CustomerOrder> getCustomerOrderByManager(CustomerOrderRequestDto request);
 
-    Specification selectByConditions(OrderRequestDto request);
+    Specification<CustomerOrder> selectByConditions(OrderRequestDto request);
 
-    Specification selectOrderByManager(CustomerOrderRequestDto request);
+    Specification<CustomerOrder> selectOrderByManager(CustomerOrderRequestDto request);
 }
