@@ -9,6 +9,7 @@ import ir.maktab.finalprojectspring.data.repository.ExpertRepository;
 import ir.maktab.finalprojectspring.exception.InvalidInputException;
 import ir.maktab.finalprojectspring.exception.NotFoundException;
 import ir.maktab.finalprojectspring.util.DateUtil;
+import ir.maktab.finalprojectspring.util.validation.Validation;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.criteria.Predicate;
@@ -58,11 +59,11 @@ public class ExpertServiceIMPL implements ExpertService {
 
     private final JavaMailSender mailSender;
 
-    public void addExpert(Expert expert, String siteURL) {
-     //   Validation.validateName(expert.getName());
-     //  Validation.validateName(expert.getFamilyName());
-     //   Validation.validateEmail(expert.getEmail());
-    // Validation.validatePassword(expert.getPassword());
+    public void addExpert(Expert expert) {
+        //   Validation.validateName(expert.getName());
+        //  Validation.validateName(expert.getFamilyName());
+        //   Validation.validateEmail(expert.getEmail());
+        // Validation.validatePassword(expert.getPassword());
         expert.setPassword(passwordEncoder.encode(expert.getPassword()));
         expert.setUserType(UserType.ROLE_EXPERT);
         expert.setCredit((double) 0);
@@ -74,30 +75,21 @@ public class ExpertServiceIMPL implements ExpertService {
 //        } catch (IOException e) {
 //            throw new InvalidInputException("invalid image file");
 //        }
-
+        Validation.imageValidation(expert.getImage());
         String randomCode = RandomString.make(64);
         expert.setVerificationCode(randomCode);
         expert.setEnabled(false);
-
         try {
             expertRepository.save(expert);
         } catch (DataIntegrityViolationException e) {
             throw new InvalidInputException("Customer already exist with given email:" + expert.getEmail());
         }
-
-        try {
-            sendVerificationEmail(expert, siteURL);
-        } catch (MessagingException e) {
-            throw new InvalidInputException("MessagingException in sendVerificationEmail");
-        } catch (UnsupportedEncodingException e) {
-            throw new InvalidInputException("UnsupportedEncodingException in sendVerificationEmail");
-        }
+        sendVerificationEmail(expert);
     }
 
-    private void sendVerificationEmail(Expert expert, String siteURL) throws MessagingException, UnsupportedEncodingException {
-
+    public void sendVerificationEmail(Expert expert) {
         String toAddress = expert.getEmail();
-        siteURL="http://localhost:8080/expert";
+        String siteURL = "http://localhost:8080/expert";
         String fromAddress = "fahi.yari@gmail.com";
         String senderName = "fahime";
         String subject = "Please verify your registration";
@@ -106,27 +98,38 @@ public class ExpertServiceIMPL implements ExpertService {
                 + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
                 + "Thank you,<br>"
                 + "Your company name.";
-
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-
-        helper.setFrom(fromAddress, senderName);
-        helper.setTo(toAddress);
-        helper.setSubject(subject);
-
+        try {
+            helper.setFrom(fromAddress, senderName);
+        } catch (MessagingException e) {
+            throw new InvalidInputException("MessaginExceptio");
+        } catch (UnsupportedEncodingException e) {
+            throw new InvalidInputException("UnsupportedEncodingException");
+        }
+        try {
+            helper.setTo(toAddress);
+        } catch (MessagingException e) {
+            throw new InvalidInputException("MessaginExceptio");
+        }
+        try {
+            helper.setSubject(subject);
+        } catch (MessagingException e) {
+            throw new InvalidInputException("MessaginExceptio");
+        }
         content = content.replace("[[name]]", expert.getName());
         String verifyURL = siteURL + "/verify?code=" + expert.getVerificationCode();
-
         content = content.replace("[[URL]]", verifyURL);
-
-        helper.setText(content, true);
-
+        try {
+            helper.setText(content, true);
+        } catch (MessagingException e) {
+            throw new InvalidInputException("MessaginExceptio");
+        }
         mailSender.send(message);
     }
 
     public boolean verify(String verificationCode) {
-        Expert expert= expertRepository.findByVerificationCode(verificationCode);
-
+        Expert expert = expertRepository.findByVerificationCode(verificationCode);
         if (expert == null || expert.isEnabled()) {
             return false;
         } else {
@@ -136,10 +139,9 @@ public class ExpertServiceIMPL implements ExpertService {
 
             return true;
         }
-
     }
 
-    public void changPassword(String username, String repeatNewPassword, String newPassword){
+    public void changPassword(String username, String repeatNewPassword, String newPassword) {
         if (!newPassword.equals(repeatNewPassword))
             throw new InvalidInputException("password and repeatPassword must be equal");
         Optional<Expert> signInExpert = expertRepository.findByUsername(username);
@@ -148,22 +150,22 @@ public class ExpertServiceIMPL implements ExpertService {
         expertRepository.save(expert);
     }
 
-    public Expert getByUsername(String username){
+    public Expert getByUsername(String username) {
         Optional<Expert> optionalExpert = expertRepository.findByUsername(username);
-       return optionalExpert.orElseThrow(() -> new NotFoundException("Invalid Username"));
+        return optionalExpert.orElseThrow(() -> new NotFoundException("Invalid Username"));
     }
 
     public List<Expert> getExpertNotAccepted() {
         return expertRepository.getAllExpertNotAccepted();
     }
 
-    public void acceptExpert(String username){
+    public void acceptExpert(String username) {
         Expert expert = getByUsername(username);
         expert.setExpertCondition(ExpertCondition.ACCEPTED);
         expertRepository.save(expert);
     }
 
-    public void addSubServiceToExpertList(String username, String subServiceName){
+    public void addSubServiceToExpertList(String username, String subServiceName) {
         Expert expert = getByUsername(username);
         SubService subService = subServiceServiceIMPL.getSubServiceByName(subServiceName);
         List<SubService> subServiceList = expert.getSubServiceList();
@@ -172,7 +174,7 @@ public class ExpertServiceIMPL implements ExpertService {
     }
 
     @Transactional
-    public void deleteSubServiceFromExpertList(String username, String subServiceName){
+    public void deleteSubServiceFromExpertList(String username, String subServiceName) {
         Expert expert = getByUsername(username);
         SubService subService = subServiceServiceIMPL.getSubServiceByName(subServiceName);
         List<SubService> subServiceList = expert.getSubServiceList();
@@ -184,9 +186,9 @@ public class ExpertServiceIMPL implements ExpertService {
     }
 
     @Transactional
-    public List<CustomerOrder> getAllCustomerOrderInSubService(String userName){
+    public List<CustomerOrder> getAllCustomerOrderInSubService(String userName) {
         Expert expert = getByUsername(userName);
-        if (! expert.getExpertCondition().equals(ExpertCondition.ACCEPTED))
+        if (!expert.getExpertCondition().equals(ExpertCondition.ACCEPTED))
             throw new InvalidInputException("you dont accepted from manager");
 
         List<CustomerOrder> customerOrderList = new ArrayList<>();
@@ -197,9 +199,9 @@ public class ExpertServiceIMPL implements ExpertService {
     }
 
     @Transactional
-    public void registerOffer(Offers offers,Expert expert,CustomerOrder customerOrder){
+    public void registerOffer(Offers offers, Expert expert, CustomerOrder customerOrder) {
         offers.setExpert(expert);
-        if (! offers.getExpert().getExpertCondition().equals(ExpertCondition.ACCEPTED))
+        if (!offers.getExpert().getExpertCondition().equals(ExpertCondition.ACCEPTED))
             throw new InvalidInputException("you dont accepted from manager");
         offers.setCustomerOrder(customerOrder);
         offersServiceIMPL.addOffers(offers);
@@ -207,62 +209,61 @@ public class ExpertServiceIMPL implements ExpertService {
     }
 
     public String convertArrayByteToImage(String username) throws IOException {
-        Expert expert=getByUsername(username);
-        byte[] byteArray=expert.getImage();
+        Expert expert = getByUsername(username);
+        byte[] byteArray = expert.getImage();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
         BufferedImage newImage = ImageIO.read(inputStream);
         ImageIO.write(newImage, "jpg", new File("outputImage.jpg"));
         return "outputImage.jpg";
     }
 
-    public void minusExpertScore(Offers offers){
-        if(DateUtil.dateToLocalDateTime(offers.getStartWork()).plus(offers.getDuration()).isBefore(LocalDateTime.now())){
-            long lateTime= Duration.between(DateUtil.dateToLocalDateTime(offers.getStartWork()).plus(offers.getDuration()),LocalDateTime.now()).getSeconds();
-            int lateTimeHours= (int) (lateTime/3600);
-            Expert expert=offers.getExpert();
-            int newScore=expert.getScore()-lateTimeHours;
+    public void minusExpertScore(Offers offers) {
+        if (DateUtil.dateToLocalDateTime(offers.getStartWork()).plus(offers.getDuration()).isBefore(LocalDateTime.now())) {
+            long lateTime = Duration.between(DateUtil.dateToLocalDateTime(offers.getStartWork()).plus(offers.getDuration()), LocalDateTime.now()).getSeconds();
+            int lateTimeHours = (int) (lateTime / 3600);
+            Expert expert = offers.getExpert();
+            int newScore = expert.getScore() - lateTimeHours;
             expert.setScore(newScore);
             expertRepository.save(expert);
             inActiveExpert(expert);
         }
     }
 
-    public void inActiveExpert(Expert expert){
-        if(expert.getScore()<0)
+    public void inActiveExpert(Expert expert) {
+        if (expert.getScore() < 0)
             expert.setExpertCondition(ExpertCondition.INACTIVE);
-
         expertRepository.save(expert);
     }
 
-    public void increaseExpertCredit(Offers offers){
-        Expert expert=offers.getExpert();
-        Double newCredit=expert.getCredit()+(offers.getOfferPrice()*0.70);
+    public void increaseExpertCredit(Offers offers) {
+        Expert expert = offers.getExpert();
+        Double newCredit = expert.getCredit() + (offers.getOfferPrice() * 0.70);
         expert.setCredit(newCredit);
         expertRepository.save(expert);
     }
 
-    public int expertGetOffersScore(Long offersId){
-        Review review=reviewServiceIMPL.getOffersScore(offersId);
+    public int expertGetOffersScore(Long offersId) {
+        Review review = reviewServiceIMPL.getOffersScore(offersId);
         return review.getScore();
     }
 
-    public void addReviewToExpertReviewList(Review review){
-        Expert expert=review.getOffers().getExpert();
-        List<Review>reviewList = expert.getReviewList();
+    public void addReviewToExpertReviewList(Review review) {
+        Expert expert = review.getOffers().getExpert();
+        List<Review> reviewList = expert.getReviewList();
         reviewList.add(review);
-        int score=expert.getScore()+review.getScore();
+        int score = expert.getScore() + review.getScore();
         expert.setScore(score);
         expert.setReviewList(reviewList);
         expertRepository.save(expert);
     }
 
-    public List<Expert> searchAndFilterExpert(ExpertRequestDto request){
-        if(request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
+    public List<Expert> searchAndFilterExpert(ExpertRequestDto request) {
+        if (request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
             request.setSubService(subServiceServiceIMPL.getSubServiceByName(request.getSubServiceName()));
         return expertRepository.findAll(selectByConditions(request));
     }
 
-    static Specification selectByConditions(ExpertRequestDto request) {
+    public Specification selectByConditions(ExpertRequestDto request) {
         return (Specification) (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getName() != null && request.getName().length() != 0)
@@ -278,32 +279,31 @@ public class ExpertServiceIMPL implements ExpertService {
             if (request.getMaxScore() != null && request.getMaxScore().length() != 0)
                 predicateList.add(cb.lessThanOrEqualTo(root.get("score"), Integer.parseInt(request.getMaxScore())));
             if (request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
-                predicateList.add(cb.isMember(request.getSubService(),root.get("subServiceList")));
-            if(request.getStartDate()!= null && request.getStartDate().length()!= 0 ) {
+                predicateList.add(cb.isMember(request.getSubService(), root.get("subServiceList")));
+            if (request.getStartDate() != null && request.getStartDate().length() != 0) {
                 try {
                     predicateList.add(cb.greaterThanOrEqualTo(root.get("date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getStartDate())));
                 } catch (ParseException e) {
                     throw new InvalidInputException("can not convert string to date");
                 }
             }
-            if(request.getEndDate()!= null && request.getEndDate().length()!= 0){
+            if (request.getEndDate() != null && request.getEndDate().length() != 0) {
                 try {
-                    predicateList.add(cb.lessThanOrEqualTo(root.get("date"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getEndDate())));
+                    predicateList.add(cb.lessThanOrEqualTo(root.get("date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(request.getEndDate())));
                 } catch (ParseException e) {
                     throw new InvalidInputException("can not convert string to date");
                 }
             }
-            if (request.getCustomerOrderMinNumber()!= null && request.getCustomerOrderMinNumber().length()!= 0)
-                predicateList.add(cb.greaterThanOrEqualTo(root.get("customerOrderNumber"),Integer.valueOf(request.getCustomerOrderMinNumber())));
-            if (request.getCustomerOrderMaxNumber()!= null && request.getCustomerOrderMaxNumber().length()!= 0)
-                predicateList.add(cb.lessThanOrEqualTo(root.get("customerOrderNumber"),request.getCustomerOrderMaxNumber()));
-
+            if (request.getCustomerOrderMinNumber() != null && request.getCustomerOrderMinNumber().length() != 0)
+                predicateList.add(cb.greaterThanOrEqualTo(root.get("customerOrderNumber"), Integer.valueOf(request.getCustomerOrderMinNumber())));
+            if (request.getCustomerOrderMaxNumber() != null && request.getCustomerOrderMaxNumber().length() != 0)
+                predicateList.add(cb.lessThanOrEqualTo(root.get("customerOrderNumber"), request.getCustomerOrderMaxNumber()));
             return cb.and(predicateList.toArray(new Predicate[0]));
         };
     }
 
     public List<Offers> getCustomerOrderByCondition(OrderRequestDto request) {
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         request.setExpert(getByUsername(userDetails.getUsername()));
         return offersServiceIMPL.getCustomerOrderByCondition(request);

@@ -19,8 +19,8 @@ public class ReviewServiceIMPL implements ReviewService {
     private final CustomerOrderServiceIMPL customerOrderServiceIMPL;
 
     public void addReview(Review review) {
-        Offers offers=offersServiceIMPL.getOffersById(review.getOffers().getId());
-        CustomerOrder customerOrder=customerOrderServiceIMPL.getCustomerOrderById(review.getCustomerOrder().getId());
+        Offers offers = offersServiceIMPL.getOffersById(review.getOffers().getId());
+        CustomerOrder customerOrder = customerOrderServiceIMPL.getCustomerOrderById(review.getCustomerOrder().getId());
         reviewRepository.save(review);
     }
 

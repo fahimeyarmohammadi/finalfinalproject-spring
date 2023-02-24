@@ -1,16 +1,19 @@
 package ir.maktab.finalprojectspring.service;
 
-import ir.maktab.finalprojectspring.data.model.BaseService;
-import ir.maktab.finalprojectspring.data.model.Expert;
-import ir.maktab.finalprojectspring.data.model.SubService;
+import ir.maktab.finalprojectspring.data.dto.CustomerOrderRequestDto;
+import ir.maktab.finalprojectspring.data.model.*;
 
 import java.util.List;
 
 public interface ManagerService {
 
+    void addManager(Manager manager);
+
+    Manager findByUsername(String username);
+
     void addBaseService(BaseService baseService);
 
-    void addSubService(SubService subService,BaseService baseService);
+    void addSubService(SubService subService, BaseService baseService);
 
     List<BaseService> getAllBaseService();
 
@@ -27,4 +30,12 @@ public interface ManagerService {
     void addExpertToSubService(String username, String subServiceName);
 
     void deleteExpertFromSubService(String username, String subServiceName);
+
+    List<CustomerOrder> getCustomerOrderByManager(CustomerOrderRequestDto request);
+
+    List<CustomerOrder> getAllCustomerOrders(String username);
+
+    List<CustomerOrder> getExpertAllCustomerOrder(String username);
+
+
 }

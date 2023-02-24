@@ -13,7 +13,6 @@ public interface SubServiceMapper {
 
     SubServiceMapper INSTANCE = Mappers.getMapper(SubServiceMapper.class);
 
-
     @Mapping(source = "baseServiceDto", target = "baseService")
     SubService dtoToModel(SubServiceDto subServiceDto);
 

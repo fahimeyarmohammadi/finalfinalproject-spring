@@ -74,7 +74,7 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     @Transactional
-    public void customerGetOrder(CustomerOrder order, String username,Address address,SubService subService) {
+    public void customerGetOrder(CustomerOrder order, String username, Address address, SubService subService) {
         Customer customer = getByUsername(username);
         customer.setCustomerOrderNumber(customer.getCustomerOrderNumber() + 1);
         order.setCustomer(customer);
@@ -161,7 +161,7 @@ public class CustomerServiceIMPL implements CustomerService {
         expertServiceIMPL.increaseExpertCredit(offers);
     }
 
-    public void customerRegisterAReview(Review review,Offers offers,CustomerOrder customerOrder) {
+    public void customerRegisterAReview(Review review, Offers offers, CustomerOrder customerOrder) {
         if (!((customerOrder.getOrderCondition().equals(OrderCondition.DONE)) || (review.getCustomerOrder().getOrderCondition().equals(OrderCondition.PAID))))
             throw new InvalidInputException("you must after done work get review!!");
         review.setOffers(offers);
@@ -174,7 +174,7 @@ public class CustomerServiceIMPL implements CustomerService {
         return customerRepository.findAll(selectByConditions(request));
     }
 
-    static Specification selectByConditions(CustomerRequestDto request) {
+    public Specification selectByConditions(CustomerRequestDto request) {
         return (Specification) (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getName() != null && request.getName().length() != 0)

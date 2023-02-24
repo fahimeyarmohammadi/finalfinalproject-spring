@@ -14,7 +14,6 @@ import java.io.IOException;
 public interface ExpertMapper {
 
     ExpertMapper INSTANCE = Mappers.getMapper(ExpertMapper.class);
-//multipartfile--[]byte
 
     @Mapping(source = "image", target = "image", qualifiedByName = "multipartFileToArrayByte")
     Expert dtoToModel(ExpertDto expertDto);

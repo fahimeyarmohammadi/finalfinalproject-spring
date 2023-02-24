@@ -60,7 +60,7 @@ public class OffersServiceIMPL implements OffersService {
         return offersRepository.findAll(selectByCondition(request));
     }
 
-    static Specification selectByCondition(OrderRequestDto request) {
+    public Specification selectByCondition(OrderRequestDto request) {
         return (Specification) (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getExpert() != null)

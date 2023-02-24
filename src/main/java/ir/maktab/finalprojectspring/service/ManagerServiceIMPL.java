@@ -36,21 +36,21 @@ public class ManagerServiceIMPL implements ManagerService {
     private final OffersServiceIMPL offersServiceIMPL;
 
     @PostConstruct
-    public void init(){
-        Manager manager=new Manager();
+    public void init() {
+        Manager manager = new Manager();
         manager.setUsername("manager");
         manager.setPassword("1234");
         manager.setUserType(UserType.ROLE_MANAGER);
         this.addManager(manager);
     }
 
-    public void addManager(Manager manager){
+    public void addManager(Manager manager) {
         manager.setUserType(UserType.ROLE_MANAGER);
         manager.setPassword(passwordEncoder.encode(manager.getPassword()));
         managerRepository.save(manager);
     }
 
-    public Manager findByUsername(String username){
+    public Manager findByUsername(String username) {
         Optional<Manager> optionalManager = managerRepository.findByUsername(username);
         return optionalManager.orElseThrow(() -> new NotFoundException("Invalid Username"));
     }
@@ -60,11 +60,10 @@ public class ManagerServiceIMPL implements ManagerService {
     }
 
     public void addSubService(SubService subService, BaseService baseService) {
-        subServiceServiceIMPL.addSubService(subService,baseService);
+        subServiceServiceIMPL.addSubService(subService, baseService);
     }
 
-    public List<BaseService> getAllBaseService()
-    {
+    public List<BaseService> getAllBaseService() {
         return baseServiceServiceIMPL.getAllBaseService();
     }
 
@@ -96,19 +95,20 @@ public class ManagerServiceIMPL implements ManagerService {
         expertServiceIMPL.deleteSubServiceFromExpertList(username, subServiceName);
     }
 
-    public List<CustomerOrder> getCustomerOrderByManager(CustomerOrderRequestDto request){
+    public List<CustomerOrder> getCustomerOrderByManager(CustomerOrderRequestDto request) {
         return customerOrderServiceIMPL.getCustomerOrderByManager(request);
     }
-    public List<CustomerOrder> getAllCustomerOrders(String username){
-        Customer customer=customerServiceIMPL.getByUsername(username);
+
+    public List<CustomerOrder> getAllCustomerOrders(String username) {
+        Customer customer = customerServiceIMPL.getByUsername(username);
         return customerOrderServiceIMPL.getAllCustomerOrder(username);
     }
 
-    public List<CustomerOrder> getExpertAllCustomerOrder(String username){
-        Expert expert=expertServiceIMPL.getByUsername(username);
-        List<Offers>offersList=offersServiceIMPL.getAcceptOffers(username);
-        List<CustomerOrder> customerOrderList=new ArrayList<>();
-        for (Offers o:offersList) {
+    public List<CustomerOrder> getExpertAllCustomerOrder(String username) {
+        Expert expert = expertServiceIMPL.getByUsername(username);
+        List<Offers> offersList = offersServiceIMPL.getAcceptOffers(username);
+        List<CustomerOrder> customerOrderList = new ArrayList<>();
+        for (Offers o : offersList) {
             customerOrderList.add(o.getCustomerOrder());
         }
         return customerOrderList;

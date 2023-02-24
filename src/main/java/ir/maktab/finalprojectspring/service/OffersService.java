@@ -1,7 +1,9 @@
 package ir.maktab.finalprojectspring.service;
 
+import ir.maktab.finalprojectspring.data.dto.OrderRequestDto;
 import ir.maktab.finalprojectspring.data.model.CustomerOrder;
 import ir.maktab.finalprojectspring.data.model.Offers;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -18,4 +20,10 @@ public interface OffersService {
     Offers getOffersById(Long id);
 
     Offers getOffersByCustomerOrderIdAndOffersCondition(Long customerOrderId);
+
+    List<Offers> getCustomerOrderByCondition(OrderRequestDto request);
+
+    Specification selectByCondition(OrderRequestDto request);
+
+    List<Offers> getAcceptOffers(String username);
 }

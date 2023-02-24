@@ -5,8 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 
-
-
 @Entity
 @Getter
 @Setter
@@ -16,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
 @Builder
-
 
 
 public class SubService {

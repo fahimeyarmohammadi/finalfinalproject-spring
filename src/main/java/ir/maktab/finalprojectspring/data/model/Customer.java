@@ -4,7 +4,6 @@ import ir.maktab.finalprojectspring.data.enumeration.UserType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
@@ -12,8 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,7 +24,6 @@ import java.util.List;
 @ToString
 @SuperBuilder
 @EqualsAndHashCode(callSuper = false)
-
 
 public class Customer extends Person implements UserDetails {
 

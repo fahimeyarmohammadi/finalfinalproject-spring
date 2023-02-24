@@ -12,10 +12,8 @@ import ir.maktab.finalprojectspring.mapper.ExpertMapper;
 import ir.maktab.finalprojectspring.mapper.OffersMapper;
 import ir.maktab.finalprojectspring.service.CustomerOrderServiceIMPL;
 import ir.maktab.finalprojectspring.service.ExpertServiceIMPL;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,17 +29,13 @@ public class ExpertController {
     private final CustomerOrderServiceIMPL customerOrderServiceIMPL;
 
 
-    @PostMapping(value = "/register",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String register(@Valid@ModelAttribute ExpertDto expertDto,HttpServletRequest request) {
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String register(@Valid @ModelAttribute ExpertDto expertDto) {
         Expert expert = ExpertMapper.INSTANCE.dtoToModel(expertDto);
-        expertServiceIMPL.addExpert(expert,getSiteURL(request));
+        expertServiceIMPL.addExpert(expert);
         return "you register successfully";
     }
 
-    private String getSiteURL(HttpServletRequest request) {
-        String siteURL = request.getRequestURL().toString();
-        return siteURL.replace(request.getServletPath(), "");
-    }
 
     @GetMapping("/verify")
     public String verifyUser(@RequestParam("code") String code) {
@@ -69,7 +63,7 @@ public class ExpertController {
         CustomerOrder customerOrder = customerOrderServiceIMPL.getCustomerOrderById(offersDto.getCustomerOrderId());
         Expert expert = expertServiceIMPL.getByUsername(offersDto.getExpertUsername());
         Offers offers = OffersMapper.INSTANCE.dtoToModel(offersDto);
-        expertServiceIMPL.registerOffer(offers,expert,customerOrder);
+        expertServiceIMPL.registerOffer(offers, expert, customerOrder);
         return "your offer register";
     }
 

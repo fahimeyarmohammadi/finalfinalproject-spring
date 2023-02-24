@@ -26,7 +26,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Expert extends Person  implements UserDetails {
+public class Expert extends Person implements UserDetails {
 
     @Enumerated(value = EnumType.STRING)
     ExpertCondition expertCondition;
@@ -39,7 +39,7 @@ public class Expert extends Person  implements UserDetails {
 
     int score;
 
-   // @Lob
+    // @Lob
     @Column(length = 300000)
     byte[] image;
 

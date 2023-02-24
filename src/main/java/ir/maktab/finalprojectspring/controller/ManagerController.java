@@ -1,7 +1,10 @@
 package ir.maktab.finalprojectspring.controller;
 
 import ir.maktab.finalprojectspring.data.dto.*;
-import ir.maktab.finalprojectspring.data.model.*;
+import ir.maktab.finalprojectspring.data.model.BaseService;
+import ir.maktab.finalprojectspring.data.model.Customer;
+import ir.maktab.finalprojectspring.data.model.Expert;
+import ir.maktab.finalprojectspring.data.model.SubService;
 import ir.maktab.finalprojectspring.mapper.*;
 import ir.maktab.finalprojectspring.service.BaseServiceServiceIMPL;
 import ir.maktab.finalprojectspring.service.CustomerServiceIMPL;
@@ -34,10 +37,10 @@ public class ManagerController {
     }
 
     @PostMapping("/addSubService")
-    public String addSubService(@Valid @RequestBody SubServiceDto subServiceDto , @RequestParam String baseServiceName) {
+    public String addSubService(@Valid @RequestBody SubServiceDto subServiceDto, @RequestParam String baseServiceName) {
         SubService subService = SubServiceMapper.INSTANCE.dtoToModel(subServiceDto);
         BaseService baseService = baseServiceServiceIMPL.getBaseServiceByName(baseServiceName);
-        managerServiceIMPL.addSubService(subService,baseService);
+        managerServiceIMPL.addSubService(subService, baseService);
         return "subService added";
     }
 
@@ -103,17 +106,17 @@ public class ManagerController {
     }
 
     @PostMapping("/getCustomerOrderByManager")
-    public List<CustomerOrderDto> getCustomerOrderByManager(@RequestBody CustomerOrderRequestDto request){
+    public List<CustomerOrderDto> getCustomerOrderByManager(@RequestBody CustomerOrderRequestDto request) {
         return CustomerOrderMapper.INSTANCE.listToDtoList(managerServiceIMPL.getCustomerOrderByManager(request));
     }
 
     @GetMapping("/getAllCustomerOrders")
-    public List<CustomerOrderDto> getAllCustomerOrders(@RequestParam String username){
+    public List<CustomerOrderDto> getAllCustomerOrders(@RequestParam String username) {
         return CustomerOrderMapper.INSTANCE.listToDtoList(managerServiceIMPL.getAllCustomerOrders(username));
     }
 
     @GetMapping("/getExpertAllCustomerOrder")
-    public List<CustomerOrderDto> getExpertAllCustomerOrder(@RequestParam String username){
+    public List<CustomerOrderDto> getExpertAllCustomerOrder(@RequestParam String username) {
         return CustomerOrderMapper.INSTANCE.listToDtoList(managerServiceIMPL.getExpertAllCustomerOrder(username));
     }
 

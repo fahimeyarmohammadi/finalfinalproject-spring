@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 
-
 @Entity
 @Getter
 @Setter

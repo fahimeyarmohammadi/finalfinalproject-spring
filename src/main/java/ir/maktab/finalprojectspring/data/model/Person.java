@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
-
 import java.util.Date;
 
 
