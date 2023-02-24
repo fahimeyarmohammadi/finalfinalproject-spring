@@ -264,7 +264,7 @@ public class ExpertServiceIMPL implements ExpertService {
     }
 
     public Specification selectByConditions(ExpertRequestDto request) {
-        return (Specification) (root, cq, cb) -> {
+        return (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getName() != null && request.getName().length() != 0)
                 predicateList.add(cb.equal(root.get("name"), request.getName()));

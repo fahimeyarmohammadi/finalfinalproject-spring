@@ -61,7 +61,7 @@ public class OffersServiceIMPL implements OffersService {
     }
 
     public Specification selectByCondition(OrderRequestDto request) {
-        return (Specification) (root, cq, cb) -> {
+        return (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getExpert() != null)
                 predicateList.add(cb.equal(root.get("expert"), request.getExpert()));

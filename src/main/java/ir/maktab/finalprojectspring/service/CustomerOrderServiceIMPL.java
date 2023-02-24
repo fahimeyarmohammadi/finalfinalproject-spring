@@ -108,7 +108,7 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
     }
 
     public Specification selectByConditions(OrderRequestDto request) {
-        return (Specification) (root, cq, cb) -> {
+        return (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getCustomer() != null)
                 predicateList.add(cb.equal(root.get("customer"), request.getCustomer()));
@@ -119,7 +119,7 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
     }
 
     public Specification selectOrderByManager(CustomerOrderRequestDto request) {
-        return (Specification) (root, cq, cb) -> {
+        return (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)
                 predicateList.add(cb.equal(root.get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));
