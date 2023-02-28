@@ -135,8 +135,8 @@ public class ExpertServiceIMPL implements ExpertService {
         } else {
             expert.setVerificationCode(null);
             expert.setEnabled(true);
+            expert.setExpertCondition(ExpertCondition.AWAITING_CONFIRMATION);
             expertRepository.save(expert);
-
             return true;
         }
     }

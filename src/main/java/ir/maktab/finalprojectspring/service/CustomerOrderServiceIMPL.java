@@ -112,8 +112,14 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
             List<Predicate> predicateList = new ArrayList<>();
             if (request.getCustomer() != null)
                 predicateList.add(cb.equal(root.get("customer"), request.getCustomer()));
-            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)
+            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0) {
+                if( !(request.getOrderCondition().equals("WAITING_EXPERT_SUGGESTION")|| request.getOrderCondition().equals("WAITING_EXPERT_SELECTION")||
+                        request.getOrderCondition().equals("WAITING_FOR_EXPERT_COMING")||request.getOrderCondition().equals("STARTED")||
+                        request.getOrderCondition().equals("DONE")||request.getOrderCondition().equals("PAID")))
+                    throw new InvalidInputException("orderCondition is false");
+
                 predicateList.add(cb.equal(root.get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));
+            }
             return cb.and(predicateList.toArray(new Predicate[0]));
         };
     }
@@ -121,8 +127,12 @@ public class CustomerOrderServiceIMPL implements CustomerOrderService {
     public Specification<CustomerOrder> selectOrderByManager(CustomerOrderRequestDto request) {
         return (root, cq, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
-            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0)
-                predicateList.add(cb.equal(root.get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));
+            if (request.getOrderCondition() != null && request.getOrderCondition().length() != 0){
+                if( !(request.getOrderCondition().equals("WAITING_EXPERT_SUGGESTION")|| request.getOrderCondition().equals("WAITING_EXPERT_SELECTION")||
+                        request.getOrderCondition().equals("WAITING_FOR_EXPERT_COMING")||request.getOrderCondition().equals("STARTED")||
+                        request.getOrderCondition().equals("DONE")||request.getOrderCondition().equals("PAID")))
+                    throw new InvalidInputException("orderCondition is false");
+                predicateList.add(cb.equal(root.get("orderCondition"), OrderCondition.valueOf(request.getOrderCondition())));}
             if (request.getSubServiceName() != null && request.getSubServiceName().length() != 0)
                 predicateList.add(cb.equal(root.get("subService").get("subName"), request.getSubServiceName()));
             if (request.getBaseServiceName() != null && request.getBaseServiceName().length() != 0)
